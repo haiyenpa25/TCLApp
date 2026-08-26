@@ -483,81 +483,7 @@
         </div>
       </section>
 
-      <!-- TAB 3: QUẢN LÝ BÀN / PHÒNG (TABLE MAP & QR) -->
-      <section v-show="currentTab === 'tables'" class="space-y-4">
-        <!-- Tables Summary Stats -->
-        <div class="grid grid-cols-3 gap-2.5">
-          <div class="bg-surface-container-lowest p-3 rounded-2xl border border-outline-variant/30 text-center shadow-card">
-            <span class="text-xs text-on-surface-variant font-medium">Bàn Trống</span>
-            <div class="font-display font-bold text-xl text-status-free">{{ countTablesByStatus('FREE') }}</div>
-          </div>
-          <div class="bg-surface-container-lowest p-3 rounded-2xl border border-outline-variant/30 text-center shadow-card">
-            <span class="text-xs text-on-surface-variant font-medium">Có Khách</span>
-            <div class="font-display font-bold text-xl text-status-occupied">{{ countTablesByStatus('OCCUPIED') }}</div>
-          </div>
-          <div class="bg-surface-container-lowest p-3 rounded-2xl border border-outline-variant/30 text-center shadow-card">
-            <span class="text-xs text-on-surface-variant font-medium">Đã Đặt</span>
-            <div class="font-display font-bold text-xl text-status-reserved">{{ countTablesByStatus('RESERVED') }}</div>
-          </div>
-        </div>
-
-        <!-- Tables Grid -->
-        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-          <div v-for="tbl in tables" :key="tbl.ID" class="bg-surface-container-lowest rounded-2xl p-3.5 shadow-card border-2 transition flex flex-col justify-between h-44" :class="getTableBorderClass(tbl.Status)">
-            <div class="flex items-start justify-between">
-              <div>
-                <h3 class="font-display font-bold text-base text-on-surface">{{ tbl.Name }}</h3>
-                <span class="text-[11px] text-on-surface-variant">{{ tbl.Capacity || 4 }} Chỗ</span>
-              </div>
-              <div class="flex items-center gap-1">
-                <span class="w-3 h-3 rounded-full" :class="getTableDotClass(tbl.Status)"></span>
-                <!-- Quick table menu -->
-                <button @click.stop="toggleTableStatusQuick(tbl)" class="text-[10px] text-outline hover:text-primary p-0.5" title="Đổi trạng thái">
-                  <span class="material-symbols-outlined text-xs">sync_alt</span>
-                </button>
-              </div>
-            </div>
-
-            <div>
-              <div v-if="tbl.ActiveOrderCount > 0" class="text-xs font-semibold text-primary flex items-center gap-1 mb-1">
-                <span class="material-symbols-outlined text-sm">receipt</span>
-                {{ tbl.ActiveOrderCount }} đơn đang phục vụ
-              </div>
-              <div v-else class="text-xs text-outline mb-1">
-                {{ getTableStatusLabel(tbl.Status) }}
-              </div>
-
-              <!-- Quick Table Actions -->
-              <div class="flex items-center justify-between text-[11px] font-bold text-primary pt-2 border-t border-outline-variant/20">
-                <button @click="handleTableClick(tbl)" class="hover:underline font-bold text-xs flex items-center gap-0.5">
-                  <span class="material-symbols-outlined text-xs">local_cafe</span> Đặt Món
-                </button>
-                <div class="flex items-center gap-1">
-                  <button v-if="tbl.Status === 'OCCUPIED'" @click.stop="openSwitchTableModal(tbl)" class="p-1 text-secondary hover:bg-surface-container rounded-md" title="Chuyển bàn">
-                    <span class="material-symbols-outlined text-sm">move_down</span>
-                  </button>
-                  <button @click.stop="openTableQRModal(tbl)" class="p-1 text-primary hover:bg-surface-container rounded-md" title="Mã QR Bàn">
-                    <span class="material-symbols-outlined text-sm">qr_code_2</span>
-                  </button>
-                  <button v-if="tbl.Status !== 'FREE'" @click.stop="resetTableToFree(tbl.ID)" class="p-1 text-status-free hover:bg-surface-container rounded-md" title="Trả bàn về Trống">
-                    <span class="material-symbols-outlined text-sm">restart_alt</span>
-                  </button>
-                  <button @click.stop="deleteCurrentTable(tbl.ID)" class="p-1 text-outline hover:text-error rounded-md" title="Xóa bàn">
-                    <span class="material-symbols-outlined text-sm">delete</span>
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Add Table / Management Actions -->
-        <div class="flex justify-end pt-2">
-          <button @click="showAddTableModal = true" class="bg-primary text-on-primary px-4 py-2 rounded-xl text-xs font-bold shadow-sm flex items-center gap-1.5 hover:opacity-90 transition">
-            <span class="material-symbols-outlined text-sm">add</span> Thêm Bàn Mới
-          </button>
-        </div>
-      </section>
+      
 
       
       <!-- ══════════════════════════════════════════════════════════════════ -->
@@ -943,6 +869,9 @@
       <section v-show="currentTab === 'settings'" class="space-y-4">
         <!-- Sub-tabs -->
         <div class="flex gap-2 border-b border-outline-variant/20 pb-2 overflow-x-auto hide-scrollbar">
+          <button @click="settingsSubTab = 'tables'" class="px-4 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition flex items-center gap-1.5" :class="settingsSubTab === 'tables' ? 'bg-primary text-on-primary shadow-xs' : 'bg-surface-container text-on-surface-variant'">
+            <span class="material-symbols-outlined text-sm">table_restaurant</span> Quản Lý Bàn & QR
+          </button>
           <button @click="settingsSubTab = 'expenses'" class="px-4 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition" :class="settingsSubTab === 'expenses' ? 'bg-primary text-on-primary' : 'bg-surface-container text-on-surface-variant'">
             Sổ Quỹ Thu Chi
           </button>
@@ -959,6 +888,83 @@
             Nhân Viên (Staff)
           </button>
         </div>
+
+        <!-- SubTab 0: Tables Management -->
+        <!-- TAB 3: QUẢN LÝ BÀN / PHÒNG (TABLE MAP & QR) -->
+      <div v-if="settingsSubTab === 'tables'" class="space-y-4">
+        <!-- Tables Summary Stats -->
+        <div class="grid grid-cols-3 gap-2.5">
+          <div class="bg-surface-container-lowest p-3 rounded-2xl border border-outline-variant/30 text-center shadow-card">
+            <span class="text-xs text-on-surface-variant font-medium">Bàn Trống</span>
+            <div class="font-display font-bold text-xl text-status-free">{{ countTablesByStatus('FREE') }}</div>
+          </div>
+          <div class="bg-surface-container-lowest p-3 rounded-2xl border border-outline-variant/30 text-center shadow-card">
+            <span class="text-xs text-on-surface-variant font-medium">Có Khách</span>
+            <div class="font-display font-bold text-xl text-status-occupied">{{ countTablesByStatus('OCCUPIED') }}</div>
+          </div>
+          <div class="bg-surface-container-lowest p-3 rounded-2xl border border-outline-variant/30 text-center shadow-card">
+            <span class="text-xs text-on-surface-variant font-medium">Đã Đặt</span>
+            <div class="font-display font-bold text-xl text-status-reserved">{{ countTablesByStatus('RESERVED') }}</div>
+          </div>
+        </div>
+
+        <!-- Tables Grid -->
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+          <div v-for="tbl in tables" :key="tbl.ID" class="bg-surface-container-lowest rounded-2xl p-3.5 shadow-card border-2 transition flex flex-col justify-between h-44" :class="getTableBorderClass(tbl.Status)">
+            <div class="flex items-start justify-between">
+              <div>
+                <h3 class="font-display font-bold text-base text-on-surface">{{ tbl.Name }}</h3>
+                <span class="text-[11px] text-on-surface-variant">{{ tbl.Capacity || 4 }} Chỗ</span>
+              </div>
+              <div class="flex items-center gap-1">
+                <span class="w-3 h-3 rounded-full" :class="getTableDotClass(tbl.Status)"></span>
+                <!-- Quick table menu -->
+                <button @click.stop="toggleTableStatusQuick(tbl)" class="text-[10px] text-outline hover:text-primary p-0.5" title="Đổi trạng thái">
+                  <span class="material-symbols-outlined text-xs">sync_alt</span>
+                </button>
+              </div>
+            </div>
+
+            <div>
+              <div v-if="tbl.ActiveOrderCount > 0" class="text-xs font-semibold text-primary flex items-center gap-1 mb-1">
+                <span class="material-symbols-outlined text-sm">receipt</span>
+                {{ tbl.ActiveOrderCount }} đơn đang phục vụ
+              </div>
+              <div v-else class="text-xs text-outline mb-1">
+                {{ getTableStatusLabel(tbl.Status) }}
+              </div>
+
+              <!-- Quick Table Actions -->
+              <div class="flex items-center justify-between text-[11px] font-bold text-primary pt-2 border-t border-outline-variant/20">
+                <button @click="handleTableClick(tbl)" class="hover:underline font-bold text-xs flex items-center gap-0.5">
+                  <span class="material-symbols-outlined text-xs">local_cafe</span> Đặt Món
+                </button>
+                <div class="flex items-center gap-1">
+                  <button v-if="tbl.Status === 'OCCUPIED'" @click.stop="openSwitchTableModal(tbl)" class="p-1 text-secondary hover:bg-surface-container rounded-md" title="Chuyển bàn">
+                    <span class="material-symbols-outlined text-sm">move_down</span>
+                  </button>
+                  <button @click.stop="openTableQRModal(tbl)" class="p-1 text-primary hover:bg-surface-container rounded-md" title="Mã QR Bàn">
+                    <span class="material-symbols-outlined text-sm">qr_code_2</span>
+                  </button>
+                  <button v-if="tbl.Status !== 'FREE'" @click.stop="resetTableToFree(tbl.ID)" class="p-1 text-status-free hover:bg-surface-container rounded-md" title="Trả bàn về Trống">
+                    <span class="material-symbols-outlined text-sm">restart_alt</span>
+                  </button>
+                  <button @click.stop="deleteCurrentTable(tbl.ID)" class="p-1 text-outline hover:text-error rounded-md" title="Xóa bàn">
+                    <span class="material-symbols-outlined text-sm">delete</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Add Table / Management Actions -->
+        <div class="flex justify-end pt-2">
+          <button @click="showAddTableModal = true" class="bg-primary text-on-primary px-4 py-2 rounded-xl text-xs font-bold shadow-sm flex items-center gap-1.5 hover:opacity-90 transition">
+            <span class="material-symbols-outlined text-sm">add</span> Thêm Bàn Mới
+          </button>
+        </div>
+      </div>
 
         <!-- SubTab 1: Expenses -->
         <div v-if="settingsSubTab === 'expenses'" class="space-y-3">
@@ -2231,7 +2237,6 @@ function launchVueApp() {
         const navItems = [
           { id: 'pos', label: 'Bán Hàng / Menu', shortLabel: 'Menu', icon: 'local_cafe' },
           { id: 'kitchen', label: 'Quầy Pha Chế', shortLabel: 'Bếp KDS', icon: 'skillet', badge: '' },
-          { id: 'tables', label: 'Quản Lý Bàn', shortLabel: 'Bàn QR', icon: 'table_restaurant' },
           { id: 'expenses', label: 'Sổ Quỹ & Chi Phí', shortLabel: 'Chi Phí', icon: 'payments' },
           { id: 'tasks', label: 'Công Việc Vận Hành', shortLabel: 'Tasks', icon: 'assignment' },
           { id: 'report', label: 'Báo Cáo Doanh Thu', shortLabel: 'Báo Cáo', icon: 'monitoring' },
