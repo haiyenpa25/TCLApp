@@ -82,6 +82,14 @@
   <!-- Vue 3 Engine is bundled at bottom of body -->
 
   <style>
+    /* IRONCLAD ZERO-FLICKER RULE: Hide #app completely until Vue 3 adds data-v-app upon successful mount */
+    #app:not([data-v-app]) {
+      display: none !important;
+      visibility: hidden !important;
+      opacity: 0 !important;
+      pointer-events: none !important;
+    }
+
     [v-cloak], [v-cloak] * {
       display: none !important;
       visibility: hidden !important;
