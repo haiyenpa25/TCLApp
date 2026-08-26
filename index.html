@@ -559,7 +559,88 @@
         </div>
       </section>
 
-      <!-- TAB 4: VẬN HÀNH & PHÂN CÔNG CÔNG VIỆC (TASKS & STAFF) -->
+      
+      <!-- ══════════════════════════════════════════════════════════════════ -->
+      <!-- TAB 4: SỔ QUỸ & CHI PHÍ QUÁN -->
+      <!-- ══════════════════════════════════════════════════════════════════ -->
+      <section v-show="currentTab === 'expenses'" class="space-y-4">
+        <!-- Header banner -->
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 bg-surface-container-lowest p-4 rounded-2xl border border-outline-variant/30 shadow-xs">
+          <div>
+            <h2 class="font-display font-bold text-lg text-primary flex items-center gap-2">
+              <span class="material-symbols-outlined text-primary text-2xl">payments</span>
+              Sổ Quỹ Thu Chi & Quản Lý Chi Phí
+            </h2>
+            <p class="text-xs text-on-surface-variant mt-0.5">Theo dõi dòng tiền, chi phí nhập hàng, mặt bằng và vận hành quán</p>
+          </div>
+          <button @click="showAddExpenseModal = true" class="bg-primary text-on-primary px-4 py-2.5 rounded-xl text-xs font-bold flex items-center gap-1.5 hover:opacity-90 transition shadow-sm shrink-0">
+            <span class="material-symbols-outlined text-base">add_circle</span> Ghi Khoản Chi Mới
+          </button>
+        </div>
+
+        <!-- Metric KPI Cards -->
+        <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+          <div class="bg-surface-container-lowest p-4 rounded-2xl border border-outline-variant/30 shadow-xs">
+            <div class="flex items-center gap-2 text-xs text-on-surface-variant font-medium">
+              <span class="material-symbols-outlined text-error text-base">trending_down</span>
+              Tổng Chi Hôm Nay
+            </div>
+            <div class="font-display font-extrabold text-xl text-error mt-2">-{{ formatVND(reportData.totalExpenses || 0) }}</div>
+          </div>
+          <div class="bg-surface-container-lowest p-4 rounded-2xl border border-outline-variant/30 shadow-xs">
+            <div class="flex items-center gap-2 text-xs text-on-surface-variant font-medium">
+              <span class="material-symbols-outlined text-primary text-base">trending_up</span>
+              Doanh Thu Hôm Nay
+            </div>
+            <div class="font-display font-extrabold text-xl text-primary mt-2">{{ formatVND(reportData.totalRevenue || 0) }}</div>
+          </div>
+          <div class="bg-surface-container-lowest p-4 rounded-2xl border border-outline-variant/30 shadow-xs col-span-2 sm:col-span-1">
+            <div class="flex items-center gap-2 text-xs text-on-surface-variant font-medium">
+              <span class="material-symbols-outlined text-secondary text-base">account_balance_wallet</span>
+              Lợi Nhuận Ròng
+            </div>
+            <div class="font-display font-extrabold text-xl text-secondary mt-2">{{ formatVND(reportData.netProfit || 0) }}</div>
+          </div>
+        </div>
+
+        <!-- Expenses List Card -->
+        <div class="bg-surface-container-lowest rounded-2xl p-4 border border-outline-variant/30 shadow-xs space-y-3">
+          <div class="flex justify-between items-center">
+            <h3 class="font-display font-bold text-sm text-on-surface flex items-center gap-2">
+              <span class="material-symbols-outlined text-base text-primary">receipt_long</span>
+              Danh Sách Các Khoản Chi Đã Ghi
+            </h3>
+            <span class="text-xs text-on-surface-variant font-medium px-2.5 py-1 bg-surface-container rounded-full">{{ expenses.length }} khoản chi</span>
+          </div>
+
+          <div v-if="expenses.length === 0" class="py-12 text-center text-xs text-outline bg-surface-container/50 rounded-xl border border-dashed border-outline-variant/30">
+            <span class="material-symbols-outlined text-3xl text-outline mb-1 block">money_off</span>
+            Chưa có khoản chi nào được ghi nhận hôm nay
+          </div>
+
+          <div v-else class="space-y-2.5">
+            <div v-for="exp in expenses" :key="exp.ID" class="bg-surface rounded-xl p-3.5 border border-outline-variant/20 shadow-xs flex items-center justify-between hover:border-primary/30 transition">
+              <div class="space-y-1">
+                <div class="flex items-center gap-2">
+                  <span class="text-[10px] font-bold px-2 py-0.5 bg-surface-container rounded-full text-on-surface-variant uppercase">{{ exp.Category }}</span>
+                  <span class="text-xs text-outline font-mono">{{ exp.Date || '' }}</span>
+                </div>
+                <h4 class="font-bold text-sm text-on-surface">{{ exp.Description }}</h4>
+                <p class="text-xs text-outline flex items-center gap-1.5">
+                  <span class="material-symbols-outlined text-xs">account_balance</span> {{ exp.FundingSource || 'Tiền quán' }}
+                  <span v-if="exp.PerformedByName">• Người chi: {{ exp.PerformedByName }}</span>
+                </p>
+              </div>
+              <div class="text-right">
+                <span class="font-display font-black text-sm text-error">-{{ formatVND(exp.Amount) }}</span>
+                <button @click="deleteCurrentExpense(exp.ID)" class="text-xs text-outline hover:text-error block mt-1 transition">Xóa</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+<!-- TAB 4: VẬN HÀNH & PHÂN CÔNG CÔNG VIỆC (TASKS & STAFF) -->
       <section v-show="currentTab === 'tasks'" class="space-y-4">
         <!-- Daily Task Progress Header -->
         <div class="bg-primary-container text-on-primary p-4 rounded-2xl shadow-soft flex items-center justify-between">
@@ -3503,81 +3584,4 @@ if (typeof globalThis !== 'undefined') { globalThis.Vue = Vue; }
     }
   </script>
 </body>
-</html>      <!-- ══════════════════════════════════════════════════════════════════ -->
-      <!-- EXPENSES & SỔ QUỸ TAB (DEDICATED DIRECT VIEW) -->
-      <!-- ══════════════════════════════════════════════════════════════════ -->
-      <div v-if="currentTab === 'expenses'" class="space-y-4">
-        <!-- Header banner -->
-        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 bg-surface-container-lowest p-4 rounded-2xl border border-outline-variant/30 shadow-xs">
-          <div>
-            <h2 class="font-display font-bold text-lg text-primary flex items-center gap-2">
-              <span class="material-symbols-outlined text-primary text-2xl">payments</span>
-              Sổ Quỹ Thu Chi & Quản Lý Chi Phí
-            </h2>
-            <p class="text-xs text-on-surface-variant mt-0.5">Theo dõi dòng tiền, chi phí nhập hàng, mặt bằng và vận hành quán</p>
-          </div>
-          <button @click="showAddExpenseModal = true" class="bg-primary text-on-primary px-4 py-2.5 rounded-xl text-xs font-bold flex items-center gap-1.5 hover:opacity-90 transition shadow-sm shrink-0">
-            <span class="material-symbols-outlined text-base">add_circle</span> Ghi Khoản Chi Mới
-          </button>
-        </div>
-
-        <!-- Metric KPI Cards -->
-        <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
-          <div class="bg-surface-container-lowest p-4 rounded-2xl border border-outline-variant/30 shadow-xs">
-            <div class="flex items-center gap-2 text-xs text-on-surface-variant font-medium">
-              <span class="material-symbols-outlined text-error text-base">trending_down</span>
-              Tổng Chi Hôm Nay
-            </div>
-            <div class="font-display font-extrabold text-xl text-error mt-2">-{{ formatVND(reportData.totalExpenses || 0) }}</div>
-          </div>
-          <div class="bg-surface-container-lowest p-4 rounded-2xl border border-outline-variant/30 shadow-xs">
-            <div class="flex items-center gap-2 text-xs text-on-surface-variant font-medium">
-              <span class="material-symbols-outlined text-primary text-base">trending_up</span>
-              Doanh Thu Hôm Nay
-            </div>
-            <div class="font-display font-extrabold text-xl text-primary mt-2">{{ formatVND(reportData.totalRevenue || 0) }}</div>
-          </div>
-          <div class="bg-surface-container-lowest p-4 rounded-2xl border border-outline-variant/30 shadow-xs col-span-2 sm:col-span-1">
-            <div class="flex items-center gap-2 text-xs text-on-surface-variant font-medium">
-              <span class="material-symbols-outlined text-secondary text-base">account_balance_wallet</span>
-              Lợi Nhuận Ròng
-            </div>
-            <div class="font-display font-extrabold text-xl text-secondary mt-2">{{ formatVND(reportData.netProfit || 0) }}</div>
-          </div>
-        </div>
-
-        <!-- Expenses List Card -->
-        <div class="bg-surface-container-lowest rounded-2xl p-4 border border-outline-variant/30 shadow-xs space-y-3">
-          <div class="flex justify-between items-center">
-            <h3 class="font-display font-bold text-sm text-on-surface flex items-center gap-2">
-              <span class="material-symbols-outlined text-base text-primary">receipt_long</span>
-              Danh Sách Các Khoản Chi Đã Ghi
-            </h3>
-            <span class="text-xs text-on-surface-variant font-medium px-2.5 py-1 bg-surface-container rounded-full">{{ expenses.length }} khoản chi</span>
-          </div>
-
-          <div v-if="expenses.length === 0" class="py-12 text-center text-xs text-outline bg-surface-container/50 rounded-xl border border-dashed border-outline-variant/30">
-            <span class="material-symbols-outlined text-3xl text-outline mb-1 block">money_off</span>
-            Chưa có khoản chi nào được ghi nhận hôm nay
-          </div>
-
-          <div v-else class="space-y-2.5">
-            <div v-for="exp in expenses" :key="exp.ID" class="bg-surface rounded-xl p-3.5 border border-outline-variant/20 shadow-xs flex items-center justify-between hover:border-primary/30 transition">
-              <div>
-                <div class="flex items-center gap-2">
-                  <span class="text-[10px] font-bold px-2.5 py-0.5 bg-primary/10 text-primary rounded-full">{{ exp.Category }}</span>
-                  <span class="text-xs text-outline font-medium">{{ exp.Date || exp.Time || '' }}</span>
-                </div>
-                <h4 class="font-bold text-sm text-on-surface mt-1.5">{{ exp.Description }}</h4>
-                <p class="text-xs text-on-surface-variant mt-0.5">{{ exp.FundingSource || 'Tiền quán' }} <span v-if="exp.PerformedByName">• Người chi: {{ exp.PerformedByName }}</span></p>
-              </div>
-              <div class="text-right shrink-0">
-                <span class="font-display font-bold text-base text-error">-{{ formatVND(exp.Amount) }}</span>
-                <button @click="deleteCurrentExpense(exp.ID)" class="text-xs text-outline hover:text-error block mt-1 transition font-medium">Xóa</button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-
+</html>

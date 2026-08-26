@@ -25,10 +25,10 @@ function withErrorHandling(fn) {
     var result = fn();
     return result !== undefined ? result : { success: true };
   } catch (e) {
-    Logger.log('[API Error] ' + e.message + '\n' + e.stack);
-    return { success: false, error: e.message };
+    Logger.log('[API Error] ' + e.message + '\n' + (e.stack || ''));
+    return { success: false, error: String(e && e.message ? e.message : e) };
   }
-
+}
 
 /**
  * Lấy toàn bộ dữ liệu khởi động ứng dụng trong 1 lần gọi duy nhất (Single RPC Roundtrip).
@@ -46,23 +46,30 @@ function getInitialData() {
     var settingsRes = getSettings();
     var reportRes = getReport('today');
 
+    var expList = [];
+    if (expensesRes && expensesRes.data) {
+      if (Array.isArray(expensesRes.data.expenses)) {
+        expList = expensesRes.data.expenses;
+      } else if (Array.isArray(expensesRes.data)) {
+        expList = expensesRes.data;
+      }
+    }
+
     return {
       success: true,
       data: {
-        menu: menuRes.data || { products: [], toppings: [], categories: [] },
-        tables: tablesRes.data || [],
-        activeOrders: activeOrdersRes.data || [],
-        tasks: tasksRes.data || [],
-        expenses: expensesRes.data || [],
-        staff: staffRes.data || [],
-        customers: customersRes.data || [],
-        settings: settingsRes.data || {},
-        report: reportRes.data || null
+        menu: (menuRes && menuRes.data) ? menuRes.data : { products: [], toppings: [], categories: [] },
+        tables: (tablesRes && tablesRes.data) ? tablesRes.data : [],
+        activeOrders: (activeOrdersRes && activeOrdersRes.data) ? activeOrdersRes.data : [],
+        tasks: (tasksRes && tasksRes.data) ? tasksRes.data : [],
+        expenses: expList,
+        staff: (staffRes && staffRes.data) ? staffRes.data : [],
+        customers: (customersRes && customersRes.data) ? customersRes.data : [],
+        settings: (settingsRes && settingsRes.data) ? settingsRes.data : {},
+        report: (reportRes && reportRes.data) ? reportRes.data : null
       }
     };
   });
-}
-
 }
 
 /**
@@ -357,26 +364,22 @@ function submitOrder(payload) {
       var pts        = Math.floor((payload.totalAmount || 0) / 10000);
       var customerId = payload.customerId || '';
 
-      // Cập nhật điểm khách hàng hiện có
-      if (customerId) {
-        var customer = getSheetData(SHEETS.CUSTOMERS, false).find(function(c) { return c.ID === customerId; });
-        if (customer) {
-          updateRowInSheet(SHEETS.CUSTOMERS, 'ID', customerId, {
-            Points:     (Number(customer.Points)     || 0) + pts,
-            TotalSpent: (Number(customer.TotalSpent) || 0) + (payload.totalAmount || 0),
+      // Tạo hồ sơ khách hàng mới nếu chưa có (chưa cộng điểm khi đơn chưa thanh toán)
+      if (!customerId && payload.customerPhone) {
+        var existingCust = getSheetData(SHEETS.CUSTOMERS, false).find(function(c) { return String(c.Phone) === String(payload.customerPhone); });
+        if (existingCust) {
+          customerId = existingCust.ID;
+        } else {
+          customerId = 'CUS-' + new Date().getTime();
+          appendRowToSheet(SHEETS.CUSTOMERS, {
+            ID: customerId, Name: payload.customerName || 'Khách hàng',
+            Phone: payload.customerPhone || '', Type: 'Cá nhân', Company: '',
+            Address: payload.deliveryAddress || '', Email: '',
+            Points: 0, TotalSpent: 0,
+            CreatedAt: new Date().toISOString(), Note: '',
           });
           invalidateCache(SHEETS.CUSTOMERS);
         }
-      } else if (payload.customerPhone && (orderType === 'TAKEAWAY' || orderType === 'DELIVERY')) {
-        customerId = 'CUS-' + new Date().getTime();
-        appendRowToSheet(SHEETS.CUSTOMERS, {
-          ID: customerId, Name: payload.customerName || '',
-          Phone: payload.customerPhone || '', Type: 'Cá nhân', Company: '',
-          Address: payload.deliveryAddress || '', Email: '',
-          Points: pts, TotalSpent: payload.totalAmount || 0,
-          CreatedAt: new Date().toISOString(), Note: '',
-        });
-        invalidateCache(SHEETS.CUSTOMERS);
       }
 
       var newOrder = {

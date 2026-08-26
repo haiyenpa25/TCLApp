@@ -19,13 +19,8 @@ function sanitizeUrlParam(val) {
  * @param {GoogleAppsScript.Events.DoGet} e - Event object chứa URL parameters
  */
 function doGet(e) {
-  if (e && e.parameter) {
-    if (e.parameter.action === 'setup')     return ContentService.createTextOutput(setupDatabase()).setMimeType(ContentService.MimeType.TEXT);
-    if (e.parameter.action === 'resetmenu') return ContentService.createTextOutput(resetMenu()).setMimeType(ContentService.MimeType.TEXT);
-  }
-
   return HtmlService.createHtmlOutputFromFile('index')
-    .setTitle('Tiệm Của Lá')
+    .setTitle('Tiệm Của Lá — Hệ Thống Quản Lý POS & F&B')
     .addMetaTag('viewport', 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0')
     .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
 }
