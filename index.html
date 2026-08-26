@@ -2303,7 +2303,13 @@ function launchVueApp() {
         const defaultBannerSvg = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 240"%3E%3Cdefs%3E%3ClinearGradient id="g1" x1="0%25" y1="0%25" x2="100%25" y2="100%25"%3E%3Cstop offset="0%25" stop-color="%2310320d"/%3E%3Cstop offset="50%25" stop-color="%231d5119"/%3E%3Cstop offset="100%25" stop-color="%232d6a26"/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width="800" height="240" fill="url(%23g1)"/%3E%3Ccircle cx="750" cy="60" r="140" fill="white" fill-opacity="0.06"/%3E%3Ccircle cx="700" cy="200" r="180" fill="white" fill-opacity="0.04"/%3E%3Ccircle cx="80" cy="180" r="110" fill="white" fill-opacity="0.05"/%3E%3Cpath d="M680 40 C720 70 740 120 730 170 C690 150 670 100 680 40 Z" fill="white" fill-opacity="0.08"/%3E%3Cpath d="M740 110 C770 130 780 170 770 200 C740 190 730 150 740 110 Z" fill="white" fill-opacity="0.06"/%3E%3C/svg%3E';
         const shopLogo = computed(() => settings.value.logoUrl || defaultLogoSvg);
         const shopBanner = computed(() => settings.value.bannerUrl || defaultBannerSvg);
-        const shopOfficialQR = 'https://img.vietqr.io/image/970436-1018704944-compact.png';
+        // Dynamic Shop Official VietQR Standee (P0-07 Synced with Settings)
+        const shopOfficialQR = computed(() => {
+          const bank = settings.value.bankId || '970436';
+          const acc = settings.value.accountNo || '1018704944';
+          const name = encodeURIComponent(settings.value.accountName || 'TRUONG HOAI DINH');
+          return `https://img.vietqr.io/image/${bank}-${acc}-compact2.png?accountName=${name}`;
+        });
 
         // Navigation Menu
         const navItems = [
