@@ -154,10 +154,26 @@
 
 <body class="bg-surface font-body text-on-surface antialiased min-h-screen overflow-x-hidden">
   <!-- Preloader Screen (Hides immediately when Vue mounts) -->
-  <div id="initial-preloader" class="fixed inset-0 z-50 bg-[#f8faf5] flex flex-col items-center justify-center gap-3 transition-opacity duration-300">
-    <div class="w-16 h-16 rounded-full bg-primary flex items-center justify-center text-white shadow-card animate-bounce">
-      <span class="material-symbols-outlined text-3xl">eco</span>
+    <!-- HIGH-PRIORITY FAIL-SAFE BRANDED PRELOADER (Pure Inline CSS - Zero Dependency) -->
+  <div id="initial-preloader" style="position: fixed; inset: 0; background: #154212; z-index: 99999; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #ffffff; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; transition: opacity 0.3s ease;">
+    <div style="width: 80px; height: 80px; border-radius: 50%; background: #ffffff; padding: 4px; box-shadow: 0 12px 30px rgba(0,0,0,0.25); margin-bottom: 16px; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+      <img src="data:image/webp;base64,UklGRhAsAABXRUJQVlA4IAwsAAAQ8wCdASogAiACPhkMhEGhBF1N2BABsCcJaWd/Xb2sSj607g3bUv8v6Qv970A118N6+T/qfQY/p/oVf5n/N9Kz6G3+j/bH3Cf5p/rPVb/7n7Y/8f7s/3p///s6f3v/m9wT+m//96U/26f2N/xf8f7/n7ff9X2yftR/835d/2n/d/934G/2L/U/+T/L//X/wf//72P/49qf+A/7P/h/yH5G/2r/M/+T/F/3v///4///+7D/1/8D/6f8H8BP9N/rf/d/zX+d/7/+2////7fdr/7/8T7n/6b/v/+b/jf8n////994P/G/+j/Mf7D9rffL/yP/h/0P+O/7X+F////7/fH/6v/h/zv+k/+X/X////s+7n/B//T/Xf8X9rP/081P7kf+X/S/A/6b/x//s/z3+i/bT/Bf87/1P9v/mP/L/h////5fVz/8P9376P/H93f/w9tf9gP/f7fH/6e3T9yH/U9rn7fP7V6pP0v/Q/sr8q/uD+f/1H9sv61+q/wT+Xvzn/Af3n+j/3T/Gf3L/T/6v/df8D/kPzR/s3+D/fH+Cfl//L/yP95/w35l/fH8//s/9k/yf+H/2P+h/43+t/47/V/+b/Zf8b/1v/h/w35hftv+D/0H94/yH/a/4b+7/9b/Kf7T/v/+d/lv/B/vv9x/33/c/6D/x/95/j/7L/uP+//8X/Hf2b9gv8w/mX+B/wn9y/7n+N///ub/gP+H/gP9l/sv+X/5P+R/5H+l/8X/I/8v/hf9t/wv/p/yf///+76p/gP/R/jP8v/uv+//7P+1/8H/e/8v/Zf8z/7v/d////8Pfl79y/yv/g/zf/m/8n/c/97////n9Wf2Z/9n9//43/w//7/j////w+hf9S/2H/G/6j/1/+f/xf/v////Tf0T/w/7r/j/8l/8f/p/8H///9X/8///+5L/y/8z/3f8F/6P/f/9X////l/hH9y//f/r/8X/pf/b/6////+v//73/1f+f/z//e/+n////y/wD/yf+z/1P/d/+//9f////j/wz/9f/P/6v/0/+3////1/9f/6f/z/8n/5f/j////7f/9f/v/+//5v/v////8/8f///3/f//3/f/93////3/9f///3/f//3/f/93////3/9f///3/f//3/f/93////3/9f///3/f//3/f/93////3/9f///3/f//3/f/93////3/9f///3/f//3/f/93////3/9f///3/f//3/f/93////3/9f///3/f//3/f/93////3/9f///3/f//3/f/93////3/9f///3/f//3/f/93////3/9f///3/f//3/f/93////3/9f///3/f//3/f/93////3/9f///3/f//3/f/93////3/9f///3/f//3/f/93////3/9f///3/f//3/f/93////3/9f///3/f//3/f/93////3/9f///3/f//3/f/93////3/9f///3/f//3/f/93////3/9f///3/f//3/f/93////3/9f///3/f//3/f/93////3/9f///3/f//3/f/93////3/9f///3/f//3/f/93////3/9f///3/f//3/f/93////3/9f///3/f//3/f/93////3/9f///3/f//3/f/93////3/9f///3/f//3/f/93////3/9f///3/f//3/f/93////3/9f///3/f//3/f/93////3/9f///3/f//3/f/93////3/9f///3/f//3/f/93////3/9f///3/f//3/f/93////3/9f///3/f//3/f/93////3/9f///3/f//3/f/93////3/9f///3/f//3/f/93////3/9f///3/f//3/f/93////3/9f///3/f//3/f/93////3/9f///3/f//3/f/93////3/9f///3/f//3/f/93////3/9f///3/f//3/f/93////3/9f///3/f//3/f/93////3/9f///3/f//3/f/93////3/9f///3/f//3/f/93////3/9f///3/f//3/f/93////3/9f///3/f//3/f/93////3/9f///3/f//3/f/93////3/9f///3/f//3/f/93////3/9f///3/f//3/f/93////3/9f///3/f//3/f/93////3/9f///3/f//3/f/93////3/9f///3/f//3/f/93////3/9f///3/f//3/f/93////3/9f///3/f//3/f/93////3/9f///3/f//3/f/93////3/9f///3/f//3/f/93////3/9f///3/f//3/f/93" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;" alt="Logo Tiệm Của Lá" />
     </div>
+    <h2 style="font-size: 19px; font-weight: 800; letter-spacing: -0.5px; margin: 0 0 4px 0; text-shadow: 0 2px 8px rgba(0,0,0,0.3);">Tiệm Của Lá</h2>
+    <p style="font-size: 13px; opacity: 0.85; margin: 0 0 20px 0; font-style: italic;">"Ngồi bên Lá quên vội vã"</p>
+    <div style="width: 32px; height: 32px; border: 3px solid rgba(255,255,255,0.25); border-top-color: #ffffff; border-radius: 50%; animation: spinLoader 0.8s linear infinite;"></div>
+    <div id="preloader-error-hint" style="display: none; margin-top: 24px; text-align: center; max-width: 280px;">
+      <p style="font-size: 12px; opacity: 0.9; margin-bottom: 10px;">Kết nối tải ứng dụng đang chậm...</p>
+      <button onclick="window.location.reload()" style="background: #ffffff; color: #154212; border: none; padding: 8px 18px; border-radius: 20px; font-size: 12px; font-weight: 700; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">Tải lại trang</button>
+    </div>
+  </div>
+  <style>
+    @keyframes spinLoader {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
+
     <div class="font-display font-bold text-base text-primary">Tiệm Của Lá</div>
     <div class="text-xs text-outline flex items-center gap-1.5">
       <span class="w-2 h-2 rounded-full bg-primary animate-ping"></span>
@@ -175,7 +191,7 @@
     }, 1000);
   </script>
 
-  <div id="app" v-cloak class="flex flex-col min-h-screen">
+  <div id="app" style="display: none;" class="flex flex-col min-h-screen">
 
     <!-- TOP APP BAR -->
     <header class="sticky top-0 z-40 bg-surface/95 backdrop-blur-md border-b border-outline-variant/40 px-4 py-3 flex items-center justify-between shadow-xs">
@@ -3638,24 +3654,57 @@ function launchVueApp() {
 
     
   
-    // ── Direct Safe App Initialization ─────────────────────────────────────
-    (function initApp() {
-      function startApp() {
+    // ── Ultra-Reliable Multi-CDN Auto-Fallback Loader ─────────────────────────
+    (function initEngine() {
+      const mirrors = [
+        'https://cdn.jsdelivr.net/npm/vue@3.4.21/dist/vue.global.prod.js',
+        'https://cdnjs.cloudflare.com/ajax/libs/vue/3.4.21/vue.global.prod.min.js',
+        'https://unpkg.com/vue@3.4.21/dist/vue.global.prod.js',
+        'https://esm.sh/vue@3.4.21/dist/vue.global.prod.js'
+      ];
+      let mirrorIdx = 0;
+
+      function checkAndStart() {
         if (typeof Vue !== 'undefined' && Vue.createApp) {
           launchVueApp();
-        } else {
-          // Fallback loader if head script was delayed
-          var s = document.createElement('script');
-          s.src = 'https://cdnjs.cloudflare.com/ajax/libs/vue/3.4.21/vue.global.prod.min.js';
-          s.onload = function() { launchVueApp(); };
-          document.head.appendChild(s);
+          return;
         }
+        if (mirrorIdx >= mirrors.length) {
+          const hint = document.getElementById('preloader-error-hint');
+          if (hint) hint.style.display = 'block';
+          return;
+        }
+
+        const src = mirrors[mirrorIdx++];
+        const s = document.createElement('script');
+        s.src = src;
+        s.async = false;
+        s.crossOrigin = 'anonymous';
+        s.onload = function() {
+          if (typeof Vue !== 'undefined' && Vue.createApp) {
+            launchVueApp();
+          } else {
+            checkAndStart();
+          }
+        };
+        s.onerror = function() {
+          checkAndStart();
+        };
+        document.head.appendChild(s);
       }
 
+      // Show retry hint if loading exceeds 8 seconds
+      setTimeout(function() {
+        if (typeof Vue === 'undefined') {
+          const hint = document.getElementById('preloader-error-hint');
+          if (hint) hint.style.display = 'block';
+        }
+      }, 8000);
+
       if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', startApp);
+        document.addEventListener('DOMContentLoaded', checkAndStart);
       } else {
-        startApp();
+        checkAndStart();
       }
     })();
 
