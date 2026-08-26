@@ -426,7 +426,7 @@
             </button>
           </div>
           <div class="flex items-center gap-2">
-            <button @click="soundEnabled = !soundEnabled" class="px-2.5 py-1 bg-surface-container rounded-lg text-xs font-semibold flex items-center gap-1 text-on-surface-variant" :title="soundEnabled ? 'Đang bật chuông báo' : 'Đã tắt chuông'">
+            <button @click="soundEnabled = !soundEnabled" class="px-2.5 py-1 bg-surface-container rounded-lg text-xs font-semibold flex items-center gap-1 text-on-surface-variant" :title="soundTitle">
               <span class="material-symbols-outlined text-sm">{{ soundEnabled ? 'volume_up' : 'volume_off' }}</span>
               <span class="hidden sm:inline">{{ soundEnabled ? 'Chuông Bật' : 'Chuông Tắt' }}</span>
             </button>
@@ -1243,10 +1243,10 @@
             <!-- Quick Preset Toppings Suggestions if low -->
             <div class="bg-surface-container/60 p-2.5 rounded-xl border border-outline-variant/20 flex flex-wrap items-center gap-2 text-xs">
               <span class="text-[11px] text-outline font-semibold">Gợi ý thêm nhanh:</span>
-              <button @click="quickAddPresetTopping('Trân Châu Hoàng Kim', 5000)" class="px-2 py-0.5 bg-surface-container-lowest border border-outline-variant/30 rounded-lg text-[11px] hover:border-primary font-medium text-on-surface">+ Trân Châu Hoàng Kim (5k)</button>
-              <button @click="quickAddPresetTopping('Kem Cheese Béo Ngậy', 10000)" class="px-2 py-0.5 bg-surface-container-lowest border border-outline-variant/30 rounded-lg text-[11px] hover:border-primary font-medium text-on-surface">+ Kem Cheese (10k)</button>
-              <button @click="quickAddPresetTopping('Thạch Củ Năng', 5000)" class="px-2 py-0.5 bg-surface-container-lowest border border-outline-variant/30 rounded-lg text-[11px] hover:border-primary font-medium text-on-surface">+ Thạch Củ Năng (5k)</button>
-              <button @click="quickAddPresetTopping('Pudding Trứng', 7000)" class="px-2 py-0.5 bg-surface-container-lowest border border-outline-variant/30 rounded-lg text-[11px] hover:border-primary font-medium text-on-surface">+ Pudding Trứng (7k)</button>
+              <button @click="addPreset(1)" class="px-2 py-0.5 bg-surface-container-lowest border border-outline-variant/30 rounded-lg text-[11px] hover:border-primary font-medium text-on-surface">+ Trân Châu Hoàng Kim (5k)</button>
+              <button @click="addPreset(2)" class="px-2 py-0.5 bg-surface-container-lowest border border-outline-variant/30 rounded-lg text-[11px] hover:border-primary font-medium text-on-surface">+ Kem Cheese (10k)</button>
+              <button @click="addPreset(3)" class="px-2 py-0.5 bg-surface-container-lowest border border-outline-variant/30 rounded-lg text-[11px] hover:border-primary font-medium text-on-surface">+ Thạch Củ Năng (5k)</button>
+              <button @click="addPreset(4)" class="px-2 py-0.5 bg-surface-container-lowest border border-outline-variant/30 rounded-lg text-[11px] hover:border-primary font-medium text-on-surface">+ Pudding Trứng (7k)</button>
             </div>
 
             <!-- Toppings Grid -->
@@ -1650,7 +1650,7 @@
               <span class="text-outline">Số tài khoản:</span>
               <div class="flex items-center gap-1">
                 <span class="font-bold text-primary font-mono text-sm">{{ settings.accountNo || '1018704944' }}</span>
-                <button @click="copyToClipboard(settings.accountNo || '1018704944', 'Đã sao chép số tài khoản!')" class="px-1.5 py-0.5 bg-surface-container rounded text-[10px] font-bold text-outline hover:text-primary">
+                <button @click="copyAccountNumber" class="px-1.5 py-0.5 bg-surface-container rounded text-[10px] font-bold text-outline hover:text-primary">
                   Copy
                 </button>
               </div>
@@ -1667,7 +1667,7 @@
               <span class="text-outline">Nội dung CK:</span>
               <div class="flex items-center gap-1">
                 <span class="font-bold text-emerald-700 font-mono">TCL {{ checkoutOrderData.ID.slice(-4) }}</span>
-                <button @click="copyToClipboard('TCL ' + checkoutOrderData.ID.slice(-4), 'Đã sao chép nội dung chuyển khoản!')" class="px-1.5 py-0.5 bg-surface-container rounded text-[10px] font-bold text-outline hover:text-primary">
+                <button @click="copyTransferContent" class="px-1.5 py-0.5 bg-surface-container rounded text-[10px] font-bold text-outline hover:text-primary">
                   Copy
                 </button>
               </div>
@@ -1694,10 +1694,10 @@
           <button @click="showTableSelector = false" class="w-7 h-7 rounded-full bg-surface-container flex items-center justify-center text-outline">✕</button>
         </div>
         <div class="grid grid-cols-2 gap-2 max-h-60 overflow-y-auto hide-scrollbar">
-          <button @click="selectedTable = null; showTableSelector = false; showToast('Đã chọn: Mang về / Không chọn bàn')" class="p-3 rounded-xl border text-center font-semibold text-xs transition" :class="!selectedTable ? 'border-primary bg-primary/10 text-primary font-bold' : 'border-outline-variant/30 text-on-surface-variant'">
+          <button @click="clearSelectedTable" class="p-3 rounded-xl border text-center font-semibold text-xs transition" :class="!selectedTable ? 'border-primary bg-primary/10 text-primary font-bold' : 'border-outline-variant/30 text-on-surface-variant'">
             Mang Về / Giao
           </button>
-          <button v-for="tbl in tables" :key="tbl.ID" @click="selectedTable = tbl; showTableSelector = false; showToast('Đã chọn ' + tbl.Name)" class="p-3 rounded-xl border text-center font-semibold text-xs transition" :class="selectedTable && selectedTable.ID === tbl.ID ? 'border-primary bg-primary/10 text-primary font-bold' : 'border-outline-variant/30 text-on-surface-variant'">
+          <button v-for="tbl in tables" :key="tbl.ID" @click="selectTable(tbl)" class="p-3 rounded-xl border text-center font-semibold text-xs transition" :class="selectedTable && selectedTable.ID === tbl.ID ? 'border-primary bg-primary/10 text-primary font-bold' : 'border-outline-variant/30 text-on-surface-variant'">
             <div>{{ tbl.Name }}</div>
             <div class="text-[10px] text-outline font-normal">{{ tbl.Capacity || 4 }} chỗ • {{ getTableStatusLabel(tbl.Status) }}</div>
           </button>
@@ -2450,6 +2450,38 @@ function launchVueApp() {
           } catch(e) {
             console.log('[Toast]', msg);
           }
+        };
+
+        
+        const soundTitle = computed(() => soundEnabled.value ? 'Đang bật chuông báo' : 'Đã tắt chuông');
+
+        const copyAccountNumber = () => {
+          copyToClipboard(settings.value.accountNo || '1018704944', 'Đã sao chép số tài khoản!');
+        };
+
+        const copyTransferContent = () => {
+          if (checkoutOrderData.value) {
+            copyToClipboard('TCL ' + checkoutOrderData.value.ID.slice(-4), 'Đã sao chép nội dung chuyển khoản!');
+          }
+        };
+
+        const selectTable = (tbl) => {
+          selectedTable.value = tbl;
+          showTableSelector.value = false;
+          showToast('Đã chọn ' + (tbl ? tbl.Name : 'bàn'));
+        };
+
+        const clearSelectedTable = () => {
+          selectedTable.value = null;
+          showTableSelector.value = false;
+          showToast('Đã chọn: Mang về / Không chọn bàn');
+        };
+
+                const addPreset = (type) => {
+          if (type === 1) quickAddPresetTopping('Trân Châu Hoàng Kim', 5000);
+          else if (type === 2) quickAddPresetTopping('Kem Cheese Béo Ngậy', 10000);
+          else if (type === 3) quickAddPresetTopping('Thạch Củ Năng', 5000);
+          else if (type === 4) quickAddPresetTopping('Pudding Trứng', 7000);
         };
 
         const copyToClipboard = (text, successMsg = 'Đã sao chép!') => {
@@ -3569,7 +3601,7 @@ const formatVND = (num) => {
           sizeOptions, iceOptions, sugarOptions, customizedPrice, isToppingSelected, toggleTopping,
           // KDS & Order History
           kitchenStatusFilter, filteredKitchenOrders, countOrdersByStatus, updateStatus, cancelCurrentOrder,
-          openCheckoutModal, showCheckoutModal, copyToClipboard, isCustomerMode, currentTableParam, receivedCashAmount, cashierName, checkoutOrderData, paymentMethod, confirmCheckout, shopLogo, shopBanner, shopOfficialQR, qrPaymentMode, 
+          openCheckoutModal, showCheckoutModal, copyToClipboard, soundTitle, copyAccountNumber, copyTransferContent, selectTable, clearSelectedTable, addPreset, isCustomerMode, currentTableParam, receivedCashAmount, cashierName, checkoutOrderData, paymentMethod, confirmCheckout, shopLogo, shopBanner, shopOfficialQR, qrPaymentMode, 
           setKitchenHistoryFilter, getStatusText, getStatusBadgeClass, getBorderColorByStatus,
           // Tables, QR Standee & Switch Table
           countTablesByStatus, getTableName, handleTableClick, getTableBorderClass, getTableDotClass, getTableStatusLabel,
