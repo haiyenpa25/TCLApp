@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Tiệm Của Lá - Kitchen Display System</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&amp;family=Inter:wght@400;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                            "background": "#f8faf5",
+                            "surface-container": "#edeeea",
+                            "surface-container-low": "#f2f4f0",
+                            "on-secondary-container": "#794e2e",
+                            "error-container": "#ffdad6",
+                            "status-preparing": "#FFC107",
+                            "tertiary-fixed": "#e5e2da",
+                            "on-error": "#ffffff",
+                            "surface": "#f8faf5",
+                            "on-tertiary-fixed-variant": "#474741",
+                            "surface-container-high": "#e7e9e4",
+                            "error": "#ba1a1a",
+                            "on-primary": "#ffffff",
+                            "outline-variant": "#c2c9bb",
+                            "secondary": "#805533",
+                            "outline": "#72796e",
+                            "secondary-container": "#fdc39a",
+                            "on-background": "#191c1a",
+                            "surface-dim": "#d9dbd6",
+                            "on-secondary-fixed": "#301400",
+                            "status-occupied": "#FF9800",
+                            "primary-container": "#2d5a27",
+                            "on-primary-fixed": "#002201",
+                            "surface-container-highest": "#e1e3df",
+                            "surface-bright": "#f8faf5",
+                            "inverse-primary": "#a1d494",
+                            "status-free": "#4CAF50",
+                            "on-tertiary-container": "#c5c2bb",
+                            "surface-variant": "#e1e3df",
+                            "primary-fixed-dim": "#a1d494",
+                            "inverse-surface": "#2e312e",
+                            "secondary-fixed-dim": "#f4bb92",
+                            "primary": "#154212",
+                            "surface-cream": "#FDFCF8",
+                            "on-primary-fixed-variant": "#23501e",
+                            "tertiary": "#3a3934",
+                            "tertiary-fixed-dim": "#c9c6bf",
+                            "status-urgent": "#D32F2F",
+                            "on-surface-variant": "#42493e",
+                            "on-secondary-fixed-variant": "#653d1e",
+                            "secondary-fixed": "#ffdcc5",
+                            "surface-tint": "#3b6934",
+                            "on-tertiary": "#ffffff",
+                            "on-tertiary-fixed": "#1c1c17",
+                            "on-error-container": "#93000a",
+                            "status-reserved": "#2196F3",
+                            "on-secondary": "#ffffff",
+                            "tertiary-container": "#51504a",
+                            "surface-container-lowest": "#ffffff",
+                            "primary-fixed": "#bcf0ae",
+                            "on-surface": "#191c1a",
+                            "inverse-on-surface": "#f0f1ed",
+                            "on-primary-container": "#9dd090"
+                    },
+                    "borderRadius": {
+                            "DEFAULT": "0.25rem",
+                            "lg": "0.5rem",
+                            "xl": "0.75rem",
+                            "full": "9999px"
+                    },
+                    "spacing": {
+                            "component-padding-lg": "16px 24px",
+                            "component-padding-sm": "8px 12px",
+                            "unit": "8px",
+                            "component-padding-md": "12px 20px",
+                            "gutter": "16px",
+                            "container-margin": "24px"
+                    },
+                    "fontFamily": {
+                            "display-lg": [
+                                    "Plus Jakarta Sans"
+                            ],
+                            "headline-lg-mobile": [
+                                    "Plus Jakarta Sans"
+                            ],
+                            "label-md": [
+                                    "Inter"
+                            ],
+                            "headline-lg": [
+                                    "Plus Jakarta Sans"
+                            ],
+                            "headline-sm": [
+                                    "Plus Jakarta Sans"
+                            ],
+                            "body-md": [
+                                    "Inter"
+                            ],
+                            "headline-md": [
+                                    "Plus Jakarta Sans"
+                            ],
+                            "body-sm": [
+                                    "Inter"
+                            ],
+                            "body-lg": [
+                                    "Inter"
+                            ]
+                    },
+                    "fontSize": {
+                            "display-lg": [
+                                    "48px",
+                                    {
+                                            "lineHeight": "56px",
+                                            "letterSpacing": "-0.02em",
+                                            "fontWeight": "700"
+                                    }
+                            ],
+                            "headline-lg-mobile": [
+                                    "28px",
+                                    {
+                                            "lineHeight": "36px",
+                                            "fontWeight": "600"
+                                    }
+                            ],
+                            "label-md": [
+                                    "12px",
+                                    {
+                                            "lineHeight": "16px",
+                                            "letterSpacing": "0.05em",
+                                            "fontWeight": "600"
+                                    }
+                            ],
+                            "headline-lg": [
+                                    "32px",
+                                    {
+                                            "lineHeight": "40px",
+                                            "fontWeight": "600"
+                                    }
+                            ],
+                            "headline-sm": [
+                                    "20px",
+                                    {
+                                            "lineHeight": "28px",
+                                            "fontWeight": "600"
+                                    }
+                            ],
+                            "body-md": [
+                                    "16px",
+                                    {
+                                            "lineHeight": "24px",
+                                            "fontWeight": "400"
+                                    }
+                            ],
+                            "headline-md": [
+                                    "24px",
+                                    {
+                                            "lineHeight": "32px",
+                                            "fontWeight": "600"
+                                    }
+                            ],
+                            "body-sm": [
+                                    "14px",
+                                    {
+                                            "lineHeight": "20px",
+                                            "fontWeight": "400"
+                                    }
+                            ],
+                            "body-lg": [
+                                    "18px",
+                                    {
+                                            "lineHeight": "28px",
+                                            "fontWeight": "400"
+                                    }
+                            ]
+                    }
+            },
+                },
+        }
+    </script>
+</head>
+<body class="bg-surface-cream text-on-surface font-body-md min-h-screen flex flex-col md:flex-row">
+<!-- TopNavBar for Mobile -->
+<nav class="md:hidden flex justify-between items-center px-6 w-full z-40 bg-surface border-b border-outline-variant h-16 sticky top-0">
+<div class="flex items-center gap-3">
+<span class="font-headline-lg-mobile text-headline-lg-mobile font-bold text-primary">Tiệm Của Lá</span>
+</div>
+<div class="flex items-center gap-4">
+<span class="font-body-sm text-body-sm text-on-surface-variant">24 Oct 2023, 14:30</span>
+<span class="material-symbols-outlined text-primary cursor-pointer hover:text-primary-container transition-colors">menu</span>
+</div>
+</nav>
+<!-- SideNavBar for Desktop -->
+<nav class="hidden md:flex flex-col h-full p-4 gap-2 bg-surface-container-lowest shadow-sm border-r border-outline-variant fixed left-0 top-0 w-[280px] z-50">
+<div class="mb-8 px-4 py-2">
+<h1 class="font-headline-md text-headline-md font-bold text-primary">Tiệm Của Lá</h1>
+<p class="font-label-md text-label-md text-on-surface-variant">Organic Vitality</p>
+</div>
+<div class="flex flex-col gap-2 flex-grow">
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high transition-colors rounded-xl" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-body-md text-body-md">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high transition-colors rounded-xl" href="#">
+<span class="material-symbols-outlined">point_of_sale</span>
+<span class="font-body-md text-body-md">POS</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 bg-secondary-container text-on-secondary-container rounded-xl font-bold" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">countertops</span>
+<span class="font-body-md text-body-md">Kitchen</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high transition-colors rounded-xl" href="#">
+<span class="material-symbols-outlined">assignment</span>
+<span class="font-body-md text-body-md">Tasks</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high transition-colors rounded-xl" href="#">
+<span class="material-symbols-outlined">account_balance_wallet</span>
+<span class="font-body-md text-body-md">Expenses</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high transition-colors rounded-xl" href="#">
+<span class="material-symbols-outlined">group</span>
+<span class="font-body-md text-body-md">CRM</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high transition-colors rounded-xl mt-auto" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-body-md text-body-md">Settings</span>
+</a>
+</div>
+</nav>
+<!-- Main Content Canvas -->
+<main class="flex-1 md:ml-[280px] p-4 md:p-gutter flex flex-col gap-gutter pb-24 md:pb-8">
+<!-- Header / Filters -->
+<header class="flex justify-between items-center bg-surface-container-lowest p-component-padding-md rounded-xl shadow-sm border border-outline-variant/10">
+<h2 class="font-headline-sm text-headline-sm text-primary">Active Orders</h2>
+<div class="flex gap-2">
+<button class="px-4 py-2 bg-primary text-on-primary rounded-full font-label-md text-label-md transition-all active:scale-95 shadow-sm">All (12)</button>
+<button class="px-4 py-2 bg-surface-container-low text-on-surface-variant rounded-full font-label-md text-label-md transition-all hover:bg-surface-container-high active:scale-95">Urgent (2)</button>
+</div>
+</header>
+<!-- Order List Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-gutter">
+<!-- Urgent Order Card -->
+<article class="bg-surface-container-lowest rounded-xl shadow-sm border-l-4 border-l-status-urgent flex flex-col overflow-hidden transition-transform duration-200 hover:-translate-y-1 relative">
+<div class="p-component-padding-md border-b border-outline-variant/20 flex justify-between items-start bg-error-container/20">
+<div>
+<div class="flex items-center gap-2 mb-1">
+<span class="font-headline-sm text-headline-sm font-bold text-on-surface">#1042</span>
+<span class="px-2 py-1 bg-status-urgent/15 text-status-urgent rounded-full font-label-md text-label-md flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">timer</span> 12 min
+                            </span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Table 4 • Dine-in</p>
+</div>
+<span class="px-3 py-1 bg-surface-container-high text-on-surface-variant rounded-full font-label-md text-label-md">Pending</span>
+</div>
+<div class="p-component-padding-md flex-1 flex flex-col gap-3">
+<div class="flex gap-3">
+<div class="w-8 h-8 rounded bg-primary/10 flex items-center justify-center font-bold text-primary flex-shrink-0">1x</div>
+<div>
+<h4 class="font-body-md text-body-md font-bold text-on-surface">Oolong Milk Tea</h4>
+<ul class="font-body-sm text-body-sm text-on-surface-variant mt-1 list-disc list-inside">
+<li>Size L</li>
+<li>50% Sugar, 50% Ice</li>
+<li>+ Boba</li>
+</ul>
+</div>
+</div>
+<hr class="border-outline-variant/20 border-dashed"/>
+<div class="flex gap-3">
+<div class="w-8 h-8 rounded bg-primary/10 flex items-center justify-center font-bold text-primary flex-shrink-0">2x</div>
+<div>
+<h4 class="font-body-md text-body-md font-bold text-on-surface">Matcha Latte</h4>
+<ul class="font-body-sm text-body-sm text-on-surface-variant mt-1 list-disc list-inside">
+<li>Size M</li>
+<li>Normal Ice</li>
+<li class="text-secondary font-bold">Note: Extra Hot</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="p-component-padding-md bg-surface-container-low/50 flex gap-2 mt-auto border-t border-outline-variant/10">
+<button class="flex-1 py-2 bg-surface text-primary border border-primary rounded-lg font-label-md text-label-md hover:bg-primary/5 transition-colors active:scale-95">Bump</button>
+<button class="flex-1 py-2 bg-primary text-on-primary rounded-lg font-label-md text-label-md shadow-sm hover:bg-primary-container hover:text-on-primary-container transition-colors active:scale-95 flex items-center justify-center gap-1">
+<span class="material-symbols-outlined text-[18px]">play_arrow</span> Start
+                    </button>
+</div>
+</article>
+<!-- Preparing Order Card -->
+<article class="bg-surface-container-lowest rounded-xl shadow-sm border-l-4 border-l-status-preparing flex flex-col overflow-hidden transition-transform duration-200 hover:-translate-y-1">
+<div class="p-component-padding-md border-b border-outline-variant/20 flex justify-between items-start">
+<div>
+<div class="flex items-center gap-2 mb-1">
+<span class="font-headline-sm text-headline-sm font-bold text-on-surface">#1043</span>
+<span class="px-2 py-1 bg-surface-container-high text-on-surface-variant rounded-full font-label-md text-label-md flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">schedule</span> 5 min
+                            </span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Takeaway</p>
+</div>
+<span class="px-3 py-1 bg-status-preparing/15 text-status-occupied rounded-full font-label-md text-label-md flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px] animate-spin">sync</span> Preparing
+                    </span>
+</div>
+<div class="p-component-padding-md flex-1 flex flex-col gap-3">
+<div class="flex gap-3">
+<div class="w-8 h-8 rounded bg-surface-container-high flex items-center justify-center font-bold text-on-surface-variant flex-shrink-0 opacity-50 line-through">1x</div>
+<div class="opacity-50">
+<h4 class="font-body-md text-body-md font-bold text-on-surface line-through">Jasmine Green Tea</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">Size M, 0% Sugar, Hot</p>
+</div>
+</div>
+<hr class="border-outline-variant/20 border-dashed"/>
+<div class="flex gap-3">
+<div class="w-8 h-8 rounded bg-primary/10 flex items-center justify-center font-bold text-primary flex-shrink-0">1x</div>
+<div>
+<h4 class="font-body-md text-body-md font-bold text-on-surface">Brown Sugar Boba</h4>
+<ul class="font-body-sm text-body-sm text-on-surface-variant mt-1 list-disc list-inside">
+<li>Size L</li>
+<li>Normal Sugar, Normal Ice</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="p-component-padding-md bg-surface-container-low/50 mt-auto border-t border-outline-variant/10">
+<button class="w-full py-2 bg-status-free text-on-primary rounded-lg font-label-md text-label-md shadow-sm hover:opacity-90 transition-opacity active:scale-95 flex items-center justify-center gap-1">
+<span class="material-symbols-outlined text-[18px]">check</span> Complete Order
+                    </button>
+</div>
+</article>
+<!-- New Order Card -->
+<article class="bg-surface-container-lowest rounded-xl shadow-sm border-l-4 border-l-outline-variant flex flex-col overflow-hidden transition-transform duration-200 hover:-translate-y-1">
+<div class="p-component-padding-md border-b border-outline-variant/20 flex justify-between items-start">
+<div>
+<div class="flex items-center gap-2 mb-1">
+<span class="font-headline-sm text-headline-sm font-bold text-on-surface">#1044</span>
+<span class="px-2 py-1 bg-surface-container-high text-on-surface-variant rounded-full font-label-md text-label-md flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">schedule</span> Just now
+                            </span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Delivery • Grab</p>
+</div>
+<span class="px-3 py-1 bg-surface-container-high text-on-surface-variant rounded-full font-label-md text-label-md">Pending</span>
+</div>
+<div class="p-component-padding-md flex-1 flex flex-col gap-3">
+<div class="flex gap-3">
+<div class="w-8 h-8 rounded bg-primary/10 flex items-center justify-center font-bold text-primary flex-shrink-0">3x</div>
+<div>
+<h4 class="font-body-md text-body-md font-bold text-on-surface">Peach Oolong Tea</h4>
+<ul class="font-body-sm text-body-sm text-on-surface-variant mt-1 list-disc list-inside">
+<li>Size M</li>
+<li>70% Sugar, Less Ice</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="p-component-padding-md bg-surface-container-low/50 flex gap-2 mt-auto border-t border-outline-variant/10">
+<button class="flex-1 py-2 bg-primary text-on-primary rounded-lg font-label-md text-label-md shadow-sm hover:bg-primary-container hover:text-on-primary-container transition-colors active:scale-95 flex items-center justify-center gap-1">
+<span class="material-symbols-outlined text-[18px]">play_arrow</span> Start
+                    </button>
+</div>
+</article>
+</div>
+</main>
+</body></html>

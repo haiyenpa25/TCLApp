@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Tiệm Của Lá - Mobile Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&amp;family=Plus+Jakarta+Sans:wght@600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "background": "#f8faf5",
+                      "surface-container": "#edeeea",
+                      "surface-container-low": "#f2f4f0",
+                      "on-secondary-container": "#794e2e",
+                      "error-container": "#ffdad6",
+                      "status-preparing": "#FFC107",
+                      "tertiary-fixed": "#e5e2da",
+                      "on-error": "#ffffff",
+                      "surface": "#f8faf5",
+                      "on-tertiary-fixed-variant": "#474741",
+                      "surface-container-high": "#e7e9e4",
+                      "error": "#ba1a1a",
+                      "on-primary": "#ffffff",
+                      "outline-variant": "#c2c9bb",
+                      "secondary": "#805533",
+                      "outline": "#72796e",
+                      "secondary-container": "#fdc39a",
+                      "on-background": "#191c1a",
+                      "surface-dim": "#d9dbd6",
+                      "on-secondary-fixed": "#301400",
+                      "status-occupied": "#FF9800",
+                      "primary-container": "#2d5a27",
+                      "on-primary-fixed": "#002201",
+                      "surface-container-highest": "#e1e3df",
+                      "surface-bright": "#f8faf5",
+                      "inverse-primary": "#a1d494",
+                      "status-free": "#4CAF50",
+                      "on-tertiary-container": "#c5c2bb",
+                      "surface-variant": "#e1e3df",
+                      "primary-fixed-dim": "#a1d494",
+                      "inverse-surface": "#2e312e",
+                      "secondary-fixed-dim": "#f4bb92",
+                      "primary": "#154212",
+                      "surface-cream": "#FDFCF8",
+                      "on-primary-fixed-variant": "#23501e",
+                      "tertiary": "#3a3934",
+                      "tertiary-fixed-dim": "#c9c6bf",
+                      "status-urgent": "#D32F2F",
+                      "on-surface-variant": "#42493e",
+                      "on-secondary-fixed-variant": "#653d1e",
+                      "secondary-fixed": "#ffdcc5",
+                      "surface-tint": "#3b6934",
+                      "on-tertiary": "#ffffff",
+                      "on-tertiary-fixed": "#1c1c17",
+                      "on-error-container": "#93000a",
+                      "status-reserved": "#2196F3",
+                      "on-secondary": "#ffffff",
+                      "tertiary-container": "#51504a",
+                      "surface-container-lowest": "#ffffff",
+                      "primary-fixed": "#bcf0ae",
+                      "on-surface": "#191c1a",
+                      "inverse-on-surface": "#f0f1ed",
+                      "on-primary-container": "#9dd090"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "component-padding-lg": "16px 24px",
+                      "component-padding-sm": "8px 12px",
+                      "unit": "8px",
+                      "component-padding-md": "12px 20px",
+                      "gutter": "16px",
+                      "container-margin": "24px"
+              },
+              "fontFamily": {
+                      "display-lg": [
+                              "Plus Jakarta Sans"
+                      ],
+                      "headline-lg-mobile": [
+                              "Plus Jakarta Sans"
+                      ],
+                      "label-md": [
+                              "Inter"
+                      ],
+                      "headline-lg": [
+                              "Plus Jakarta Sans"
+                      ],
+                      "headline-sm": [
+                              "Plus Jakarta Sans"
+                      ],
+                      "body-md": [
+                              "Inter"
+                      ],
+                      "headline-md": [
+                              "Plus Jakarta Sans"
+                      ],
+                      "body-sm": [
+                              "Inter"
+                      ],
+                      "body-lg": [
+                              "Inter"
+                      ]
+              },
+              "fontSize": {
+                      "display-lg": [
+                              "48px",
+                              {
+                                      "lineHeight": "56px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "headline-lg-mobile": [
+                              "28px",
+                              {
+                                      "lineHeight": "36px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "label-md": [
+                              "12px",
+                              {
+                                      "lineHeight": "16px",
+                                      "letterSpacing": "0.05em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "headline-lg": [
+                              "32px",
+                              {
+                                      "lineHeight": "40px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "headline-sm": [
+                              "20px",
+                              {
+                                      "lineHeight": "28px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "body-md": [
+                              "16px",
+                              {
+                                      "lineHeight": "24px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "headline-md": [
+                              "24px",
+                              {
+                                      "lineHeight": "32px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "body-sm": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "body-lg": [
+                              "18px",
+                              {
+                                      "lineHeight": "28px",
+                                      "fontWeight": "400"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+      </script>
+</head>
+<body class="bg-surface-cream text-on-surface antialiased">
+<!-- Top Navigation (Mobile Adapted) -->
+<header class="bg-surface border-b border-outline-variant w-full h-16 flex justify-between items-center px-6 z-40 sticky top-0 shadow-sm">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center font-bold font-headline-sm">L</div>
+<h1 class="font-headline-sm text-headline-sm font-bold text-primary">Tiệm Của Lá</h1>
+</div>
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-primary">notifications</span>
+<div class="w-8 h-8 rounded-full bg-surface-variant flex items-center justify-center">
+<span class="material-symbols-outlined text-on-surface-variant text-sm">person</span>
+</div>
+</div>
+</header>
+<main class="p-gutter flex flex-col gap-6 pb-24 max-w-lg mx-auto">
+<!-- Header -->
+<div>
+<h2 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface">Overview</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Today's Performance</p>
+</div>
+<!-- KPIs Grid (Bento Style) -->
+<div class="grid grid-cols-2 gap-4">
+<!-- Revenue -->
+<div class="bg-surface-container-lowest p-component-padding-md rounded-xl shadow-[0_4px_12px_rgba(21,66,18,0.04)] border border-outline-variant/20 flex flex-col gap-2">
+<div class="flex items-center gap-2 text-on-surface-variant mb-1">
+<span class="material-symbols-outlined text-primary text-sm" style="font-variation-settings: 'FILL' 1;">payments</span>
+<span class="font-label-md text-label-md uppercase">Revenue</span>
+</div>
+<div class="font-headline-md text-headline-md text-on-surface">₫12.4M</div>
+<div class="font-body-sm text-body-sm text-status-free flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">trending_up</span>
+                    +8.2%
+                </div>
+</div>
+<!-- Orders -->
+<div class="bg-surface-container-lowest p-component-padding-md rounded-xl shadow-[0_4px_12px_rgba(21,66,18,0.04)] border border-outline-variant/20 flex flex-col gap-2">
+<div class="flex items-center gap-2 text-on-surface-variant mb-1">
+<span class="material-symbols-outlined text-primary text-sm" style="font-variation-settings: 'FILL' 1;">receipt_long</span>
+<span class="font-label-md text-label-md uppercase">Orders</span>
+</div>
+<div class="font-headline-md text-headline-md text-on-surface">142</div>
+<div class="font-body-sm text-body-sm text-status-urgent flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">trending_down</span>
+                    -2.1%
+                </div>
+</div>
+<!-- Net Profit (Full Width) -->
+<div class="col-span-2 bg-primary-container p-component-padding-md rounded-xl shadow-[0_4px_12px_rgba(21,66,18,0.08)] flex justify-between items-center relative overflow-hidden">
+<!-- Decorative subtle element -->
+<div class="absolute right-[-20%] top-[-50%] w-48 h-48 bg-primary rounded-full opacity-10 blur-xl"></div>
+<div class="flex flex-col gap-1 z-10">
+<div class="flex items-center gap-2 text-on-primary-container/80 mb-1">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">account_balance</span>
+<span class="font-label-md text-label-md uppercase">Net Profit</span>
+</div>
+<div class="font-headline-lg-mobile text-headline-lg-mobile text-on-primary-container">₫4.1M</div>
+</div>
+<div class="bg-surface-container-lowest/20 rounded-full px-3 py-1 backdrop-blur-sm z-10 flex items-center gap-1">
+<span class="material-symbols-outlined text-on-primary-container text-sm">arrow_upward</span>
+<span class="font-label-md text-label-md text-on-primary-container">+12%</span>
+</div>
+</div>
+</div>
+<!-- Revenue Trend Chart Placeholder -->
+<div class="bg-surface-container-lowest p-component-padding-md rounded-xl shadow-[0_4px_12px_rgba(21,66,18,0.04)] border border-outline-variant/20 flex flex-col gap-4">
+<div class="flex justify-between items-center">
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Revenue Trend</h3>
+<button class="font-label-md text-label-md text-primary flex items-center gap-1">
+                     Today <span class="material-symbols-outlined text-sm">expand_more</span>
+</button>
+</div>
+<!-- CSS based simplified chart representation -->
+<div class="h-32 w-full flex items-end gap-2 pt-4 relative border-b border-outline-variant/30">
+<!-- Y-axis rough labels -->
+<div class="absolute left-0 top-0 h-full flex flex-col justify-between text-[10px] text-on-surface-variant pb-1">
+<span>20M</span>
+<span>10M</span>
+<span>0</span>
+</div>
+<div class="w-full flex items-end justify-between px-6 h-full">
+<div class="w-[12%] bg-surface-variant rounded-t-sm h-[40%]"></div>
+<div class="w-[12%] bg-surface-variant rounded-t-sm h-[60%]"></div>
+<div class="w-[12%] bg-surface-variant rounded-t-sm h-[30%]"></div>
+<div class="w-[12%] bg-primary rounded-t-sm h-[85%] relative">
+<div class="absolute -top-6 left-1/2 transform -translate-x-1/2 bg-on-surface text-surface text-[10px] py-0.5 px-1.5 rounded whitespace-nowrap">Peak</div>
+</div>
+<div class="w-[12%] bg-surface-variant rounded-t-sm h-[50%]"></div>
+<div class="w-[12%] bg-surface-variant rounded-t-sm h-[70%]"></div>
+</div>
+</div>
+<div class="flex justify-between px-6 text-[10px] text-on-surface-variant uppercase font-label-md">
+<span>8a</span>
+<span>10a</span>
+<span>12p</span>
+<span>2p</span>
+<span>4p</span>
+<span>6p</span>
+</div>
+</div>
+<!-- Top Selling Products -->
+<div class="flex flex-col gap-3">
+<div class="flex justify-between items-end mb-2">
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Top Products</h3>
+<a class="font-label-md text-label-md text-primary hover:underline" href="#">View All</a>
+</div>
+<!-- Product List -->
+<div class="bg-surface-container-lowest rounded-xl shadow-[0_4px_12px_rgba(21,66,18,0.04)] border border-outline-variant/20 overflow-hidden">
+<!-- Item 1 -->
+<div class="flex items-center gap-4 p-3 border-b border-outline-variant/20 last:border-0">
+<div class="w-12 h-12 rounded-lg bg-surface-variant overflow-hidden shrink-0">
+<img class="w-full h-full object-cover" data-alt="A close-up studio shot of a refreshing iced matcha latte in a clear tall glass, condensation on the outside. High key lighting, modern minimalist organic food photography style, light airy background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCtFWSKh0vW6KA8NpJjSCDZozFlLmP6wXoOF_z2evfPRjSO3PqYcrYsBds7NUUzclIwEMkuhWPyUl4o-NYk3OIX791qfavg23xYjJYo6Nu7CgxKReTBms_y_EXX2QOS4ivvZSGKfjXT0xTl_6xt0EV9osyjw5WhWgXalytQu-k0YAZhJESqK8Gihgh9nqJG35uweXSIi9LmZFxE3SCuPJe-7GGYJf9wFZBOtBbX2DS_lkJ5MoeZXgdyZA"/>
+</div>
+<div class="flex-grow flex flex-col">
+<span class="font-body-md text-body-md font-semibold text-on-surface">Iced Matcha Latte</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">42 sold</span>
+</div>
+<div class="font-body-md text-body-md font-semibold text-primary">
+                         ₫2.1M
+                     </div>
+</div>
+<!-- Item 2 -->
+<div class="flex items-center gap-4 p-3 border-b border-outline-variant/20 last:border-0">
+<div class="w-12 h-12 rounded-lg bg-surface-variant overflow-hidden shrink-0">
+<img class="w-full h-full object-cover" data-alt="A top-down studio shot of an artisanal cold brew coffee over ice in a stout glass. Minimalist cafe setting, bright natural light, crisp clear ice cubes, earthy organic modern vibe." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCaqMgb5jcsbe_Xh9V4bc7jtxoAF96_9CoEyTZuI3GtdQbdgDaXg5SCmpjhlNqIALSxhhw58fjNInHLVRrZqKP94V6mG6kQIDoL_8fKK1zCyfqoCuu-PGrqs-fN63XlE-nh03UfD0YpnYwkV2zMFinW5nNG_IgYGvMP22OVIuaZyeU_gVik5dVmCV9ENVDdziedBUiLg0YESdvBUA4UPE7csmycCAWP6AaX7XMFtOJbSNw6495Dj8VoXg"/>
+</div>
+<div class="flex-grow flex flex-col">
+<span class="font-body-md text-body-md font-semibold text-on-surface">Artisan Cold Brew</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">38 sold</span>
+</div>
+<div class="font-body-md text-body-md font-semibold text-primary">
+                         ₫1.9M
+                     </div>
+</div>
+<!-- Item 3 -->
+<div class="flex items-center gap-4 p-3 border-b border-outline-variant/20 last:border-0">
+<div class="w-12 h-12 rounded-lg bg-surface-variant overflow-hidden shrink-0">
+<img class="w-full h-full object-cover" data-alt="A slice of organic avocado toast on dark rye bread, garnished with microgreens. Shot from a 45-degree angle on a light cream surface. Bright, clean, modern organic cafe aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBL5fPxKSvgACK5PdO8U0WoPsjS1JHxvq8pqYIzHxLC-js3hXIxZjrBzFWg-p-bzJTc3rZvsrqAGqabmEzR76TiAxyI3BmEUnHuExqhb-QThsqZPtWmsG4CHevUIgnL6Iu18Fwjkn2nXV5s8xm7KX-MSQ_ayuFmsCyzLXsRq6ahwyog6XoKu8NNFvLb9h-iCYRaBVKARC0oYZPjx1MYFwghZ5yO2N9qaHAPM3XjG4U-umH_Jysih5xt0w"/>
+</div>
+<div class="flex-grow flex flex-col">
+<span class="font-body-md text-body-md font-semibold text-on-surface">Avocado Toast</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">25 sold</span>
+</div>
+<div class="font-body-md text-body-md font-semibold text-primary">
+                         ₫1.5M
+                     </div>
+</div>
+</div>
+</div>
+</main>
+<!-- Bottom Navigation Bar (Mobile specific) -->
+<nav class="fixed bottom-0 left-0 w-full bg-surface-container-lowest border-t border-outline-variant shadow-[0_-4px_16px_rgba(21,66,18,0.05)] pb-safe pt-2 px-4 flex justify-between items-center z-50 md:hidden">
+<a class="flex flex-col items-center gap-1 p-2 min-w-[64px] text-primary" href="#">
+<div class="bg-secondary-container px-4 py-1 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">dashboard</span>
+</div>
+<span class="font-label-md text-label-md text-[10px]">Dashboard</span>
+</a>
+<a class="flex flex-col items-center gap-1 p-2 min-w-[64px] text-on-surface-variant hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">point_of_sale</span>
+<span class="font-label-md text-label-md text-[10px]">POS</span>
+</a>
+<a class="flex flex-col items-center gap-1 p-2 min-w-[64px] text-on-surface-variant hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">assignment</span>
+<span class="font-label-md text-label-md text-[10px]">Orders</span>
+</a>
+<a class="flex flex-col items-center gap-1 p-2 min-w-[64px] text-on-surface-variant hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-md text-label-md text-[10px]">Settings</span>
+</a>
+</nav>
+</body></html>

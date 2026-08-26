@@ -1,0 +1,13 @@
+# Clasp ignore file
+node_modules/**
+package.json
+package-lock.json
+vue.min.js
+*.png
+run_vue_test.js
+docs/**
+SPECIFICATION.md
+README.md
+*.md
+.git/**
+.gitignore

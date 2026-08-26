@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Task Management - Tiệm Của Lá</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "background": "#f8faf5",
+                        "surface-container": "#edeeea",
+                        "surface-container-low": "#f2f4f0",
+                        "on-secondary-container": "#794e2e",
+                        "error-container": "#ffdad6",
+                        "status-preparing": "#FFC107",
+                        "tertiary-fixed": "#e5e2da",
+                        "on-error": "#ffffff",
+                        "surface": "#f8faf5",
+                        "on-tertiary-fixed-variant": "#474741",
+                        "surface-container-high": "#e7e9e4",
+                        "error": "#ba1a1a",
+                        "on-primary": "#ffffff",
+                        "outline-variant": "#c2c9bb",
+                        "secondary": "#805533",
+                        "outline": "#72796e",
+                        "secondary-container": "#fdc39a",
+                        "on-background": "#191c1a",
+                        "surface-dim": "#d9dbd6",
+                        "on-secondary-fixed": "#301400",
+                        "status-occupied": "#FF9800",
+                        "primary-container": "#2d5a27",
+                        "on-primary-fixed": "#002201",
+                        "surface-container-highest": "#e1e3df",
+                        "surface-bright": "#f8faf5",
+                        "inverse-primary": "#a1d494",
+                        "status-free": "#4CAF50",
+                        "on-tertiary-container": "#c5c2bb",
+                        "surface-variant": "#e1e3df",
+                        "primary-fixed-dim": "#a1d494",
+                        "inverse-surface": "#2e312e",
+                        "secondary-fixed-dim": "#f4bb92",
+                        "primary": "#154212",
+                        "surface-cream": "#FDFCF8",
+                        "on-primary-fixed-variant": "#23501e",
+                        "tertiary": "#3a3934",
+                        "tertiary-fixed-dim": "#c9c6bf",
+                        "status-urgent": "#D32F2F",
+                        "on-surface-variant": "#42493e",
+                        "on-secondary-fixed-variant": "#653d1e",
+                        "secondary-fixed": "#ffdcc5",
+                        "surface-tint": "#3b6934",
+                        "on-tertiary": "#ffffff",
+                        "on-tertiary-fixed": "#1c1c17",
+                        "on-error-container": "#93000a",
+                        "status-reserved": "#2196F3",
+                        "on-secondary": "#ffffff",
+                        "tertiary-container": "#51504a",
+                        "surface-container-lowest": "#ffffff",
+                        "primary-fixed": "#bcf0ae",
+                        "on-surface": "#191c1a",
+                        "inverse-on-surface": "#f0f1ed",
+                        "on-primary-container": "#9dd090"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "component-padding-lg": "16px 24px",
+                        "component-padding-sm": "8px 12px",
+                        "unit": "8px",
+                        "component-padding-md": "12px 20px",
+                        "gutter": "16px",
+                        "container-margin": "24px"
+                    },
+                    "fontFamily": {
+                        "display-lg": ["Plus Jakarta Sans"],
+                        "headline-lg-mobile": ["Plus Jakarta Sans"],
+                        "label-md": ["Inter"],
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "headline-sm": ["Plus Jakarta Sans"],
+                        "body-md": ["Inter"],
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "body-sm": ["Inter"],
+                        "body-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "headline-lg-mobile": ["28px", { "lineHeight": "36px", "fontWeight": "600" }],
+                        "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "fontWeight": "600" }],
+                        "headline-sm": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { background-color: #f8faf5; }
+        .task-card {
+            box-shadow: 0 4px 6px -1px rgba(21, 66, 18, 0.04), 0 2px 4px -1px rgba(21, 66, 18, 0.02);
+            transition: all 0.2s ease;
+        }
+        .task-card:active {
+            transform: scale(0.98);
+            box-shadow: 0 1px 3px 0 rgba(21, 66, 18, 0.04);
+        }
+        
+        /* Custom Checkbox */
+        .custom-checkbox {
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            border: 2px solid #c2c9bb; /* outline-variant */
+            border-radius: 6px;
+            background-color: white;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .custom-checkbox:checked {
+            background-color: #154212; /* primary */
+            border-color: #154212;
+        }
+        .custom-checkbox:checked::after {
+            content: '\e5ca'; /* Material symbol check */
+            font-family: 'Material Symbols Outlined';
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md min-h-screen flex flex-col md:hidden pb-[80px]">
+<!-- Header -->
+<header class="bg-surface sticky top-0 z-30 border-b border-outline-variant/30 px-gutter py-4 flex items-center justify-between shadow-sm">
+<h1 class="font-headline-sm text-headline-sm text-primary font-bold">Tasks</h1>
+<button class="w-10 h-10 flex items-center justify-center rounded-full bg-surface-container-low text-primary active:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined">filter_list</span>
+</button>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-1 p-gutter space-y-6">
+<!-- Progress Summary -->
+<section class="bg-surface-container-lowest rounded-xl p-4 task-card border border-outline-variant/20 flex gap-4 items-center">
+<div class="relative w-16 h-16 flex-shrink-0">
+<svg class="w-full h-full transform -rotate-90" viewbox="0 0 36 36">
+<path class="text-surface-container-high" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="3.8"></path>
+<path class="text-primary" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-dasharray="60, 100" stroke-width="4"></path>
+</svg>
+<div class="absolute inset-0 flex items-center justify-center font-label-md text-label-md font-bold text-primary">
+                    60%
+                </div>
+</div>
+<div>
+<h2 class="font-headline-sm text-headline-sm font-semibold text-on-surface">Daily Progress</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant">12 of 20 tasks completed today</p>
+</div>
+</section>
+<!-- Overdue Tasks -->
+<section>
+<h3 class="font-label-md text-label-md text-status-urgent flex items-center gap-2 mb-3 uppercase tracking-wider">
+<span class="material-symbols-outlined text-[16px]">error</span> Overdue
+            </h3>
+<div class="space-y-3">
+<!-- Task Item -->
+<div class="bg-surface-container-lowest rounded-xl p-4 task-card border-l-4 border-status-urgent flex gap-3">
+<div class="pt-1">
+<input class="custom-checkbox" type="checkbox"/>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start mb-1">
+<h4 class="font-body-md text-body-md font-medium text-on-surface">Deep clean espresso machine</h4>
+<span class="bg-status-urgent/10 text-status-urgent font-label-md text-[10px] px-2 py-0.5 rounded-full">High</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-2">Due Yesterday</p>
+<div class="flex items-center gap-2">
+<img class="w-6 h-6 rounded-full object-cover border border-outline-variant/30" data-alt="A small circular avatar photo of a barista in a green apron working in a bright modern cafe setting, soft natural lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD2SlqpOrMLrgoibIGndHj_A2oJQEcy4diXTehU3GyyY41puHJ6NYhOjXGlCWVI5IK67vWoilbjXm2ro2GpnFsmFbVLIXDkUb3yfsYr1eSIbxCj21IZlFG9eaxOEJo6pStcvIF2znAzki7zwJnfnw818klKrs7ZCPwsd2gyUZIf0vWf0M_LaXHhM51CfQK8PLQAt1yyk_NTgUh6qtx9T-uXnTpMUkrma_5ZAH87NOI16T3ylRbMQwp62A"/>
+<span class="font-label-md text-[11px] text-on-surface-variant">Assigned to: Minh</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Pending Today Tasks -->
+<section>
+<h3 class="font-label-md text-label-md text-primary flex items-center gap-2 mb-3 uppercase tracking-wider">
+<span class="material-symbols-outlined text-[16px]">today</span> Pending Today
+            </h3>
+<div class="space-y-3">
+<!-- Task Item -->
+<div class="bg-surface-container-lowest rounded-xl p-4 task-card border-l-4 border-status-preparing flex gap-3">
+<div class="pt-1">
+<input class="custom-checkbox" type="checkbox"/>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start mb-1">
+<h4 class="font-body-md text-body-md font-medium text-on-surface">Restock paper cups &amp; lids</h4>
+<span class="bg-status-preparing/15 text-on-surface font-label-md text-[10px] px-2 py-0.5 rounded-full">Medium</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-2">Before 2:00 PM</p>
+<div class="flex items-center gap-2">
+<img class="w-6 h-6 rounded-full object-cover border border-outline-variant/30" data-alt="A small circular avatar photo of a cafe manager in a crisp white shirt standing in a well-lit minimalist bakery." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBZBzI4ZbBDHdXJaCoq-kgpBRq33eWJQrbdr7Mr7IyOHLK42felHEC1zso4SQZpS3uzV-5T8PrU9cUbr6vfhyrTqOPzy7Kfa3lAM-TEP77v3Vx5EFV7xa_mN37__MzFCwQfQWBTlgoMtyL8x5ecHE7--KyaFWw2qRTwkyKxi4_Ef9IR7fUdY3ff-2tiG8MzQ-Axkwej1RMEyoHFlryJ78djOVZeneyoi2JB2kRC1TnM_HZEn9ZwJ_ZpSg"/>
+<span class="font-label-md text-[11px] text-on-surface-variant">Assigned to: Lan</span>
+</div>
+</div>
+</div>
+<!-- Task Item -->
+<div class="bg-surface-container-lowest rounded-xl p-4 task-card border-l-4 border-surface-variant flex gap-3">
+<div class="pt-1">
+<input class="custom-checkbox" type="checkbox"/>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start mb-1">
+<h4 class="font-body-md text-body-md font-medium text-on-surface">Update seasonal menu board</h4>
+<span class="bg-surface-container-high text-on-surface-variant font-label-md text-[10px] px-2 py-0.5 rounded-full">Low</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-2">End of shift</p>
+<div class="flex items-center gap-2">
+<img class="w-6 h-6 rounded-full object-cover border border-outline-variant/30" data-alt="A small circular avatar photo of a barista in a green apron working in a bright modern cafe setting, soft natural lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB3xi8BrBe8Hx2FprrXUzU55sGtlWoHYlgHcIgKpSAmakdZQeD2pqW3T22MnphhASNtNMpbLrRbfF6clYsY4gBUZXXcY_5ZVdRIGE2PwPNMxum5zjhzK5KXIW4_mq9iIOSD_3cSJ6jtRJrIJBG17vP8fv-mID-eKEO0Awiu33axh8xypV4xx7n-J9h0m--DHaa1ZaXaNUtGtTvoSV3QM3c1QT4pDxvWFiI_tIDops2RAHwWkq2IqcgRDg"/>
+<span class="font-label-md text-[11px] text-on-surface-variant">Assigned to: Minh</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Completed Tasks -->
+<section>
+<h3 class="font-label-md text-label-md text-outline flex items-center gap-2 mb-3 uppercase tracking-wider">
+<span class="material-symbols-outlined text-[16px]">check_circle</span> Completed
+            </h3>
+<div class="space-y-3 opacity-60">
+<!-- Task Item -->
+<div class="bg-surface-container-low rounded-xl p-4 border border-outline-variant/30 flex gap-3">
+<div class="pt-1">
+<input checked="" class="custom-checkbox" disabled="" type="checkbox"/>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start mb-1">
+<h4 class="font-body-md text-body-md font-medium text-outline line-through">Morning inventory count</h4>
+</div>
+<p class="font-body-sm text-body-sm text-outline mb-2">Completed at 8:30 AM</p>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- FAB for adding tasks -->
+<button class="fixed bottom-24 right-6 w-14 h-14 bg-primary text-on-primary rounded-full shadow-lg flex items-center justify-center hover:bg-primary-container hover:text-on-primary-container active:scale-95 transition-all z-20">
+<span class="material-symbols-outlined" style="font-size: 28px;">add</span>
+</button>
+<!-- BottomNavBar (Semantic Shell mapping: Tasks) -->
+<nav class="fixed bottom-0 left-0 w-full bg-surface border-t border-outline-variant/20 shadow-[0_-2px_10px_rgba(0,0,0,0.02)] z-40 pb-safe md:hidden flex justify-around items-center h-[72px] px-2">
+<a class="flex flex-col items-center justify-center w-16 h-full gap-1 text-on-surface-variant hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-md text-[10px]">Dashboard</span>
+</a>
+<a class="flex flex-col items-center justify-center w-16 h-full gap-1 text-on-surface-variant hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">point_of_sale</span>
+<span class="font-label-md text-[10px]">POS</span>
+</a>
+<!-- Active Tab -->
+<a class="flex flex-col items-center justify-center w-16 h-full gap-1 text-primary relative" href="#">
+<div class="absolute -top-1 w-8 h-1 bg-primary rounded-b-full"></div>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">assignment</span>
+<span class="font-label-md text-[10px] font-bold">Tasks</span>
+</a>
+<a class="flex flex-col items-center justify-center w-16 h-full gap-1 text-on-surface-variant hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">account_balance_wallet</span>
+<span class="font-label-md text-[10px]">Expenses</span>
+</a>
+</nav>
+</body></html>
