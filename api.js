@@ -23,7 +23,21 @@ function genId(prefix) {
 function withErrorHandling(fn) {
   try {
     var result = fn();
-    return result !== undefined ? result : { success: true };
+    return result !== undefined ? result : { success: true }
+
+function withLock(fn, timeoutMs) {
+  timeoutMs = timeoutMs || 10000;
+  return withErrorHandling(function() {
+    var lock = LockService.getScriptLock();
+    try {
+      lock.waitLock(timeoutMs);
+      return fn();
+    } finally {
+      try { lock.releaseLock(); } catch(e) {}
+    }
+  });
+}
+;
   } catch (e) {
     Logger.log('[API Error] ' + e.message + '\n' + (e.stack || ''));
     return { success: false, error: String(e && e.message ? e.message : e) };
@@ -170,7 +184,7 @@ function getSettings() {
 }
 
 function saveSettings(data) {
-  return withErrorHandling(function() {
+  return withLock(function() {
     var p = PropertiesService.getScriptProperties();
     if (data.shopName)    p.setProperty('SHOP_NAME',    data.shopName);
     if (data.slogan)      p.setProperty('SHOP_SLOGAN',  data.slogan);
@@ -217,7 +231,7 @@ function getMenuAdmin() {
 }
 
 function addProduct(data) {
-  return withErrorHandling(function() {
+  return withLock(function() {
     var id = 'P-' + new Date().getTime();
     var item = {
       ID: id, Name: data.name, Category: data.category,
@@ -231,7 +245,7 @@ function addProduct(data) {
 }
 
 function updateProduct(id, data) {
-  return withErrorHandling(function() {
+  return withLock(function() {
     var updates = {};
     if (data.name     !== undefined) updates.Name     = data.name;
     if (data.category !== undefined) updates.Category = data.category;
@@ -248,7 +262,7 @@ function updateProduct(id, data) {
 }
 
 function deleteProduct(id) {
-  return withErrorHandling(function() {
+  return withLock(function() {
     deleteRowFromSheet(SHEETS.PRODUCTS, 'ID', id);
     CacheService.getScriptCache().removeAll(['menu_pub', 'menu_admin']);
     return { success: true, id: id };
@@ -258,7 +272,7 @@ function deleteProduct(id) {
 // ── TOPPINGS CRUD ─────────────────────────────────────────────────────────────
 
 function addTopping(data) {
-  return withErrorHandling(function() {
+  return withLock(function() {
     var id = 'T-' + new Date().getTime();
     var item = { ID: id, Name: data.name, Price: Number(data.price), Status: 'ACTIVE' };
     appendRowToSheet(SHEETS.TOPPINGS, item);
@@ -268,7 +282,7 @@ function addTopping(data) {
 }
 
 function updateTopping(id, data) {
-  return withErrorHandling(function() {
+  return withLock(function() {
     var updates = {};
     if (data.name   !== undefined) updates.Name   = data.name;
     if (data.price  !== undefined) updates.Price  = Number(data.price);
@@ -280,7 +294,7 @@ function updateTopping(id, data) {
 }
 
 function deleteTopping(id) {
-  return withErrorHandling(function() {
+  return withLock(function() {
     deleteRowFromSheet(SHEETS.TOPPINGS, 'ID', id);
     CacheService.getScriptCache().removeAll(['menu_pub', 'menu_admin']);
     return { success: true, id: id };
@@ -704,13 +718,13 @@ function getTables() {
 }
 
 function resetTable(tableId) {
-  return withErrorHandling(function() {
+  return withLock(function() {
     return { success: updateRowInSheet(SHEETS.TABLES, 'ID', tableId, { Status: 'FREE' }) };
   });
 }
 
 function addTable(data) {
-  return withErrorHandling(function() {
+  return withLock(function() {
     var existing = getSheetData(SHEETS.TABLES, false);
     var id = 'TBL' + String(existing.length + 1).padStart(2, '0');
     var item = {
@@ -723,7 +737,7 @@ function addTable(data) {
 }
 
 function deleteTable(id) {
-  return withErrorHandling(function() {
+  return withLock(function() {
     deleteRowFromSheet(SHEETS.TABLES, 'ID', id);
     return { success: true, id: id };
   });
@@ -768,7 +782,7 @@ function getAppUrl() {
 // ── EXPENSES ──────────────────────────────────────────────────────────────────
 
 function addExpense(data) {
-  return withErrorHandling(function() {
+  return withLock(function() {
     var id   = 'EXP-' + new Date().getTime();
     var date = data.date || new Date().toISOString().split('T')[0];
     var item = {
@@ -794,14 +808,14 @@ function getExpenses(date) {
 }
 
 function deleteExpense(id) {
-  return withErrorHandling(function() {
+  return withLock(function() {
     deleteRowFromSheet(SHEETS.EXPENSES, 'ID', id);
     return { success: true, id: id };
   });
 }
 
 function updateExpense(id, data) {
-  return withErrorHandling(function() {
+  return withLock(function() {
     var updates = {};
     if (data.category        !== undefined) updates.Category        = data.category;
     if (data.description     !== undefined) updates.Description     = data.description;
@@ -994,7 +1008,7 @@ function searchCustomer(phone) {
 }
 
 function saveCustomer(data) {
-  return withErrorHandling(function() {
+  return withLock(function() {
     if (data.id) {
       updateRowInSheet(SHEETS.CUSTOMERS, 'ID', data.id, {
         Name: data.name || '', Phone: data.phone || '',
@@ -1149,7 +1163,7 @@ function searchCustomers(phone) { return searchCustomer(phone); }
 function getCustomerOrders(customerId) { return getCustomerHistory(customerId); }
 
 function updateTableStatus(tableId, status) {
-  return withErrorHandling(function() {
+  return withLock(function() {
     var allowed = ['FREE', 'OCCUPIED', 'RESERVED'];
     var st = String(status).toUpperCase();
     if (!allowed.includes(st)) return { success: false, error: 'Trạng thái không hợp lệ: ' + status };
@@ -1172,7 +1186,7 @@ function getStaff() {
 }
 
 function addStaff(data) {
-  return withErrorHandling(function() {
+  return withLock(function() {
     var name = (data && data.name) ? String(data.name).trim() : '';
     if (!name) return { success: false, error: 'Tên nhân viên không được rỗng' };
     var id = genId('NV');
@@ -1184,7 +1198,7 @@ function addStaff(data) {
 }
 
 function updateStaff(data) {
-  return withErrorHandling(function() {
+  return withLock(function() {
     if (!data || !data.id) return { success: false, error: 'Thiếu ID' };
     var updates = {};
     if (data.name)   updates.Name   = String(data.name).trim();
@@ -1196,7 +1210,7 @@ function updateStaff(data) {
 }
 
 function deactivateStaff(id) {
-  return withErrorHandling(function() {
+  return withLock(function() {
     updateRowInSheet(SHEETS.STAFF, 'ID', id, { Status: 'INACTIVE' });
     invalidateCache(SHEETS.STAFF);
     return { success: true, id: id };
@@ -1213,7 +1227,7 @@ function getTaskTemplates() {
 }
 
 function addTaskTemplate(data) {
-  return withErrorHandling(function() {
+  return withLock(function() {
     var id = genId('TMPL');
     var today = Utilities.formatDate(new Date(), Session.getScriptTimeZone(), 'yyyy-MM-dd');
     var item = {
@@ -1235,7 +1249,7 @@ function addTaskTemplate(data) {
 }
 
 function updateTaskTemplate(data) {
-  return withErrorHandling(function() {
+  return withLock(function() {
     if (!data || !data.id) return { success: false, error: 'Thiếu ID template' };
     var updates = {};
     if (data.title        !== undefined) updates.Title        = data.title;
@@ -1254,7 +1268,7 @@ function updateTaskTemplate(data) {
 }
 
 function deleteTaskTemplate(id) {
-  return withErrorHandling(function() {
+  return withLock(function() {
     updateRowInSheet(SHEETS.TASK_TEMPLATES, 'ID', id, { Status: 'DELETED' });
     invalidateCache(SHEETS.TASK_TEMPLATES);
     return { success: true, id: id };
@@ -1262,7 +1276,7 @@ function deleteTaskTemplate(id) {
 }
 
 function toggleTaskTemplate(id) {
-  return withErrorHandling(function() {
+  return withLock(function() {
     var templates = getSheetData(SHEETS.TASK_TEMPLATES, false);
     var t = templates.find(function(x) { return x.ID === id; });
     if (!t) return { success: false, error: 'Template không tồn tại' };
@@ -1375,7 +1389,7 @@ function completeTask(id, note) {
 }
 
 function skipTask(id, note) {
-  return withErrorHandling(function() {
+  return withLock(function() {
     updateRowInSheet(SHEETS.TASK_INSTANCES, 'ID', id, {
       Status: 'SKIPPED',
       Note:   note || '',
@@ -1418,7 +1432,7 @@ function createAdhocTask(data) {
  * @param {'ACTIVE'|'OUT_OF_STOCK'|'INACTIVE'} status
  */
 function toggleProductStock(productId, status) {
-  return withErrorHandling(function() {
+  return withLock(function() {
     var ok = updateRowInSheet(SHEETS.PRODUCTS, 'ID', productId, { Status: status });
     CacheService.getScriptCache().removeAll(['menu_pub', 'menu_admin']);
     return { success: ok, productId: productId, status: status };
