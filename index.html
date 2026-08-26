@@ -263,6 +263,37 @@
         </div>
 
         <!-- Search & Filter Bar -->
+                <!-- ORDER TYPE & TABLE QUICK SELECTOR -->
+        <div class="bg-surface-container-lowest p-2.5 rounded-2xl border border-outline-variant/30 shadow-xs flex flex-wrap items-center justify-between gap-2">
+          <!-- Order Type Segmented Control -->
+          <div class="flex items-center gap-1 bg-surface-container p-1 rounded-xl">
+            <button @click="orderType = 'DINE_IN'" class="px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1" :class="orderType === 'DINE_IN' ? 'bg-primary text-on-primary shadow-xs' : 'text-on-surface-variant hover:text-on-surface'">
+              <span class="material-symbols-outlined text-sm">table_restaurant</span> Tại Bàn
+            </button>
+            <button @click="orderType = 'TAKEAWAY'" class="px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1" :class="orderType === 'TAKEAWAY' ? 'bg-primary text-on-primary shadow-xs' : 'text-on-surface-variant hover:text-on-surface'">
+              <span class="material-symbols-outlined text-sm">shopping_bag</span> Mang Về
+            </button>
+            <button @click="orderType = 'DELIVERY'" class="px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1" :class="orderType === 'DELIVERY' ? 'bg-primary text-on-primary shadow-xs' : 'text-on-surface-variant hover:text-on-surface'">
+              <span class="material-symbols-outlined text-sm">two_wheeler</span> Giao Hàng
+            </button>
+          </div>
+
+          <!-- Table Quick Selector (For Dine-In) -->
+          <div v-if="orderType === 'DINE_IN'" class="flex items-center gap-2">
+            <button @click="showTableSelector = true" class="px-3 py-1.5 bg-primary/10 text-primary border border-primary/30 rounded-xl text-xs font-bold flex items-center gap-1.5 hover:bg-primary/20 transition shadow-xs">
+              <span class="material-symbols-outlined text-sm">event_seat</span>
+              <span>{{ selectedTable ? selectedTable.Name : 'Chọn Bàn Ngồi' }}</span>
+              <span class="material-symbols-outlined text-xs">arrow_drop_down</span>
+            </button>
+            <button v-if="selectedTable" @click="selectedTable = null" class="w-7 h-7 rounded-lg bg-surface-container flex items-center justify-center text-outline hover:text-error text-xs">✕</button>
+          </div>
+
+          <!-- Delivery Address Prompt (For Delivery) -->
+          <div v-if="orderType === 'DELIVERY'" class="flex-1 min-w-[200px]">
+            <input v-model="deliveryAddress" type="text" placeholder="Địa chỉ giao hàng..." class="w-full px-3 py-1.5 bg-surface-container border border-outline-variant/30 rounded-xl text-xs" />
+          </div>
+        </div>
+
         <div class="flex gap-2">
           <div class="relative flex-1">
             <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-lg">search</span>
@@ -326,6 +357,26 @@
             </div>
           </div>
         </div>
+      
+        <!-- Floating Quick Cart Bar (Mobile & Desktop) -->
+        <div v-if="cart.length > 0" class="fixed bottom-16 md:bottom-6 right-3 left-3 md:left-auto md:right-8 z-40 max-w-lg mx-auto">
+          <div class="bg-primary/95 backdrop-blur-md text-on-primary p-3 rounded-2xl shadow-float flex items-center justify-between gap-3 border border-white/20 animate-bounce-subtle">
+            <div class="flex items-center gap-2.5">
+              <div class="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center font-bold text-base">
+                <span class="material-symbols-outlined text-xl">shopping_cart</span>
+              </div>
+              <div>
+                <div class="text-xs font-bold">{{ cartItemCount }} món trong giỏ</div>
+                <div class="font-display font-extrabold text-sm text-green-200">{{ formatVND(cartTotal) }}</div>
+              </div>
+            </div>
+            <button @click="showCartDrawer = true" class="bg-white text-primary px-4 py-2 rounded-xl text-xs font-black flex items-center gap-1.5 hover:bg-green-50 active:scale-95 transition shadow-sm">
+              <span>Xem Giỏ & Đặt Đơn</span>
+              <span class="material-symbols-outlined text-sm font-bold">arrow_forward</span>
+            </button>
+          </div>
+        </div>
+
       </section>
 
       <!-- TAB 2: QUẦY PHA CHẾ & LỊCH SỬ ĐƠN (KDS) -->
@@ -2337,6 +2388,8 @@ function launchVueApp() {
         const usePointsDiscount = ref(false);
         const orderNote = ref('');
         const submittingOrder = ref(false);
+        const lastCreatedOrder = ref(null);
+        const deliveryAddress = ref('');
 
         // Customization Modal State
         const showCustomModal = ref(false);
@@ -2830,9 +2883,10 @@ function launchVueApp() {
           submittingOrder.value = false;
 
           if (res.success) {
-            if (res.data) {
-              activeOrders.value.unshift(res.data);
-            }
+            const created = res.data || { ID: res.orderId || ('ORD-' + Date.now()), ...payload, TotalAmount: payload.totalAmount };
+            activeOrders.value.unshift(created);
+            lastCreatedOrder.value = created;
+
             if (selectedTable.value) {
               const tbl = tables.value.find(t => t.ID === selectedTable.value.ID);
               if (tbl) {
@@ -2844,7 +2898,7 @@ function launchVueApp() {
             showCartDrawer.value = false;
             orderNote.value = '';
             usePointsDiscount.value = false;
-            showToast('Đã gửi đơn hàng thành công!', 'check_circle');
+            showToast('Đã gửi đơn hàng đến quầy pha chế!', 'check_circle');
           } else {
             showToast(res.error || 'Lỗi khi gửi đơn', 'error');
           }
@@ -3528,7 +3582,7 @@ function launchVueApp() {
           // POS & Cart
           cart, cartItemCount, cartTotal, showCartDrawer, showTableSelector, selectedTable, orderType,
           customerName, customerPhone, foundCustomer, usePointsDiscount, pointsDiscountAmount, finalCartTotal,
-          lookupCustomerByPhone, orderNote, submittingOrder, openCustomization, addToCart, removeFromCart,
+          lookupCustomerByPhone, orderNote, submittingOrder, lastCreatedOrder, deliveryAddress, openCustomization, addToCart, removeFromCart,
           increaseCartQty, decreaseCartQty, placeOrder, currentTableName,
           // Customization Modal
           showCustomModal, currentProduct, selectedSize, selectedIce, selectedSugar, selectedToppings, customQuantity,
