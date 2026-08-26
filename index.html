@@ -1441,7 +1441,8 @@
     <!-- ================= MODALS & DRAWERS ================= -->
 
     <!-- MODAL 1: CUSTOMIZATION DRAWER -->
-    <div v-if="showCustomModal && currentProduct" class="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-end sm:items-center justify-center p-0 sm:p-4">
+    <template v-if="showCustomModal && currentProduct">
+    <div class="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-end sm:items-center justify-center p-0 sm:p-4">
       <div class="bg-surface-container-lowest w-full max-w-lg rounded-t-3xl sm:rounded-3xl p-5 shadow-float max-h-[90vh] flex flex-col overflow-hidden animate-slide-up">
         <div class="flex items-start justify-between pb-3 border-b border-outline-variant/20">
           <div class="flex gap-3">
@@ -1515,9 +1516,11 @@
         </div>
       </div>
     </div>
+    </template>
 
     <!-- MODAL 2: CART & CHECKOUT DRAWER -->
-    <div v-if="showCartDrawer" class="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex justify-end">
+    <template v-if="showCartDrawer">
+    <div class="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex justify-end">
       <div class="bg-surface-container-lowest w-full max-w-md h-full p-5 flex flex-col justify-between shadow-float">
         <div class="flex items-center justify-between pb-3 border-b border-outline-variant/20">
           <div class="flex items-center gap-2">
@@ -1605,9 +1608,11 @@
         </div>
       </div>
     </div>
+    </template>
 
     <!-- MODAL 3: CHECKOUT & PAYMENT MODAL -->
-    <div v-if="showCheckoutModal && checkoutOrderData" class="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4">
+    <template v-if="showCheckoutModal && checkoutOrderData">
+    <div class="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4">
       <div class="bg-surface-container-lowest w-full max-w-sm rounded-3xl p-5 shadow-float space-y-4">
         <div class="flex justify-between items-start border-b border-outline-variant/20 pb-3">
           <div>
@@ -1685,9 +1690,11 @@
         </div>
       </div>
     </div>
+    </template>
 
     <!-- MODAL 4: SELECT TABLE (From POS Tab) -->
-    <div v-if="showTableSelector" class="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4">
+    <template v-if="showTableSelector">
+    <div class="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4">
       <div class="bg-surface-container-lowest w-full max-w-sm rounded-3xl p-5 shadow-float space-y-4">
         <div class="flex justify-between items-center border-b border-outline-variant/20 pb-3">
           <h3 class="font-display font-bold text-base text-primary">Chọn Bàn Phục Vụ</h3>
@@ -1704,9 +1711,11 @@
         </div>
       </div>
     </div>
+    </template>
 
     <!-- MODAL 5: TABLE QR CODE STANDEE -->
-    <div v-if="showTableQRModal && currentQRTable" class="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4">
+    <template v-if="showTableQRModal && currentQRTable">
+    <div class="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4">
       <div class="bg-surface-container-lowest w-full max-w-sm rounded-3xl p-6 shadow-float space-y-4 text-center">
         <div class="flex justify-between items-center border-b border-outline-variant/20 pb-3">
           <h3 class="font-display font-bold text-base text-primary">Mã QR Đặt Món: {{ currentQRTable.Name }}</h3>
@@ -1734,9 +1743,11 @@
         </div>
       </div>
     </div>
+    </template>
 
     <!-- MODAL 6: SWITCH TABLE -->
-    <div v-if="showSwitchTableModal && sourceSwitchTable" class="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4">
+    <template v-if="showSwitchTableModal && sourceSwitchTable">
+    <div class="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4">
       <div class="bg-surface-container-lowest w-full max-w-sm rounded-3xl p-5 shadow-float space-y-4">
         <div class="flex justify-between items-center border-b border-outline-variant/20 pb-3">
           <div>
@@ -1761,9 +1772,11 @@
         </button>
       </div>
     </div>
+    </template>
 
     <!-- MODAL 7: THERMAL RECEIPT / KITCHEN SLIP PRINT -->
-    <div v-if="showReceiptModal && receiptOrder" class="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4">
+    <template v-if="showReceiptModal && receiptOrder">
+    <div class="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4">
       <div class="bg-surface-container-lowest w-full max-w-sm rounded-3xl p-5 shadow-float space-y-4 max-h-[90vh] flex flex-col">
         <div class="flex justify-between items-center border-b border-outline-variant/20 pb-3">
           <h3 class="font-display font-bold text-base text-primary">Phiếu Hóa Đơn #{{ receiptOrder.ID.slice(-4) }}</h3>
@@ -1813,9 +1826,11 @@
         </button>
       </div>
     </div>
+    </template>
 
     <!-- MODAL 8: AD-HOC TASK CREATION -->
-    <div v-if="showAdhocTaskModal" class="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4">
+    <template v-if="showAdhocTaskModal">
+    <div class="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4">
       <div class="bg-surface-container-lowest w-full max-w-sm rounded-3xl p-5 shadow-float space-y-4">
         <div class="flex justify-between items-center border-b border-outline-variant/20 pb-3">
           <h3 class="font-display font-bold text-base text-primary">Thêm Việc Đột Xuất Hôm Nay</h3>
@@ -1847,9 +1862,11 @@
         </div>
       </div>
     </div>
+    </template>
 
     <!-- MODAL 9: ADD / EDIT PRODUCT MODAL (With File Upload & Preview) -->
-    <div v-if="showProductModal" class="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4">
+    <template v-if="showProductModal">
+    <div class="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4">
       <div class="bg-surface-container-lowest w-full max-w-md rounded-3xl p-5 shadow-float space-y-4 max-h-[90vh] flex flex-col">
         <div class="flex justify-between items-center border-b border-outline-variant/20 pb-3">
           <h3 class="font-display font-bold text-base text-primary">{{ isEditingProduct ? 'Chỉnh Sửa Món' : 'Thêm Món Mới' }}</h3>
@@ -1965,10 +1982,12 @@
           <span>{{ uploadingImage ? 'Đang lưu & tải ảnh lên Drive...' : (isEditingProduct ? 'Lưu Thay Đổi' : 'Tạo Món Mới') }}</span>
         </button>
       </div>
+    </template>
     </div>
 
     <!-- MODAL 10: ADD / EDIT TOPPING MODAL -->
-    <div v-if="showToppingModal" class="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4">
+    <template v-if="showToppingModal">
+    <div class="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4">
       <div class="bg-surface-container-lowest w-full max-w-sm rounded-3xl p-5 shadow-float space-y-4">
         <div class="flex justify-between items-center border-b border-outline-variant/20 pb-3">
           <h3 class="font-display font-bold text-base text-primary">{{ isEditingTopping ? 'Sửa Topping' : 'Thêm Topping Mới' }}</h3>
@@ -1989,9 +2008,11 @@
         </div>
       </div>
     </div>
+    </template>
 
     <!-- MODAL 11: ADD NEW TABLE -->
-    <div v-if="showAddTableModal" class="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4">
+    <template v-if="showAddTableModal">
+    <div class="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4">
       <div class="bg-surface-container-lowest w-full max-w-sm rounded-3xl p-5 shadow-float space-y-4">
         <div class="flex justify-between items-center border-b border-outline-variant/20 pb-3">
           <h3 class="font-display font-bold text-base text-primary">Thêm Bàn Mới</h3>
@@ -2012,9 +2033,11 @@
         </div>
       </div>
     </div>
+    </template>
 
     <!-- MODAL 12: ADD EXPENSE -->
-    <div v-if="showAddExpenseModal" class="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4">
+    <template v-if="showAddExpenseModal">
+    <div class="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4">
       <div class="bg-surface-container-lowest w-full max-w-sm rounded-3xl p-5 shadow-float space-y-4">
         <div class="flex justify-between items-center border-b border-outline-variant/20 pb-3">
           <h3 class="font-display font-bold text-base text-primary">Ghi Khoản Chi Phí Mới</h3>
@@ -2054,9 +2077,11 @@
         </div>
       </div>
     </div>
+    </template>
 
     <!-- MODAL 13: ADD / EDIT CUSTOMER (CRM) -->
-    <div v-if="showCustomerModal" class="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4">
+    <template v-if="showCustomerModal">
+    <div class="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4">
       <div class="bg-surface-container-lowest w-full max-w-sm rounded-3xl p-5 shadow-float space-y-4">
         <div class="flex justify-between items-center border-b border-outline-variant/20 pb-3">
           <h3 class="font-display font-bold text-base text-primary">{{ isEditingCustomer ? 'Sửa Khách Hàng' : 'Thêm Khách Hàng Mới' }}</h3>
@@ -2090,9 +2115,11 @@
         </div>
       </div>
     </div>
+    </template>
 
     <!-- MODAL 14: CUSTOMER HISTORY MODAL -->
-    <div v-if="showCustomerHistoryModal && selectedCustomerForHistory" class="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4">
+    <template v-if="showCustomerHistoryModal && selectedCustomerForHistory">
+    <div class="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4">
       <div class="bg-surface-container-lowest w-full max-w-md rounded-3xl p-5 shadow-float space-y-4 max-h-[85vh] flex flex-col">
         <div class="flex justify-between items-center border-b border-outline-variant/20 pb-3">
           <div>
@@ -2121,9 +2148,11 @@
         </div>
       </div>
     </div>
+    </template>
 
     <!-- MODAL 15: ADD STAFF -->
-    <div v-if="showAddStaffModal" class="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4">
+    <template v-if="showAddStaffModal">
+    <div class="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4">
       <div class="bg-surface-container-lowest w-full max-w-sm rounded-3xl p-5 shadow-float space-y-4">
         <div class="flex justify-between items-center border-b border-outline-variant/20 pb-3">
           <h3 class="font-display font-bold text-base text-primary">Thêm Nhân Viên</h3>
@@ -2140,9 +2169,11 @@
         </div>
       </div>
     </div>
+    </template>
 
     <!-- MODAL 16: TASK TEMPLATES MANAGEMENT -->
-    <div v-if="showTaskTemplateModal" class="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4">
+    <template v-if="showTaskTemplateModal">
+    <div class="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4">
       <div class="bg-surface-container-lowest w-full max-w-md rounded-3xl p-5 shadow-float space-y-4 max-h-[85vh] flex flex-col">
         <div class="flex justify-between items-center border-b border-outline-variant/20 pb-3">
           <h3 class="font-display font-bold text-base text-primary">Quản Lý Lịch Công Việc Lặp Lại</h3>
@@ -2173,6 +2204,7 @@
         </div>
       </div>
     </div>
+    </template>
 
     
 
