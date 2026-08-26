@@ -2179,12 +2179,13 @@
 
   <!-- APPLICATION JAVASCRIPT ENGINE (All-In-One Unified Sandbox Bundle) -->
   <script>
+
 function launchVueApp() {
       const { createApp, ref, computed, onMounted } = Vue;
 
       createApp({
       setup() {
-        // ── 1. CORE DATA STORAGE (Declared at TOP to prevent TDZ) ───────────
+        //  1. CORE DATA STORAGE (Declared at TOP to prevent TDZ) 
         const loading = ref(false);
         const isOnline = ref(navigator.onLine);
         const currentTab = ref('pos');
@@ -2196,7 +2197,7 @@ function launchVueApp() {
 
         const products = ref([]);
         const toppings = ref([]);
-        const categories = ref(['Trà Trái Cây', 'Trà Sữa', 'Cà Phê', 'Ăn Vặt', 'Đá Xay']);
+        const categories = ref(['Tr\u00e0 Tr\u00e1i C\u00e2y', 'Tr\u00e0 S\u1eefa', 'C\u00e0 Ph\u00ea', '\u0102n V\u1eb7t', '\u0110\u00e1 Xay']);
         const tables = ref([]);
         const activeOrders = ref([]);
         const orderHistoryList = ref([]);
@@ -2241,15 +2242,15 @@ function launchVueApp() {
 
         // Navigation Menu
         const navItems = [
-          { id: 'pos', label: 'Bán Hàng / Menu', shortLabel: 'Menu', icon: 'local_cafe' },
-          { id: 'kitchen', label: 'Quầy Pha Chế', shortLabel: 'Bếp KDS', icon: 'skillet', badge: '' },
-          { id: 'expenses', label: 'Sổ Quỹ & Chi Phí', shortLabel: 'Chi Phí', icon: 'payments' },
-          { id: 'tasks', label: 'Công Việc Vận Hành', shortLabel: 'Tasks', icon: 'assignment' },
-          { id: 'report', label: 'Báo Cáo Doanh Thu', shortLabel: 'Báo Cáo', icon: 'monitoring' },
-          { id: 'settings', label: 'Cài Đặt Hệ Thống', shortLabel: 'Cài Đặt', icon: 'settings' },
+          { id: 'pos', label: 'B\u00e1n H\u00e0ng / Menu', shortLabel: 'Menu', icon: 'local_cafe' },
+          { id: 'kitchen', label: 'Qu\u1ea7y Pha Ch\u1ebf', shortLabel: 'B\u1ebfp KDS', icon: 'skillet', badge: '' },
+          { id: 'expenses', label: 'S\u1ed5 Qu\u1ef9 & Chi Ph\u00ed', shortLabel: 'Chi Ph\u00ed', icon: 'payments' },
+          { id: 'tasks', label: 'C\u00f4ng Vi\u1ec7c V\u1eadn H\u00e0nh', shortLabel: 'Tasks', icon: 'assignment' },
+          { id: 'report', label: 'B\u00e1o C\u00e1o Doanh Thu', shortLabel: 'B\u00e1o C\u00e1o', icon: 'monitoring' },
+          { id: 'settings', label: 'C\u00e0i \u0110\u1eb7t H\u1ec7 Th\u1ed1ng', shortLabel: 'C\u00e0i \u0110\u1eb7t', icon: 'settings' },
         ];
 
-        // ── 2. MENU ADMIN PRO STATE & COMPUTEDS ─────────────────────────────
+        //  2. MENU ADMIN PRO STATE & COMPUTEDS 
         const adminMenuSearch = ref('');
         const adminCategoryFilter = ref('ALL');
         const adminStatusFilter = ref('ALL');
@@ -2304,8 +2305,8 @@ function launchVueApp() {
           uploadingImage.value = false;
           productForm.value = {
             ID: '',
-            name: prod.Name + ' (Bản sao)',
-            category: prod.Category || 'Trà Trái Cây',
+            name: prod.Name + ' (B\u1ea3n sao)',
+            category: prod.Category || 'Tr\u00e0 Tr\u00e1i C\u00e2y',
             price: Number(prod.Price) || 25000,
             image: prod.Image || '',
             imagePreview: prod.Image || '',
@@ -2316,19 +2317,19 @@ function launchVueApp() {
             status: 'ACTIVE',
           };
           showProductModal.value = true;
-          showToast('Đã nhân bản thông tin món, chỉnh sửa và bấm Lưu!');
+          showToast('\u0110\u00e3 nh\u00e2n b\u1ea3n th\u00f4ng tin m\u00f3n, ch\u1ec9nh s\u1eeda v\u00e0 b\u1ea5m L\u01b0u!');
         };
 
         const quickAddPresetTopping = async (name, price) => {
           const exists = toppings.value.some(t => t.Name.toLowerCase() === name.toLowerCase());
           if (exists) {
-            showToast('Topping này đã có trong danh sách!');
+            showToast('Topping n\u00e0y \u0111\u00e3 c\u00f3 trong danh s\u00e1ch!');
             return;
           }
           const res = await callGAS('addTopping', { name, price });
           if (res.success && res.data) {
             toppings.value.push(res.data);
-            showToast(`Đã thêm nhanh ${name}!`, 'check_circle');
+            showToast(`\u0110\u00e3 th\u00eam nhanh ${name}!`, 'check_circle');
           }
         };
 
@@ -2349,19 +2350,19 @@ function launchVueApp() {
         // Customization Modal State
         const showCustomModal = ref(false);
         const currentProduct = ref(null);
-        const selectedSize = ref('S (Nhỏ)');
-        const selectedIce = ref('100% Đá');
-        const selectedSugar = ref('100% Đường');
+        const selectedSize = ref('S (Nh\u1ecf)');
+        const selectedIce = ref('100% \u0110\u00e1');
+        const selectedSugar = ref('100% \u0110\u01b0\u1eddng');
         const selectedToppings = ref([]);
         const customQuantity = ref(1);
 
         const sizeOptions = [
-          { label: 'S (Nhỏ)', price: 0 },
-          { label: 'M (Vừa)', price: 3000 },
-          { label: 'L (Lớn)', price: 6000 },
+          { label: 'S (Nh\u1ecf)', price: 0 },
+          { label: 'M (V\u1eeba)', price: 3000 },
+          { label: 'L (L\u1edbn)', price: 6000 },
         ];
-        const iceOptions = ['100% Đá', '70% Đá', '50% Đá', 'Ít đá', 'Không đá'];
-        const sugarOptions = ['100% Đường', '70% Đường', '50% Đường', 'Ít ngọt', 'Không đường'];
+        const iceOptions = ['100% \u0110\u00e1', '70% \u0110\u00e1', '50% \u0110\u00e1', '\u00cdt \u0111\u00e1', 'Kh\u00f4ng \u0111\u00e1'];
+        const sugarOptions = ['100% \u0110\u01b0\u1eddng', '70% \u0110\u01b0\u1eddng', '50% \u0110\u01b0\u1eddng', '\u00cdt ng\u1ecdt', 'Kh\u00f4ng \u0111\u01b0\u1eddng'];
 
         // KDS State
         const kitchenStatusFilter = ref('ALL');
@@ -2369,7 +2370,7 @@ function launchVueApp() {
         const isCustomerMode = ref(false);
         const currentTableParam = ref('');
         const receivedCashAmount = ref(0);
-        const cashierName = ref('Thu Ngân');
+        const cashierName = ref('Thu Ng\u00e2n');
         const checkoutOrderData = ref(null);
         const paymentMethod = ref('CASH');
 
@@ -2391,7 +2392,7 @@ function launchVueApp() {
         const newTableForm = ref({ name: '', capacity: 4 });
 
         const showAddExpenseModal = ref(false);
-        const newExpenseForm = ref({ category: 'Nguyên liệu', description: '', amount: null, fundingSource: 'Tiền quán' });
+        const newExpenseForm = ref({ category: 'Nguy\u00ean li\u1ec7u', description: '', amount: null, fundingSource: 'Ti\u1ec1n qu\u00e1n' });
 
         const showAddStaffModal = ref(false);
         const newStaffName = ref('');
@@ -2405,7 +2406,7 @@ function launchVueApp() {
         // CRM Customer Modal State
         const showCustomerModal = ref(false);
         const isEditingCustomer = ref(false);
-        const customerForm = ref({ id: '', name: '', phone: '', type: 'Cá nhân', address: '', email: '', note: '' });
+        const customerForm = ref({ id: '', name: '', phone: '', type: 'C\u00e1 nh\u00e2n', address: '', email: '', note: '' });
         const showCustomerHistoryModal = ref(false);
         const selectedCustomerForHistory = ref(null);
         const customerOrdersList = ref([]);
@@ -2419,7 +2420,7 @@ function launchVueApp() {
         const showDirectUrlInput = ref(false);
         const uploadingImage = ref(false);
         const productForm = ref({
-          ID: '', name: '', category: 'Trà Trái Cây', price: 25000,
+          ID: '', name: '', category: 'Tr\u00e0 Tr\u00e1i C\u00e2y', price: 25000,
           image: '', imagePreview: '', isNewImageUpload: false,
           hasSize: true, hasIce: true, hasSugar: true, status: 'ACTIVE'
         });
@@ -2452,38 +2453,38 @@ function launchVueApp() {
         };
 
         
-        const soundTitle = computed(() => soundEnabled.value ? 'Đang bật chuông báo' : 'Đã tắt chuông');
+        const soundTitle = computed(() => soundEnabled.value ? '\u0110ang b\u1eadt chu\u00f4ng b\u00e1o' : '\u0110\u00e3 t\u1eaft chu\u00f4ng');
 
         const copyAccountNumber = () => {
-          copyToClipboard(settings.value.accountNo || '1018704944', 'Đã sao chép số tài khoản!');
+          copyToClipboard(settings.value.accountNo || '1018704944', '\u0110\u00e3 sao ch\u00e9p s\u1ed1 t\u00e0i kho\u1ea3n!');
         };
 
         const copyTransferContent = () => {
           if (checkoutOrderData.value) {
-            copyToClipboard('TCL ' + checkoutOrderData.value.ID.slice(-4), 'Đã sao chép nội dung chuyển khoản!');
+            copyToClipboard('TCL ' + checkoutOrderData.value.ID.slice(-4), '\u0110\u00e3 sao ch\u00e9p n\u1ed9i dung chuy\u1ec3n kho\u1ea3n!');
           }
         };
 
         const selectTable = (tbl) => {
           selectedTable.value = tbl;
           showTableSelector.value = false;
-          showToast('Đã chọn ' + (tbl ? tbl.Name : 'bàn'));
+          showToast('\u0110\u00e3 ch\u1ecdn ' + (tbl ? tbl.Name : 'b\u00e0n'));
         };
 
         const clearSelectedTable = () => {
           selectedTable.value = null;
           showTableSelector.value = false;
-          showToast('Đã chọn: Mang về / Không chọn bàn');
+          showToast('\u0110\u00e3 ch\u1ecdn: Mang v\u1ec1 / Kh\u00f4ng ch\u1ecdn b\u00e0n');
         };
 
                 const addPreset = (type) => {
-          if (type === 1) quickAddPresetTopping('Trân Châu Hoàng Kim', 5000);
-          else if (type === 2) quickAddPresetTopping('Kem Cheese Béo Ngậy', 10000);
-          else if (type === 3) quickAddPresetTopping('Thạch Củ Năng', 5000);
-          else if (type === 4) quickAddPresetTopping('Pudding Trứng', 7000);
+          if (type === 1) quickAddPresetTopping('Tr\u00e2n Ch\u00e2u Ho\u00e0ng Kim', 5000);
+          else if (type === 2) quickAddPresetTopping('Kem Cheese B\u00e9o Ng\u1eady', 10000);
+          else if (type === 3) quickAddPresetTopping('Th\u1ea1ch C\u1ee7 N\u0103ng', 5000);
+          else if (type === 4) quickAddPresetTopping('Pudding Tr\u1ee9ng', 7000);
         };
 
-        const copyToClipboard = (text, successMsg = 'Đã sao chép!') => {
+        const copyToClipboard = (text, successMsg = '\u0110\u00e3 sao ch\u00e9p!') => {
           if (navigator.clipboard && navigator.clipboard.writeText) {
             navigator.clipboard.writeText(text).then(() => {
               showToast(successMsg, 'content_copy');
@@ -2495,7 +2496,7 @@ function launchVueApp() {
           }
         };
 const formatVND = (num) => {
-          if (!num || isNaN(num)) return '0 ₫';
+          if (!num || isNaN(num)) return '0 \u20ab';
           return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(num);
         };
 
@@ -2545,7 +2546,7 @@ const formatVND = (num) => {
         // Computed
         const activeTabTitle = computed(() => {
           const item = navItems.find(x => x.id === currentTab.value);
-          return item ? item.label : 'Tiệm Của Lá';
+          return item ? item.label : 'Ti\u1ec7m C\u1ee7a L\u00e1';
         });
 
         const filteredProducts = computed(() => {
@@ -2635,15 +2636,15 @@ const formatVND = (num) => {
               success: true,
               data: {
                 products: [
-                  { ID: 'P01', Name: 'Summer Pineapple', Category: 'Trà Trái Cây', Price: 23000, Status: 'ACTIVE', HasSize: true, HasIce: true, HasSugar: true },
-                  { ID: 'P02', Name: 'Summer Mango', Category: 'Trà Trái Cây', Price: 23000, Status: 'ACTIVE', HasSize: true, HasIce: true, HasSugar: true },
-                  { ID: 'P03', Name: 'Trà Sữa Truyền Thống', Category: 'Trà Sữa', Price: 23000, Status: 'ACTIVE', HasSize: true, HasIce: true, HasSugar: true },
+                  { ID: 'P01', Name: 'Summer Pineapple', Category: 'Tr\u00e0 Tr\u00e1i C\u00e2y', Price: 23000, Status: 'ACTIVE', HasSize: true, HasIce: true, HasSugar: true },
+                  { ID: 'P02', Name: 'Summer Mango', Category: 'Tr\u00e0 Tr\u00e1i C\u00e2y', Price: 23000, Status: 'ACTIVE', HasSize: true, HasIce: true, HasSugar: true },
+                  { ID: 'P03', Name: 'Tr\u00e0 S\u1eefa Truy\u1ec1n Th\u1ed1ng', Category: 'Tr\u00e0 S\u1eefa', Price: 23000, Status: 'ACTIVE', HasSize: true, HasIce: true, HasSugar: true },
                 ],
                 toppings: [
-                  { ID: 'T01', Name: 'Thạch Lá', Price: 3000, Status: 'ACTIVE' },
-                  { ID: 'T02', Name: 'Sương Sáo', Price: 3000, Status: 'ACTIVE' },
+                  { ID: 'T01', Name: 'Th\u1ea1ch L\u00e1', Price: 3000, Status: 'ACTIVE' },
+                  { ID: 'T02', Name: 'S\u01b0\u01a1ng S\u00e1o', Price: 3000, Status: 'ACTIVE' },
                 ],
-                categories: ['Trà Trái Cây', 'Trà Sữa', 'Cà Phê']
+                categories: ['Tr\u00e0 Tr\u00e1i C\u00e2y', 'Tr\u00e0 S\u1eefa', 'C\u00e0 Ph\u00ea']
               }
             };
           }
@@ -2651,9 +2652,9 @@ const formatVND = (num) => {
             return {
               success: true,
               data: [
-                { ID: 'TBL01', Name: 'Bàn 1', Status: 'FREE', Capacity: 4, ActiveOrderCount: 0 },
-                { ID: 'TBL02', Name: 'Bàn 2', Status: 'OCCUPIED', Capacity: 4, ActiveOrderCount: 1 },
-                { ID: 'TBL03', Name: 'Bàn 3', Status: 'FREE', Capacity: 2, ActiveOrderCount: 0 },
+                { ID: 'TBL01', Name: 'B\u00e0n 1', Status: 'FREE', Capacity: 4, ActiveOrderCount: 0 },
+                { ID: 'TBL02', Name: 'B\u00e0n 2', Status: 'OCCUPIED', Capacity: 4, ActiveOrderCount: 1 },
+                { ID: 'TBL03', Name: 'B\u00e0n 3', Status: 'FREE', Capacity: 2, ActiveOrderCount: 0 },
               ]
             };
           }
@@ -2663,8 +2664,8 @@ const formatVND = (num) => {
               data: [
                 {
                   ID: 'ORD-1779689153500', TableID: 'TBL02', Status: 'NEW', TotalAmount: 46000, OrderType: 'DINE_IN',
-                  CustomerName: 'Cty Nhung', CreatedAt: new Date(Date.now() - 5 * 60000).toISOString(), Note: '100% Đá',
-                  items: [{ ProductName: 'Summer Mango', Size: 'M', Ice: '100% Đá', Sugar: '100%', Toppings: 'Thạch Lá', Quantity: 2, Price: 23000 }]
+                  CustomerName: 'Cty Nhung', CreatedAt: new Date(Date.now() - 5 * 60000).toISOString(), Note: '100% \u0110\u00e1',
+                  items: [{ ProductName: 'Summer Mango', Size: 'M', Ice: '100% \u0110\u00e1', Sugar: '100%', Toppings: 'Th\u1ea1ch L\u00e1', Quantity: 2, Price: 23000 }]
                 }
               ]
             };
@@ -2676,7 +2677,7 @@ const formatVND = (num) => {
                 {
                   ID: 'ORD-1779689153500', TableID: 'TBL01', Status: 'COMPLETED', TotalAmount: 23000, OrderType: 'TAKEAWAY',
                   CustomerName: 'Cty Nhung', CreatedAt: new Date(Date.now() - 30 * 60000).toISOString(),
-                  items: [{ ProductName: 'Summer Mango', Size: 'M', Ice: '100% Đá', Sugar: '100%', Quantity: 1, Price: 23000 }]
+                  items: [{ ProductName: 'Summer Mango', Size: 'M', Ice: '100% \u0110\u00e1', Sugar: '100%', Quantity: 1, Price: 23000 }]
                 }
               ]
             };
@@ -2684,7 +2685,7 @@ const formatVND = (num) => {
           if (fn === 'getCustomers') {
             return {
               success: true,
-              data: [{ ID: 'CUS-1779171846788', Name: 'Anh Hiếu', Phone: '0339849159', Type: 'Cá nhân', Address: 'Globle city', Points: 21, TotalSpent: 211000 }]
+              data: [{ ID: 'CUS-1779171846788', Name: 'Anh Hi\u1ebfu', Phone: '0339849159', Type: 'C\u00e1 nh\u00e2n', Address: 'Globle city', Points: 21, TotalSpent: 211000 }]
             };
           }
           return { success: true };
@@ -2791,11 +2792,11 @@ const formatVND = (num) => {
               if (d.customers) customerList.value = d.customers;
               if (d.settings) settings.value = d.settings;
               if (d.report) reportData.value = Object.assign({}, reportData.value, d.report);
-              if (toastFeedback) showToast('Đã làm mới dữ liệu!');
+              if (toastFeedback) showToast('\u0110\u00e3 l\u00e0m m\u1edbi d\u1eef li\u1ec7u!');
             } else {
               // Fallback to individual calls if getInitialData is not available
               await Promise.all([loadMenu(), loadTables(), loadOrders(), loadTasks(), loadReport(), loadSettings(), loadExpenses(), loadStaff(), loadCustomers()]);
-              if (toastFeedback) showToast('Đã làm mới dữ liệu!');
+              if (toastFeedback) showToast('\u0110\u00e3 l\u00e0m m\u1edbi d\u1eef li\u1ec7u!');
             }
           } catch(err) {
             console.error('refreshData error:', err);
@@ -2827,7 +2828,7 @@ const formatVND = (num) => {
               if (res.success && res.data && res.data.length > 0) {
                 foundCustomer.value = res.data[0];
                 if (!customerName.value) customerName.value = res.data[0].Name;
-                showToast(`Đã nhận diện: ${res.data[0].Name} (${res.data[0].Points || 0} điểm)`);
+                showToast(`\u0110\u00e3 nh\u1eadn di\u1ec7n: ${res.data[0].Name} (${res.data[0].Points || 0} \u0111i\u1ec3m)`);
               }
             }, 400);
           }
@@ -2836,9 +2837,9 @@ const formatVND = (num) => {
         // Customization Modal Logic
         const openCustomization = (prod) => {
           currentProduct.value = prod;
-          selectedSize.value = 'S (Nhỏ)';
-          selectedIce.value = '100% Đá';
-          selectedSugar.value = '100% Đường';
+          selectedSize.value = 'S (Nh\u1ecf)';
+          selectedIce.value = '100% \u0110\u00e1';
+          selectedSugar.value = '100% \u0110\u01b0\u1eddng';
           selectedToppings.value = [];
           customQuantity.value = 1;
           showCustomModal.value = true;
@@ -2865,7 +2866,7 @@ const formatVND = (num) => {
             price: customizedPrice.value,
           });
           showCustomModal.value = false;
-          showToast(`Đã thêm ${currentProduct.value.Name} vào đơn!`);
+          showToast(`\u0110\u00e3 th\u00eam ${currentProduct.value.Name} v\u00e0o \u0111\u01a1n!`);
         };
 
         const removeFromCart = (idx) => { cart.value.splice(idx, 1); };
@@ -2909,9 +2910,9 @@ const formatVND = (num) => {
             showCartDrawer.value = false;
             orderNote.value = '';
             usePointsDiscount.value = false;
-            showToast('Đã gửi đơn hàng đến quầy pha chế!', 'check_circle');
+            showToast('\u0110\u00e3 g\u1eedi \u0111\u01a1n h\u00e0ng \u0111\u1ebfn qu\u1ea7y pha ch\u1ebf!', 'check_circle');
           } else {
-            showToast(res.error || 'Lỗi khi gửi đơn', 'error');
+            showToast(res.error || 'L\u1ed7i khi g\u1eedi \u0111\u01a1n', 'error');
           }
         };
 
@@ -2922,18 +2923,18 @@ const formatVND = (num) => {
 
           const res = await callGAS('updateOrderStatus', orderId, newStatus);
           if (res.success) {
-            showToast(`Đơn đã chuyển sang: ${getStatusText(newStatus)}`);
+            showToast(`\u0110\u01a1n \u0111\u00e3 chuy\u1ec3n sang: ${getStatusText(newStatus)}`);
           } else {
             loadOrders();
           }
         };
 
         const cancelCurrentOrder = async (orderId) => {
-          if (!confirm('Bạn có chắc muốn hủy đơn này?')) return;
+          if (!confirm('B\u1ea1n c\u00f3 ch\u1eafc mu\u1ed1n h\u1ee7y \u0111\u01a1n n\u00e0y?')) return;
           removeById(activeOrders.value, orderId);
           const res = await callGAS('cancelOrder', orderId);
           if (res.success) {
-            showToast('Đã hủy đơn hàng');
+            showToast('\u0110\u00e3 h\u1ee7y \u0111\u01a1n h\u00e0ng');
           } else {
             loadOrders();
           }
@@ -2958,7 +2959,7 @@ const formatVND = (num) => {
             }
           }
           showCheckoutModal.value = false;
-          showToast('Đã hoàn tất thanh toán & giải phóng bàn!', 'verified');
+          showToast('\u0110\u00e3 ho\u00e0n t\u1ea5t thanh to\u00e1n & gi\u1ea3i ph\u00f3ng b\u00e0n!', 'verified');
 
           const res = await callGAS('checkoutOrder', orderId, { paymentMethod: paymentMethod.value });
           if (!res.success) {
@@ -3011,7 +3012,7 @@ const formatVND = (num) => {
           });
 
           showSwitchTableModal.value = false;
-          showToast(`Đã chuyển đơn từ ${sourceSwitchTable.value.Name} sang ${targetSwitchTable.value.Name}!`);
+          showToast(`\u0110\u00e3 chuy\u1ec3n \u0111\u01a1n t\u1eeb ${sourceSwitchTable.value.Name} sang ${targetSwitchTable.value.Name}!`);
 
           const res = await callGAS('switchTable', fromId, toId);
           if (!res.success) {
@@ -3030,14 +3031,14 @@ const formatVND = (num) => {
         const resetTableToFree = async (tblId) => {
           const tbl = tables.value.find(t => t.ID === tblId);
           if (tbl) tbl.Status = 'FREE';
-          showToast('Đã trả bàn về trạng thái Trống');
+          showToast('\u0110\u00e3 tr\u1ea3 b\u00e0n v\u1ec1 tr\u1ea1ng th\u00e1i Tr\u1ed1ng');
           await callGAS('resetTable', tblId);
         };
 
         const deleteCurrentTable = async (tblId) => {
-          if (!confirm('Bạn có chắc muốn xóa bàn này khỏi danh sách?')) return;
+          if (!confirm('B\u1ea1n c\u00f3 ch\u1eafc mu\u1ed1n x\u00f3a b\u00e0n n\u00e0y kh\u1ecfi danh s\u00e1ch?')) return;
           removeById(tables.value, tblId);
-          showToast('Đã xóa bàn');
+          showToast('\u0110\u00e3 x\u00f3a b\u00e0n');
           await callGAS('deleteTable', tblId);
         };
 
@@ -3048,16 +3049,16 @@ const formatVND = (num) => {
             t.Status = 'DONE';
             t.CompletedAt = new Date().toISOString();
           }
-          showToast('Đã hoàn thành nhiệm vụ!', 'check_circle');
+          showToast('\u0110\u00e3 ho\u00e0n th\u00e0nh nhi\u1ec7m v\u1ee5!', 'check_circle');
           const res = await callGAS('completeTask', taskId, '');
           if (!res.success) loadTasks();
         };
 
         const skipCurrentTask = async (taskId) => {
-          const reason = prompt('Nhập lý do bỏ qua nhiệm vụ (tùy chọn):');
+          const reason = prompt('Nh\u1eadp l\u00fd do b\u1ecf qua nhi\u1ec7m v\u1ee5 (t\u00f9y ch\u1ecdn):');
           const t = tasks.value.find(x => x.ID === taskId);
           if (t) t.Status = 'SKIPPED';
-          showToast('Đã bỏ qua nhiệm vụ');
+          showToast('\u0110\u00e3 b\u1ecf qua nhi\u1ec7m v\u1ee5');
           const res = await callGAS('skipTask', taskId, reason || '');
           if (!res.success) loadTasks();
         };
@@ -3069,7 +3070,7 @@ const formatVND = (num) => {
             if (res.data) tasks.value.unshift(res.data);
             showAdhocTaskModal.value = false;
             adhocTaskForm.value = { title: '', assignedName: '', priority: 'medium', note: '' };
-            showToast('Đã tạo việc đột xuất thành công!');
+            showToast('\u0110\u00e3 t\u1ea1o vi\u1ec7c \u0111\u1ed9t xu\u1ea5t th\u00e0nh c\u00f4ng!');
           }
         };
 
@@ -3078,7 +3079,7 @@ const formatVND = (num) => {
           selectedTable.value = tbl;
           orderType.value = 'DINE_IN';
           setTab('pos');
-          showToast(`Đã chọn ${tbl.Name}`);
+          showToast(`\u0110\u00e3 ch\u1ecdn ${tbl.Name}`);
         };
 
         const submitAddTable = async () => {
@@ -3088,7 +3089,7 @@ const formatVND = (num) => {
             if (res.data) tables.value.push(res.data);
             showAddTableModal.value = false;
             newTableForm.value = { name: '', capacity: 4 };
-            showToast('Đã thêm bàn mới thành công!');
+            showToast('\u0110\u00e3 th\u00eam b\u00e0n m\u1edbi th\u00e0nh c\u00f4ng!');
           }
         };
 
@@ -3098,15 +3099,15 @@ const formatVND = (num) => {
           if (res.success) {
             if (res.data) expenses.value.unshift(res.data);
             showAddExpenseModal.value = false;
-            newExpenseForm.value = { category: 'Nguyên liệu', description: '', amount: null, fundingSource: 'Tiền quán' };
-            showToast('Đã ghi khoản chi thành công!');
+            newExpenseForm.value = { category: 'Nguy\u00ean li\u1ec7u', description: '', amount: null, fundingSource: 'Ti\u1ec1n qu\u00e1n' };
+            showToast('\u0110\u00e3 ghi kho\u1ea3n chi th\u00e0nh c\u00f4ng!');
           }
         };
 
         const deleteCurrentExpense = async (id) => {
-          if (!confirm('Bạn có chắc muốn xóa khoản chi này?')) return;
+          if (!confirm('B\u1ea1n c\u00f3 ch\u1eafc mu\u1ed1n x\u00f3a kho\u1ea3n chi n\u00e0y?')) return;
           removeById(expenses.value, id);
-          showToast('Đã xóa khoản chi');
+          showToast('\u0110\u00e3 x\u00f3a kho\u1ea3n chi');
           const res = await callGAS('deleteExpense', id);
           if (!res.success) loadExpenses();
         };
@@ -3145,7 +3146,7 @@ const formatVND = (num) => {
               productForm.value.imagePreview = compressedBase64;
               productForm.value.image = compressedBase64;
               productForm.value.isNewImageUpload = true;
-              showToast('Đã chọn ảnh thành công!');
+              showToast('\u0110\u00e3 ch\u1ecdn \u1ea3nh th\u00e0nh c\u00f4ng!');
             };
             img.src = event.target.result;
           };
@@ -3163,7 +3164,7 @@ const formatVND = (num) => {
           showDirectUrlInput.value = false;
           uploadingImage.value = false;
           productForm.value = {
-            ID: '', name: '', category: categories.value[0] || 'Trà Trái Cây', price: 25000,
+            ID: '', name: '', category: categories.value[0] || 'Tr\u00e0 Tr\u00e1i C\u00e2y', price: 25000,
             image: '', imagePreview: '', isNewImageUpload: false,
             hasSize: true, hasIce: true, hasSugar: true, status: 'ACTIVE'
           };
@@ -3177,7 +3178,7 @@ const formatVND = (num) => {
           productForm.value = {
             ID: prod.ID,
             name: prod.Name,
-            category: prod.Category || 'Trà Trái Cây',
+            category: prod.Category || 'Tr\u00e0 Tr\u00e1i C\u00e2y',
             price: Number(prod.Price) || 0,
             image: prod.Image || '',
             imagePreview: prod.Image || '',
@@ -3193,7 +3194,7 @@ const formatVND = (num) => {
         const toggleStockStatus = async (prod) => {
           const newSt = prod.Status === 'OUT_OF_STOCK' ? 'ACTIVE' : 'OUT_OF_STOCK';
           prod.Status = newSt;
-          showToast(newSt === 'OUT_OF_STOCK' ? `Đã gắn nhãn Hết Hàng: ${prod.Name}` : `Đã mở bán lại: ${prod.Name}`);
+          showToast(newSt === 'OUT_OF_STOCK' ? `\u0110\u00e3 g\u1eafn nh\u00e3n H\u1ebft H\u00e0ng: ${prod.Name}` : `\u0110\u00e3 m\u1edf b\u00e1n l\u1ea1i: ${prod.Name}`);
           await callGAS('toggleProductStock', prod.ID, newSt);
         };
 
@@ -3226,7 +3227,7 @@ const formatVND = (num) => {
               upsertById(products.value, Object.assign({ ID: productForm.value.ID, Name: payload.name, Category: payload.category, Price: payload.price, Image: payload.image, HasSize: payload.hasSize, HasIce: payload.hasIce, HasSugar: payload.hasSugar, Status: payload.status }));
               if (!categories.value.includes(payload.category)) categories.value.push(payload.category);
               showProductModal.value = false;
-              showToast('Đã cập nhật thông tin món!');
+              showToast('\u0110\u00e3 c\u1eadp nh\u1eadt th\u00f4ng tin m\u00f3n!');
             }
           } else {
             const res = await callGAS('addProduct', payload);
@@ -3234,15 +3235,15 @@ const formatVND = (num) => {
               if (res.data) products.value.unshift(res.data);
               if (!categories.value.includes(payload.category)) categories.value.push(payload.category);
               showProductModal.value = false;
-              showToast('Đã thêm món mới vào thực đơn!');
+              showToast('\u0110\u00e3 th\u00eam m\u00f3n m\u1edbi v\u00e0o th\u1ef1c \u0111\u01a1n!');
             }
           }
         };
 
         const deleteCurrentProduct = async (id) => {
-          if (!confirm('Bạn có chắc muốn xóa món này khỏi thực đơn?')) return;
+          if (!confirm('B\u1ea1n c\u00f3 ch\u1eafc mu\u1ed1n x\u00f3a m\u00f3n n\u00e0y kh\u1ecfi th\u1ef1c \u0111\u01a1n?')) return;
           removeById(products.value, id);
-          showToast('Đã xóa món khỏi thực đơn');
+          showToast('\u0110\u00e3 x\u00f3a m\u00f3n kh\u1ecfi th\u1ef1c \u0111\u01a1n');
           await callGAS('deleteProduct', id);
         };
 
@@ -3266,35 +3267,35 @@ const formatVND = (num) => {
             if (res.success) {
               upsertById(toppings.value, { ID: toppingForm.value.ID, Name: toppingForm.value.name, Price: toppingForm.value.price, Status: toppingForm.value.status });
               showToppingModal.value = false;
-              showToast('Đã cập nhật topping!');
+              showToast('\u0110\u00e3 c\u1eadp nh\u1eadt topping!');
             }
           } else {
             const res = await callGAS('addTopping', { name: toppingForm.value.name, price: toppingForm.value.price });
             if (res.success) {
               if (res.data) toppings.value.push(res.data);
               showToppingModal.value = false;
-              showToast('Đã thêm topping mới!');
+              showToast('\u0110\u00e3 th\u00eam topping m\u1edbi!');
             }
           }
         };
 
         const deleteCurrentTopping = async (id) => {
-          if (!confirm('Bạn có chắc muốn xóa topping này?')) return;
+          if (!confirm('B\u1ea1n c\u00f3 ch\u1eafc mu\u1ed1n x\u00f3a topping n\u00e0y?')) return;
           removeById(toppings.value, id);
-          showToast('Đã xóa topping');
+          showToast('\u0110\u00e3 x\u00f3a topping');
           await callGAS('deleteTopping', id);
         };
 
         // CRM Customer Actions
         const openAddCustomerModal = () => {
           isEditingCustomer.value = false;
-          customerForm.value = { id: '', name: '', phone: '', type: 'Cá nhân', address: '', email: '', note: '' };
+          customerForm.value = { id: '', name: '', phone: '', type: 'C\u00e1 nh\u00e2n', address: '', email: '', note: '' };
           showCustomerModal.value = true;
         };
 
         const openEditCustomerModal = (c) => {
           isEditingCustomer.value = true;
-          customerForm.value = { id: c.ID, name: c.Name, phone: c.Phone, type: c.Type || 'Cá nhân', address: c.Address || '', email: c.Email || '', note: c.Note || '' };
+          customerForm.value = { id: c.ID, name: c.Name, phone: c.Phone, type: c.Type || 'C\u00e1 nh\u00e2n', address: c.Address || '', email: c.Email || '', note: c.Note || '' };
           showCustomerModal.value = true;
         };
 
@@ -3302,7 +3303,7 @@ const formatVND = (num) => {
           const res = await callGAS('saveCustomer', customerForm.value);
           if (res.success) {
             showCustomerModal.value = false;
-            showToast(isEditingCustomer.value ? 'Đã cập nhật hồ sơ khách hàng!' : 'Đã thêm khách hàng mới!');
+            showToast(isEditingCustomer.value ? '\u0110\u00e3 c\u1eadp nh\u1eadt h\u1ed3 s\u01a1 kh\u00e1ch h\u00e0ng!' : '\u0110\u00e3 th\u00eam kh\u00e1ch h\u00e0ng m\u1edbi!');
             loadCustomers();
           }
         };
@@ -3321,10 +3322,10 @@ const formatVND = (num) => {
           if (!pinForm.value.oldPin || !pinForm.value.newPin) return;
           const res = await callGAS('changePin', pinForm.value.oldPin, pinForm.value.newPin);
           if (res.success) {
-            showToast('Đã đổi mã PIN Admin thành công!');
+            showToast('\u0110\u00e3 \u0111\u1ed5i m\u00e3 PIN Admin th\u00e0nh c\u00f4ng!');
             pinForm.value = { oldPin: '', newPin: '' };
           } else {
-            showToast(res.error || 'Lỗi khi đổi mã PIN', 'error');
+            showToast(res.error || 'L\u1ed7i khi \u0111\u1ed5i m\u00e3 PIN', 'error');
           }
         };
 
@@ -3335,14 +3336,14 @@ const formatVND = (num) => {
             if (res.data) staffList.value.push(res.data);
             showAddStaffModal.value = false;
             newStaffName.value = '';
-            showToast('Đã thêm nhân viên mới!');
+            showToast('\u0110\u00e3 th\u00eam nh\u00e2n vi\u00ean m\u1edbi!');
           }
         };
 
         const deactivateStaffMember = async (id) => {
-          if (!confirm('Bạn có chắc muốn vô hiệu hóa nhân viên này?')) return;
+          if (!confirm('B\u1ea1n c\u00f3 ch\u1eafc mu\u1ed1n v\u00f4 hi\u1ec7u h\u00f3a nh\u00e2n vi\u00ean n\u00e0y?')) return;
           removeById(staffList.value, id);
-          showToast('Đã vô hiệu hóa nhân viên');
+          showToast('\u0110\u00e3 v\u00f4 hi\u1ec7u h\u00f3a nh\u00e2n vi\u00ean');
           const res = await callGAS('deactivateStaff', id);
           if (!res.success) loadStaff();
         };
@@ -3353,7 +3354,7 @@ const formatVND = (num) => {
           if (res.success) {
             showTaskTemplateModal.value = false;
             newTaskTemplateForm.value = { title: '', repeatType: 'daily', priority: 'medium' };
-            showToast('Đã thêm mẫu lịch công việc!');
+            showToast('\u0110\u00e3 th\u00eam m\u1eabu l\u1ecbch c\u00f4ng vi\u1ec7c!');
             loadTasks();
           }
         };
@@ -3379,7 +3380,7 @@ const formatVND = (num) => {
               ctx.drawImage(img, sx, sy, size, size, 0, 0, dim, dim);
               const compressed = canvas.toDataURL('image/jpeg', 0.85);
               settings.value.logoUrl = compressed;
-              showToast('Đã chọn Logo mới! Bấm Lưu Cài Đặt để hoàn tất.');
+              showToast('\u0110\u00e3 ch\u1ecdn Logo m\u1edbi! B\u1ea5m L\u01b0u C\u00e0i \u0110\u1eb7t \u0111\u1ec3 ho\u00e0n t\u1ea5t.');
             };
             img.src = event.target.result;
           };
@@ -3407,7 +3408,7 @@ const formatVND = (num) => {
               ctx.drawImage(img, 0, 0, width, height);
               const compressed = canvas.toDataURL('image/jpeg', 0.85);
               settings.value.bannerUrl = compressed;
-              showToast('Đã chọn Banner mới! Bấm Lưu Cài Đặt để hoàn tất.');
+              showToast('\u0110\u00e3 ch\u1ecdn Banner m\u1edbi! B\u1ea5m L\u01b0u C\u00e0i \u0110\u1eb7t \u0111\u1ec3 ho\u00e0n t\u1ea5t.');
             };
             img.src = event.target.result;
           };
@@ -3416,17 +3417,17 @@ const formatVND = (num) => {
 
         const removeLogo = () => {
           settings.value.logoUrl = '';
-          showToast('Đã chuyển về Logo mặc định');
+          showToast('\u0110\u00e3 chuy\u1ec3n v\u1ec1 Logo m\u1eb7c \u0111\u1ecbnh');
         };
 
         const removeBanner = () => {
           settings.value.bannerUrl = '';
-          showToast('Đã chuyển về Banner mặc định');
+          showToast('\u0110\u00e3 chuy\u1ec3n v\u1ec1 Banner m\u1eb7c \u0111\u1ecbnh');
         };
 
         const saveShopSettings = async () => {
           const res = await callGAS('saveSettings', settings.value);
-          if (res.success) showToast('Đã lưu cấu hình quán!');
+          if (res.success) showToast('\u0110\u00e3 l\u01b0u c\u1ea5u h\u00ecnh qu\u00e1n!');
         };
 
         const setReportPreset = async (preset) => {
@@ -3475,7 +3476,7 @@ const formatVND = (num) => {
           const res = await callGAS('getReportByRange', { dateFrom: customDateFrom.value, dateTo: customDateTo.value });
           if (res.success && res.data) {
             reportData.value = res.data;
-            showToast(`Đã tải báo cáo từ ${customDateFrom.value} đến ${customDateTo.value}`);
+            showToast(`\u0110\u00e3 t\u1ea3i b\u00e1o c\u00e1o t\u1eeb ${customDateFrom.value} \u0111\u1ebfn ${customDateTo.value}`);
           }
         };
 
@@ -3487,7 +3488,7 @@ const formatVND = (num) => {
           return t ? t.Name : tId;
         };
         const getStatusText = (st) => {
-          const map = { NEW: 'Chờ Pha', PREPARING: 'Đang Pha', PACKING: 'Đóng Gói', SERVING: 'Đang Trả', COMPLETED: 'Hoàn Tất', CANCELLED: 'Đã Hủy' };
+          const map = { NEW: 'Ch\u1edd Pha', PREPARING: '\u0110ang Pha', PACKING: '\u0110\u00f3ng G\u00f3i', SERVING: '\u0110ang Tr\u1ea3', COMPLETED: 'Ho\u00e0n T\u1ea5t', CANCELLED: '\u0110\u00e3 H\u1ee7y' };
           return map[st] || st;
         };
         const getStatusBadgeClass = (st) => {
@@ -3523,13 +3524,13 @@ const formatVND = (num) => {
           return 'bg-status-free';
         };
         const getTableStatusLabel = (st) => {
-          if (st === 'OCCUPIED') return 'Có khách';
-          if (st === 'RESERVED') return 'Đã đặt';
-          return 'Bàn trống';
+          if (st === 'OCCUPIED') return 'C\u00f3 kh\u00e1ch';
+          if (st === 'RESERVED') return '\u0110\u00e3 \u0111\u1eb7t';
+          return 'B\u00e0n tr\u1ed1ng';
         };
         const getPriorityText = (p) => {
-          const map = { high: 'Ưu tiên Cao', medium: 'Vừa', low: 'Thấp' };
-          return map[p] || 'Vừa';
+          const map = { high: '\u01afu ti\u00ean Cao', medium: 'V\u1eeba', low: 'Th\u1ea5p' };
+          return map[p] || 'V\u1eeba';
         };
         const getTaskPriorityBorderClass = (p) => {
           if (p === 'high') return 'border-status-urgent';
@@ -3639,7 +3640,7 @@ const formatVND = (num) => {
 
     
   
-    // ── Synchronous Instant Launch (Zero CDN Latency) ─────────────────────────
+    //  Synchronous Instant Launch (Zero CDN Latency) 
     // Robust Launcher with CDN fallback
     if (typeof Vue !== 'undefined') {
       launchVueApp();
@@ -3656,6 +3657,7 @@ const formatVND = (num) => {
         }
       });
     }
-  </script>
+  
+</script>
 </body>
 </html>
