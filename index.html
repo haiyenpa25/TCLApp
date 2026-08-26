@@ -212,7 +212,7 @@
     <main class="flex-1 pb-24 md:pb-8 md:pl-64 max-w-7xl w-full mx-auto p-3 md:p-6">
 
       <!-- DESKTOP SIDEBAR NAVIGATION (Visible on md+ screens) -->
-      <aside class="hidden md:flex flex-col fixed left-0 top-0 bottom-0 w-64 bg-surface-container-lowest border-r border-outline-variant/30 z-50 p-4 shadow-soft">
+      <aside v-if="!isCustomerMode" class="hidden md:flex flex-col fixed left-0 top-0 bottom-0 w-64 bg-surface-container-lowest border-r border-outline-variant/30 z-50 p-4 shadow-soft">
         <div class="flex items-center gap-3 px-3 py-4 mb-4 border-b border-outline-variant/20">
           <div class="w-12 h-12 rounded-full overflow-hidden border-2 border-primary/30 shadow-sm shrink-0 bg-white">
             <img :src="shopLogo" class="w-full h-full object-cover" alt="Logo Tiệm Của Lá" />
@@ -1455,7 +1455,7 @@
     </main>
 
     <!-- BOTTOM NAVIGATION (Mobile Only) -->
-    <nav class="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-surface/95 backdrop-blur-lg border-t border-outline-variant/30 px-1 py-1.5 flex items-center justify-between shadow-float overflow-x-auto hide-scrollbar">
+    <nav v-if="!isCustomerMode" class="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-surface/95 backdrop-blur-lg border-t border-outline-variant/30 px-1 py-1.5 flex items-center justify-between shadow-float overflow-x-auto hide-scrollbar">
       <button v-for="item in navItems" :key="item.id" @click="setTab(item.id)" class="flex-1 min-w-[52px] py-1 flex flex-col items-center justify-center gap-0.5 rounded-xl transition-all duration-150 relative shrink-0" :class="currentTab === item.id ? 'text-primary font-bold' : 'text-on-surface-variant hover:text-on-surface'">
         <span class="material-symbols-outlined text-xl transition-transform" :class="currentTab === item.id ? 'scale-110' : 'outlined-icon'">{{ item.icon }}</span>
         <span class="text-[10px] tracking-tight leading-none truncate max-w-[56px]">{{ item.shortLabel || item.label }}</span>
@@ -1467,7 +1467,7 @@
     <!-- ================= MODALS & DRAWERS ================= -->
 
     <!-- MODAL 1: CUSTOMIZATION DRAWER -->
-    <div v-if="showCustomModal && currentProduct" style="display: none;" class="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-end sm:items-center justify-center p-0 sm:p-4">
+    <div v-if="showCustomModal && currentProduct" class="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-end sm:items-center justify-center p-0 sm:p-4">
       <div class="bg-surface-container-lowest w-full max-w-lg rounded-t-3xl sm:rounded-3xl p-5 shadow-float max-h-[90vh] flex flex-col overflow-hidden animate-slide-up">
         <div class="flex items-start justify-between pb-3 border-b border-outline-variant/20">
           <div class="flex gap-3">
@@ -1543,7 +1543,7 @@
     </div>
 
     <!-- MODAL 2: CART & CHECKOUT DRAWER -->
-    <div v-if="showCartDrawer" style="display: none;" class="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex justify-end">
+    <div v-if="showCartDrawer" class="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex justify-end">
       <div class="bg-surface-container-lowest w-full max-w-md h-full p-5 flex flex-col justify-between shadow-float">
         <div class="flex items-center justify-between pb-3 border-b border-outline-variant/20">
           <div class="flex items-center gap-2">
@@ -1633,7 +1633,7 @@
     </div>
 
     <!-- MODAL 3: CHECKOUT & PAYMENT MODAL -->
-    <div v-if="showCheckoutModal && checkoutOrderData" style="display: none;" class="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4">
+    <div v-if="showCheckoutModal && checkoutOrderData" class="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4">
       <div class="bg-surface-container-lowest w-full max-w-sm rounded-3xl p-5 shadow-float space-y-4">
         <div class="flex justify-between items-start border-b border-outline-variant/20 pb-3">
           <div>
@@ -1707,7 +1707,7 @@
     </div>
 
     <!-- MODAL 4: SELECT TABLE (From POS Tab) -->
-    <div v-if="showTableSelector" style="display: none;" class="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4">
+    <div v-if="showTableSelector" class="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4">
       <div class="bg-surface-container-lowest w-full max-w-sm rounded-3xl p-5 shadow-float space-y-4">
         <div class="flex justify-between items-center border-b border-outline-variant/20 pb-3">
           <h3 class="font-display font-bold text-base text-primary">Chọn Bàn Phục Vụ</h3>
@@ -1726,7 +1726,7 @@
     </div>
 
     <!-- MODAL 5: TABLE QR CODE STANDEE -->
-    <div v-if="showTableQRModal && currentQRTable" style="display: none;" class="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4">
+    <div v-if="showTableQRModal && currentQRTable" class="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4">
       <div class="bg-surface-container-lowest w-full max-w-sm rounded-3xl p-6 shadow-float space-y-4 text-center">
         <div class="flex justify-between items-center border-b border-outline-variant/20 pb-3">
           <h3 class="font-display font-bold text-base text-primary">Mã QR Đặt Món: {{ currentQRTable.Name }}</h3>
@@ -1756,7 +1756,7 @@
     </div>
 
     <!-- MODAL 6: SWITCH TABLE -->
-    <div v-if="showSwitchTableModal && sourceSwitchTable" style="display: none;" class="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4">
+    <div v-if="showSwitchTableModal && sourceSwitchTable" class="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4">
       <div class="bg-surface-container-lowest w-full max-w-sm rounded-3xl p-5 shadow-float space-y-4">
         <div class="flex justify-between items-center border-b border-outline-variant/20 pb-3">
           <div>
@@ -1783,7 +1783,7 @@
     </div>
 
     <!-- MODAL 7: THERMAL RECEIPT / KITCHEN SLIP PRINT -->
-    <div v-if="showReceiptModal && receiptOrder" style="display: none;" class="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4">
+    <div v-if="showReceiptModal && receiptOrder" class="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4">
       <div class="bg-surface-container-lowest w-full max-w-sm rounded-3xl p-5 shadow-float space-y-4 max-h-[90vh] flex flex-col">
         <div class="flex justify-between items-center border-b border-outline-variant/20 pb-3">
           <h3 class="font-display font-bold text-base text-primary">Phiếu Hóa Đơn #{{ receiptOrder.ID.slice(-4) }}</h3>
@@ -1835,7 +1835,7 @@
     </div>
 
     <!-- MODAL 8: AD-HOC TASK CREATION -->
-    <div v-if="showAdhocTaskModal" style="display: none;" class="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4">
+    <div v-if="showAdhocTaskModal" class="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4">
       <div class="bg-surface-container-lowest w-full max-w-sm rounded-3xl p-5 shadow-float space-y-4">
         <div class="flex justify-between items-center border-b border-outline-variant/20 pb-3">
           <h3 class="font-display font-bold text-base text-primary">Thêm Việc Đột Xuất Hôm Nay</h3>
@@ -1869,7 +1869,7 @@
     </div>
 
     <!-- MODAL 9: ADD / EDIT PRODUCT MODAL (With File Upload & Preview) -->
-    <div v-if="showProductModal" style="display: none;" class="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4">
+    <div v-if="showProductModal" class="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4">
       <div class="bg-surface-container-lowest w-full max-w-md rounded-3xl p-5 shadow-float space-y-4 max-h-[90vh] flex flex-col">
         <div class="flex justify-between items-center border-b border-outline-variant/20 pb-3">
           <h3 class="font-display font-bold text-base text-primary">{{ isEditingProduct ? 'Chỉnh Sửa Món' : 'Thêm Món Mới' }}</h3>
@@ -1988,7 +1988,7 @@
     </div>
 
     <!-- MODAL 10: ADD / EDIT TOPPING MODAL -->
-    <div v-if="showToppingModal" style="display: none;" class="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4">
+    <div v-if="showToppingModal" class="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4">
       <div class="bg-surface-container-lowest w-full max-w-sm rounded-3xl p-5 shadow-float space-y-4">
         <div class="flex justify-between items-center border-b border-outline-variant/20 pb-3">
           <h3 class="font-display font-bold text-base text-primary">{{ isEditingTopping ? 'Sửa Topping' : 'Thêm Topping Mới' }}</h3>
@@ -2011,7 +2011,7 @@
     </div>
 
     <!-- MODAL 11: ADD NEW TABLE -->
-    <div v-if="showAddTableModal" style="display: none;" class="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4">
+    <div v-if="showAddTableModal" class="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4">
       <div class="bg-surface-container-lowest w-full max-w-sm rounded-3xl p-5 shadow-float space-y-4">
         <div class="flex justify-between items-center border-b border-outline-variant/20 pb-3">
           <h3 class="font-display font-bold text-base text-primary">Thêm Bàn Mới</h3>
@@ -2034,7 +2034,7 @@
     </div>
 
     <!-- MODAL 12: ADD EXPENSE -->
-    <div v-if="showAddExpenseModal" style="display: none;" class="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4">
+    <div v-if="showAddExpenseModal" class="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4">
       <div class="bg-surface-container-lowest w-full max-w-sm rounded-3xl p-5 shadow-float space-y-4">
         <div class="flex justify-between items-center border-b border-outline-variant/20 pb-3">
           <h3 class="font-display font-bold text-base text-primary">Ghi Khoản Chi Phí Mới</h3>
@@ -2076,7 +2076,7 @@
     </div>
 
     <!-- MODAL 13: ADD / EDIT CUSTOMER (CRM) -->
-    <div v-if="showCustomerModal" style="display: none;" class="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4">
+    <div v-if="showCustomerModal" class="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4">
       <div class="bg-surface-container-lowest w-full max-w-sm rounded-3xl p-5 shadow-float space-y-4">
         <div class="flex justify-between items-center border-b border-outline-variant/20 pb-3">
           <h3 class="font-display font-bold text-base text-primary">{{ isEditingCustomer ? 'Sửa Khách Hàng' : 'Thêm Khách Hàng Mới' }}</h3>
@@ -2112,7 +2112,7 @@
     </div>
 
     <!-- MODAL 14: CUSTOMER HISTORY MODAL -->
-    <div v-if="showCustomerHistoryModal && selectedCustomerForHistory" style="display: none;" class="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4">
+    <div v-if="showCustomerHistoryModal && selectedCustomerForHistory" class="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4">
       <div class="bg-surface-container-lowest w-full max-w-md rounded-3xl p-5 shadow-float space-y-4 max-h-[85vh] flex flex-col">
         <div class="flex justify-between items-center border-b border-outline-variant/20 pb-3">
           <div>
@@ -2143,7 +2143,7 @@
     </div>
 
     <!-- MODAL 15: ADD STAFF -->
-    <div v-if="showAddStaffModal" style="display: none;" class="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4">
+    <div v-if="showAddStaffModal" class="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4">
       <div class="bg-surface-container-lowest w-full max-w-sm rounded-3xl p-5 shadow-float space-y-4">
         <div class="flex justify-between items-center border-b border-outline-variant/20 pb-3">
           <h3 class="font-display font-bold text-base text-primary">Thêm Nhân Viên</h3>
@@ -2162,7 +2162,7 @@
     </div>
 
     <!-- MODAL 16: TASK TEMPLATES MANAGEMENT -->
-    <div v-if="showTaskTemplateModal" style="display: none;" class="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4">
+    <div v-if="showTaskTemplateModal" class="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4">
       <div class="bg-surface-container-lowest w-full max-w-md rounded-3xl p-5 shadow-float space-y-4 max-h-[85vh] flex flex-col">
         <div class="flex justify-between items-center border-b border-outline-variant/20 pb-3">
           <h3 class="font-display font-bold text-base text-primary">Quản Lý Lịch Công Việc Lặp Lại</h3>
@@ -2195,7 +2195,7 @@
     </div>
 
     <!-- MODAL: FULLSCREEN OFFICIAL QR STANDEE -->
-    <div v-if="showFullscreenQR || showShopStandeeModal" style="display: none;" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-3" @click.self="showFullscreenQR = false; showShopStandeeModal = false">
+    <div v-if="showFullscreenQR || showShopStandeeModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-3" @click.self="showFullscreenQR = false; showShopStandeeModal = false">
       <div class="bg-white rounded-3xl p-4 max-w-sm w-full text-center shadow-float space-y-3 animate-scale-up">
         <div class="flex justify-between items-center pb-2 border-b border-outline-variant/20">
           <div class="text-left">
@@ -2221,7 +2221,7 @@
     </div>
 
     <!-- TOAST NOTIFICATION -->
-    <div v-if="toast.show" style="display: none;" class="fixed top-5 left-1/2 -translate-x-1/2 z-50 bg-primary text-on-primary px-4 py-2.5 rounded-full shadow-float text-xs font-semibold flex items-center gap-2 animate-bounce">
+    <div v-if="toast.show" class="fixed top-5 left-1/2 -translate-x-1/2 z-50 bg-primary text-on-primary px-4 py-2.5 rounded-full shadow-float text-xs font-semibold flex items-center gap-2 animate-bounce">
       <span class="material-symbols-outlined text-base">{{ toast.icon || 'info' }}</span>
       <span>{{ toast.message }}</span>
     </div>
@@ -2411,6 +2411,10 @@ function launchVueApp() {
         // KDS State
         const kitchenStatusFilter = ref('ALL');
         const showCheckoutModal = ref(false);
+        const isCustomerMode = ref(false);
+        const currentTableParam = ref('');
+        const receivedCashAmount = ref(0);
+        const cashierName = ref('Thu Ngân');
         const checkoutOrderData = ref(null);
         const paymentMethod = ref('CASH');
 
@@ -3589,7 +3593,7 @@ function launchVueApp() {
           sizeOptions, iceOptions, sugarOptions, customizedPrice, isToppingSelected, toggleTopping,
           // KDS & Order History
           kitchenStatusFilter, filteredKitchenOrders, countOrdersByStatus, updateStatus, cancelCurrentOrder,
-          openCheckoutModal, showCheckoutModal, checkoutOrderData, paymentMethod, confirmCheckout, shopLogo, shopBanner, shopOfficialQR, qrPaymentMode, showFullscreenQR, showShopStandeeModal,
+          openCheckoutModal, showCheckoutModal, isCustomerMode, currentTableParam, receivedCashAmount, cashierName, checkoutOrderData, paymentMethod, confirmCheckout, shopLogo, shopBanner, shopOfficialQR, qrPaymentMode, showFullscreenQR, showShopStandeeModal,
           setKitchenHistoryFilter, getStatusText, getStatusBadgeClass, getBorderColorByStatus,
           // Tables, QR Standee & Switch Table
           countTablesByStatus, getTableName, handleTableClick, getTableBorderClass, getTableDotClass, getTableStatusLabel,

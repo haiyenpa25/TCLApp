@@ -351,20 +351,88 @@ function _buildOrderDetailRows(orderId, items, detSheet) {
 }
 
 /** Tối ưu submitOrder với LockService và Batch appendRowsToSheet */
+
+/**
+ * Thuật toán tính giá Authoritative trên Server (P0 Security & Data Integrity).
+ * Server tự đọc bảng giá Products & Toppings từ Google Sheets để tính toán.
+ */
+function _calculateOrderAuthoritative(rawItems, products, toppings) {
+  var prodMap = new Map();
+  if (products && products.length) {
+    products.forEach(function(p) { prodMap.set(String(p.ID), p); });
+  }
+  var topMap = new Map();
+  if (toppings && toppings.length) {
+    toppings.forEach(function(t) {
+      topMap.set(String(t.Name).trim().toLowerCase(), t);
+      topMap.set(String(t.ID), t);
+    });
+  }
+
+  var total = 0;
+  var computedItems = (rawItems || []).map(function(item, idx) {
+    var p = prodMap.get(String(item.productId));
+    var basePrice = p ? (Number(p.Price) || 0) : (Number(item.price) || 0);
+
+    // Size Delta
+    var sizeDelta = 0;
+    var sz = String(item.size || '').toUpperCase();
+    if (sz === 'M') sizeDelta = 5000;
+    else if (sz === 'L') sizeDelta = 10000;
+
+    // Toppings Delta
+    var topDelta = 0;
+    var topArr = Array.isArray(item.toppings) ? item.toppings : (item.toppings ? String(item.toppings).split(', ') : []);
+    topArr.forEach(function(tName) {
+      var topObj = topMap.get(String(tName).trim().toLowerCase()) || topMap.get(String(tName).trim());
+      if (topObj) {
+        topDelta += Number(topObj.Price) || 5000;
+      } else {
+        topDelta += 5000;
+      }
+    });
+
+    var unitPrice = basePrice + sizeDelta + topDelta;
+    var qty = Math.max(1, parseInt(item.quantity, 10) || 1);
+    var subtotal = unitPrice * qty;
+    total += subtotal;
+
+    return {
+      productId: item.productId || (p ? p.ID : ''),
+      productName: p ? p.Name : (item.productName || 'Món'),
+      size: item.size || 'M',
+      ice: item.ice || '100% Đá',
+      sugar: item.sugar || '100% Đường',
+      toppings: topArr,
+      quantity: qty,
+      price: unitPrice,
+      subtotal: subtotal,
+      note: item.note || ''
+    };
+  });
+
+  return { items: computedItems, totalAmount: total };
+}
+
+/** Tối ưu submitOrder với Server Authoritative Pricing, LockService và Batch writes */
 function submitOrder(payload) {
   return withErrorHandling(function() {
     var lock = LockService.getScriptLock();
-    if (!lock.tryLock(3000)) {
+    if (!lock.tryLock(3500)) {
       return { success: false, error: 'Hệ thống đang xử lý đơn khác, vui lòng thử lại sau giây lát.' };
     }
 
     try {
-      var orderId    = 'ORD-' + new Date().getTime();
-      var orderType  = payload.orderType || 'DINE_IN';
-      var pts        = Math.floor((payload.totalAmount || 0) / 10000);
-      var customerId = payload.customerId || '';
+      var products = getSheetData(SHEETS.PRODUCTS, false);
+      var toppings = getSheetData(SHEETS.TOPPINGS, false);
+      var calcResult = _calculateOrderAuthoritative(payload.items, products, toppings);
 
-      // Tạo hồ sơ khách hàng mới nếu chưa có (chưa cộng điểm khi đơn chưa thanh toán)
+      var orderId = 'ORD-' + new Date().getTime();
+      var orderType = payload.orderType || 'DINE_IN';
+      var customerId = payload.customerId || '';
+      var discountAmount = 0;
+
+      // Xử lý khách hàng và giảm giá tích điểm
       if (!customerId && payload.customerPhone) {
         var existingCust = getSheetData(SHEETS.CUSTOMERS, false).find(function(c) { return String(c.Phone) === String(payload.customerPhone); });
         if (existingCust) {
@@ -382,14 +450,41 @@ function submitOrder(payload) {
         }
       }
 
+      // Kiểm tra đổi điểm hợp lệ (10 điểm = 10.000đ)
+      if (customerId && payload.usePointsDiscount) {
+        var cust = getSheetData(SHEETS.CUSTOMERS, false).find(function(c) { return c.ID === customerId; });
+        if (cust && (Number(cust.Points) || 0) >= 10) {
+          discountAmount = 10000;
+          updateRowInSheet(SHEETS.CUSTOMERS, 'ID', customerId, {
+            Points: (Number(cust.Points) || 0) - 10
+          });
+          appendRowToSheet(SHEETS.POINT_LEDGER, {
+            ID: genId('LED'), CustomerID: customerId, OrderID: orderId,
+            Type: 'REDEEM', Points: -10, CreatedAt: new Date().toISOString(),
+            Note: 'Đổi 10 điểm giảm 10.000đ cho đơn ' + orderId
+          });
+          invalidateCache(SHEETS.CUSTOMERS);
+        }
+      }
+
+      var finalTotal = Math.max(0, calcResult.totalAmount - discountAmount);
+
       var newOrder = {
-        ID: orderId, TableID: payload.tableId || '',
-        TotalAmount: payload.totalAmount, Status: 'NEW',
-        Source: payload.source || 'ONLINE', OrderType: orderType,
-        CustomerID: customerId, CustomerName: payload.customerName || '',
+        ID: orderId,
+        TableID: payload.tableId || '',
+        TableSessionID: payload.tableId ? ('TS-' + payload.tableId + '-' + new Date().toISOString().substring(0,10)) : '',
+        TotalAmount: finalTotal,
+        Status: 'NEW',
+        KitchenStatus: 'NEW',
+        PaymentStatus: 'UNPAID',
+        Source: payload.source || 'POS',
+        OrderType: orderType,
+        CustomerID: customerId,
+        CustomerName: payload.customerName || '',
         CustomerPhone: payload.customerPhone || '',
         DeliveryAddress: payload.deliveryAddress || '',
-        CreatedAt: new Date().toISOString(), Note: payload.note || '',
+        CreatedAt: new Date().toISOString(),
+        Note: payload.note || '',
       };
 
       appendRowToSheet(SHEETS.ORDERS, newOrder);
@@ -400,13 +495,13 @@ function submitOrder(payload) {
 
       // Batch Insert Order Details
       var detSheet = getSheet(SHEETS.ORDER_DETAILS);
-      var rows     = _buildOrderDetailRows(orderId, payload.items, detSheet);
+      var rows = _buildOrderDetailRows(orderId, calcResult.items, detSheet);
       if (rows.length > 0) {
         detSheet.getRange(detSheet.getLastRow() + 1, 1, rows.length, rows[0].length).setValues(rows);
         invalidateCache(SHEETS.ORDER_DETAILS);
       }
 
-      var fullOrderData = Object.assign({}, newOrder, { items: payload.items || [] });
+      var fullOrderData = Object.assign({}, newOrder, { items: calcResult.items });
       return { success: true, orderId: orderId, data: fullOrderData };
     } finally {
       lock.releaseLock();
@@ -946,55 +1041,97 @@ function updateOrder(data) { return editOrder(data); }
 function cancelOrder(orderId) { return updateOrderStatus(orderId, 'CANCELLED'); }
 function getOrderById(orderId) { return getOrderStatus(orderId); }
 
-function checkoutOrder(orderId, paymentData) {
+function checkoutOrder(payload, extraData) {
   return withErrorHandling(function() {
+    var orderId = typeof payload === 'string' ? payload : (payload ? payload.orderId : '');
+    var pd = (typeof payload === 'object' && payload.method) ? payload : (extraData || {});
+    var method = (pd.method || pd.paymentMethod || 'CASH').toUpperCase();
+    var receivedAmount = Number(pd.receivedAmount || pd.cashAmount || pd.amount || 0);
+    var cashierName = pd.cashierName || 'Thu Ngân';
+    var note = pd.note || '';
+
     var lock = LockService.getScriptLock();
-    if (!lock.tryLock(2500)) return { success: false, error: 'Hệ thống đang bận' };
+    if (!lock.tryLock(3500)) return { success: false, error: 'Hệ thống đang bận, vui lòng thử lại sau giây lát.' };
 
     try {
       var orders = getSheetData(SHEETS.ORDERS, false);
       var order  = orders.find(function(o) { return o.ID === orderId; });
-      if (!order) return { success: false, error: 'Không tìm thấy đơn' };
+      if (!order) return { success: false, error: 'Không tìm thấy đơn hàng: ' + orderId };
 
-      var pd = paymentData || {};
-      var notePayment = '[TT:' + (pd.paymentMethod || 'cash').toUpperCase() + ']';
-      if (pd.cashAmount)     notePayment += ' TM:' + pd.cashAmount;
-      if (pd.transferAmount) notePayment += ' CK:' + pd.transferAmount;
-      if (pd.tips)           notePayment += ' Tips:' + pd.tips;
+      var total = Number(order.TotalAmount) || 0;
+      if (receivedAmount <= 0) receivedAmount = total;
+      var changeAmount = Math.max(0, receivedAmount - total);
 
-      var existingNote = order.Note || '';
-      var newNote = existingNote ? (existingNote + ' ' + notePayment) : notePayment;
-
+      // 1. Cập nhật Order trạng thái Đã Thanh Toán & Đã Hoàn Tất
       updateRowInSheet(SHEETS.ORDERS, 'ID', orderId, {
         Status: 'COMPLETED',
-        Note:   newNote,
+        PaymentStatus: 'PAID'
       });
+      invalidateCache(SHEETS.ORDERS);
 
+      // 2. Ghi nhận giao dịch vào bảng Payments (P0 Money)
+      var paymentRecord = {
+        ID: genId('PAY'),
+        OrderID: orderId,
+        TableSessionID: order.TableSessionID || '',
+        Amount: total,
+        Method: method,
+        ReceivedAmount: receivedAmount,
+        ChangeAmount: changeAmount,
+        Status: 'COMPLETED',
+        TransactionRef: pd.transactionRef || '',
+        CashierName: cashierName,
+        CreatedAt: new Date().toISOString(),
+        Note: note
+      };
+      appendRowToSheet(SHEETS.PAYMENTS, paymentRecord);
+      invalidateCache(SHEETS.PAYMENTS);
+
+      // 3. Giải phóng bàn nếu là DINE_IN
       if (order.TableID) {
-        var others = orders.filter(function(o) {
+        var remainingTableOrders = orders.filter(function(o) {
           return o.TableID === order.TableID && o.ID !== orderId &&
                  ['NEW','PREPARING','PACKING','SERVING'].includes(o.Status);
         });
-        if (others.length === 0) {
+        if (remainingTableOrders.length === 0) {
           updateRowInSheet(SHEETS.TABLES, 'ID', order.TableID, { Status: 'FREE' });
+          invalidateCache(SHEETS.TABLES);
         }
       }
 
+      // 4. Tích điểm hội viên an toàn vào CustomerPointLedger (10.000đ = 1 điểm, chỉ phát sinh khi PAID)
       if (order.CustomerID) {
-        var pts = Math.floor((Number(order.TotalAmount) || 0) / 10000);
-        var customer = getSheetData(SHEETS.CUSTOMERS, false).find(function(c) { return c.ID === order.CustomerID; });
-        if (customer) {
-          updateRowInSheet(SHEETS.CUSTOMERS, 'ID', order.CustomerID, {
-            Points:     (Number(customer.Points)     || 0) + pts,
-            TotalSpent: (Number(customer.TotalSpent) || 0) + (Number(order.TotalAmount) || 0),
-          });
-          invalidateCache(SHEETS.CUSTOMERS);
+        var earnPts = Math.floor(total / 10000);
+        if (earnPts > 0) {
+          var customer = getSheetData(SHEETS.CUSTOMERS, false).find(function(c) { return c.ID === order.CustomerID; });
+          if (customer) {
+            updateRowInSheet(SHEETS.CUSTOMERS, 'ID', order.CustomerID, {
+              Points: (Number(customer.Points) || 0) + earnPts,
+              TotalSpent: (Number(customer.TotalSpent) || 0) + total,
+            });
+            appendRowToSheet(SHEETS.POINT_LEDGER, {
+              ID: genId('LED'),
+              CustomerID: order.CustomerID,
+              OrderID: orderId,
+              Type: 'EARN',
+              Points: earnPts,
+              CreatedAt: new Date().toISOString(),
+              Note: 'Tích ' + earnPts + ' điểm từ đơn hàng ' + orderId
+            });
+            invalidateCache(SHEETS.CUSTOMERS);
+            invalidateCache(SHEETS.POINT_LEDGER);
+          }
         }
       }
 
-      invalidateCache(SHEETS.ORDERS);
-      invalidateCache(SHEETS.TABLES);
-      return { success: true, orderId: orderId, status: 'COMPLETED' };
+      return {
+        success: true,
+        orderId: orderId,
+        totalAmount: total,
+        receivedAmount: receivedAmount,
+        changeAmount: changeAmount,
+        payment: paymentRecord
+      };
     } finally {
       lock.releaseLock();
     }
@@ -1285,5 +1422,43 @@ function toggleProductStock(productId, status) {
     var ok = updateRowInSheet(SHEETS.PRODUCTS, 'ID', productId, { Status: status });
     CacheService.getScriptCache().removeAll(['menu_pub', 'menu_admin']);
     return { success: ok, productId: productId, status: status };
+  });
+}
+
+
+/**
+ * Bootstrap an toàn dành riêng cho Khách Quét QR Bàn (Customer Mode).
+ * Chỉ trả Menu & Thông tin bàn, tuyệt đối cách ly khỏi CRM, Staff, Chi phí & Báo cáo.
+ */
+function getCustomerBootstrap(tableId) {
+  return withErrorHandling(function() {
+    var menuRes = getMenu();
+    var settingsRes = getSettings();
+    var tableObj = null;
+    if (tableId) {
+      var tables = getSheetData(SHEETS.TABLES, false);
+      tableObj = tables.find(function(t) { return t.ID === tableId || t.Name === tableId; });
+    }
+
+    var pubSettings = {};
+    if (settingsRes && settingsRes.data) {
+      pubSettings = {
+        shopName: settingsRes.data.shopName || 'Tiệm Của Lá',
+        slogan: settingsRes.data.slogan || '',
+        phone: settingsRes.data.phone || '',
+        bankId: settingsRes.data.bankId || '970436',
+        accountNo: settingsRes.data.accountNo || '',
+        accountName: settingsRes.data.accountName || ''
+      };
+    }
+
+    return {
+      success: true,
+      data: {
+        shop: pubSettings,
+        table: tableObj ? { ID: tableObj.ID, Name: tableObj.Name } : null,
+        menu: (menuRes && menuRes.data) ? menuRes.data : { products: [], toppings: [], categories: [] }
+      }
+    };
   });
 }

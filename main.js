@@ -40,6 +40,10 @@ function setupDatabase() {
     'Staff':           ['ID','Name','Status'],
     'TaskTemplates':   ['ID','Title','Description','AssignedTo','AssignedName','RepeatType','RepeatEvery','Priority','StartDate','Status'],
     'TaskInstances':   ['ID','TemplateID','Title','AssignedTo','AssignedName','DueDate','Priority','Status','CompletedAt','CompletedBy','Note'],
+    // Financial & Session Management
+    'Payments':        ['ID','OrderID','TableSessionID','Amount','Method','ReceivedAmount','ChangeAmount','Status','TransactionRef','CashierName','CreatedAt','Note'],
+    'CustomerPointLedger': ['ID','CustomerID','OrderID','Type','Points','CreatedAt','Note'],
+    'TableSessions':   ['ID','TableID','Status','OpenedAt','ClosedAt','CustomerCount','Note'],
   };
 
   for (const [name, headers] of Object.entries(schema)) {

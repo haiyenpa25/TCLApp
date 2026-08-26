@@ -20,6 +20,9 @@ const SHEETS = {
   STAFF:           'Staff',
   TASK_TEMPLATES:  'TaskTemplates',
   TASK_INSTANCES:  'TaskInstances',
+  PAYMENTS:        'Payments',
+  POINT_LEDGER:    'CustomerPointLedger',
+  TABLE_SESSIONS:  'TableSessions',
 };
 
 const DB_CACHE_TIMEOUT = 300; // 5 phút (seconds)
