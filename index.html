@@ -84,6 +84,9 @@
   <style>
     [v-cloak], [v-cloak] * {
       display: none !important;
+      visibility: hidden !important;
+      opacity: 0 !important;
+      pointer-events: none !important;
     }
 
     .material-symbols-outlined {
@@ -145,6 +148,8 @@
       content: '';
     }
   </style>
+  <!-- Vue 3 Engine (Standard Head Script for Google Apps Script Sandbox) -->
+  <script src="https://cdn.jsdelivr.net/npm/vue@3.4.21/dist/vue.global.prod.js"></script>
 </head>
 
 <body class="bg-surface font-body text-on-surface antialiased min-h-screen overflow-x-hidden">
@@ -3633,47 +3638,24 @@ function launchVueApp() {
 
     
   
-    // ── Robust Multi-CDN Vue 3 Dynamic Loader ─────────────────────────────────────
+    // ── Direct Safe App Initialization ─────────────────────────────────────
     (function initApp() {
-      const CDNS = [
-        'https://cdn.jsdelivr.net/npm/vue@3.4.21/dist/vue.global.prod.js',
-        'https://cdnjs.cloudflare.com/ajax/libs/vue/3.4.21/vue.global.prod.min.js',
-        'https://unpkg.com/vue@3.4.21/dist/vue.global.prod.js'
-      ];
-      let cdnIndex = 0;
-
-      function loadVueEngine() {
+      function startApp() {
         if (typeof Vue !== 'undefined' && Vue.createApp) {
-          return launchVueApp();
-        }
-        if (cdnIndex >= CDNS.length) {
-          console.error('All Vue 3 CDNs failed to load.');
-          const preloaderText = document.querySelector('#preloader p');
-          if (preloaderText) preloaderText.innerText = 'Không thể kết nối thư viện. Vui lòng kiểm tra mạng và tải lại trang.';
-          return;
-        }
-
-        const src = CDNS[cdnIndex++];
-        console.log('[Vue Loader] Loading engine from:', src);
-        const script = document.createElement('script');
-        script.src = src;
-        script.async = false;
-        script.crossOrigin = 'anonymous';
-        script.onload = function() {
-          console.log('[Vue Loader] Vue 3 loaded successfully!');
           launchVueApp();
-        };
-        script.onerror = function() {
-          console.warn('[Vue Loader] CDN failed, trying next mirror...');
-          loadVueEngine();
-        };
-        document.head.appendChild(script);
+        } else {
+          // Fallback loader if head script was delayed
+          var s = document.createElement('script');
+          s.src = 'https://cdnjs.cloudflare.com/ajax/libs/vue/3.4.21/vue.global.prod.min.js';
+          s.onload = function() { launchVueApp(); };
+          document.head.appendChild(s);
+        }
       }
 
       if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', loadVueEngine);
+        document.addEventListener('DOMContentLoaded', startApp);
       } else {
-        loadVueEngine();
+        startApp();
       }
     })();
 
