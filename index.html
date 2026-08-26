@@ -197,24 +197,7 @@ function _i(e,t){const n=ns(e);class s extends xi{constructor(e){super(n,e,t)}}r
     }
   </style>
 
-    <div class="font-display font-bold text-base text-primary">Tiệm Của Lá</div>
-    <div class="text-xs text-outline flex items-center gap-1.5">
-      <span class="w-2 h-2 rounded-full bg-primary animate-ping"></span>
-      Đang khởi động hệ thống...
-    </div>
-  </div>
-  <script>
-    // Auto-dismiss preloader fallback so the UI is ALWAYS visible even on slow connections
-    setTimeout(function() {
-      var p = document.getElementById('initial-preloader');
-      if (p) {
-        p.style.opacity = '0';
-        setTimeout(function() { if (p && p.parentNode) p.parentNode.removeChild(p); }, 300);
-      }
-    }, 1000);
-  </script>
-
-  <div id="app" style="display: none;" class="flex flex-col min-h-screen">
+  <div id="app" class="flex flex-col min-h-screen">
 
     <!-- TOP APP BAR -->
     <header class="sticky top-0 z-40 bg-surface/95 backdrop-blur-md border-b border-outline-variant/40 px-4 py-3 flex items-center justify-between shadow-xs">
@@ -1998,7 +1981,6 @@ function _i(e,t){const n=ns(e);class s extends xi{constructor(e){super(n,e,t)}}r
         </button>
       </div>
     </template>
-    </div>
 
     <!-- MODAL 10: ADD / EDIT TOPPING MODAL -->
     <template v-if="showToppingModal">
