@@ -217,11 +217,7 @@
       </div>
 
       <div class="flex items-center gap-2">
-        <!-- Quick Shop QR Standee Button -->
-        <button @click="showShopStandeeModal = true" class="bg-primary/10 hover:bg-primary/20 text-primary px-2.5 py-1.5 rounded-xl flex items-center gap-1 text-xs font-bold transition shadow-xs" title="Mã QR Thanh Toán Quán">
-          <span class="material-symbols-outlined text-sm">qr_code_2</span>
-          <span class="hidden sm:inline">QR Quán</span>
-        </button>
+        
 
         <!-- Quick Cart Trigger (POS Tab) -->
         <button v-if="currentTab === 'pos' && cart.length > 0" @click="showCartDrawer = true" class="relative bg-primary text-on-primary px-3 py-1.5 rounded-full flex items-center gap-1.5 text-xs font-semibold shadow-sm transition active:scale-95">
@@ -1686,40 +1682,46 @@
           </button>
         </div>
 
-        <div v-if="paymentMethod === 'TRANSFER'" class="bg-surface-container p-3 rounded-2xl text-center space-y-2.5">
-          <!-- Toggle between Official Standee and Dynamic VietQR with Amount -->
-          <div class="flex bg-surface-container-highest p-0.5 rounded-xl text-[11px] font-bold">
-            <button @click="qrPaymentMode = 'OFFICIAL'" class="flex-1 py-1 rounded-lg transition" :class="qrPaymentMode === 'OFFICIAL' ? 'bg-primary text-on-primary shadow-xs' : 'text-on-surface-variant'">
-              Mã Quán Chính Thức
-            </button>
-            <button @click="qrPaymentMode = 'DYNAMIC'" class="flex-1 py-1 rounded-lg transition" :class="qrPaymentMode === 'DYNAMIC' ? 'bg-primary text-on-primary shadow-xs' : 'text-on-surface-variant'">
-              VietQR Tự Điền Tiền
-            </button>
+        <div v-if="paymentMethod === 'TRANSFER'" class="bg-surface-container p-3.5 rounded-2xl space-y-3">
+          <!-- Dynamic VietQR Image with Fail-Safe Fallback -->
+          <div class="bg-white p-2 rounded-2xl shadow-card border border-outline-variant/30 max-w-[200px] mx-auto overflow-hidden">
+            <img :src="`https://img.vietqr.io/image/${settings.bankId || '970436'}-${settings.accountNo || '1018704944'}-compact2.png?amount=${checkoutOrderData.TotalAmount}&addInfo=TCL%20${checkoutOrderData.ID.slice(-4)}&accountName=${encodeURIComponent(settings.accountName || 'TRUONG HOAI DINH')}`"
+                 class="w-full h-auto object-contain rounded-xl"
+                 alt="Mã VietQR Chuyển Khoản"
+                 @error="(e) => e.target.style.display = 'none'" />
           </div>
 
-          <!-- Mode 1: Official Shop Standee Card (Tiệm Của Lá - TRƯƠNG HOÀI DINH) -->
-          <div v-if="qrPaymentMode === 'OFFICIAL'" class="space-y-1.5">
-            <div @click="showFullscreenQR = true" class="w-52 h-72 mx-auto bg-white rounded-2xl overflow-hidden shadow-card border-2 border-primary/20 cursor-pointer relative group">
-              <img :src="shopOfficialQR" class="w-full h-full object-cover" alt="Mã QR Tiệm Của Lá" />
-              <div class="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition flex items-center justify-center text-white text-xs font-bold gap-1">
-                <span class="material-symbols-outlined text-sm">fullscreen</span> Phóng To
+          <!-- Banking Details Card with Copy Buttons -->
+          <div class="bg-surface-container-lowest p-3 rounded-xl border border-outline-variant/20 space-y-2 text-xs text-left">
+            <div class="flex justify-between items-center">
+              <span class="text-outline">Ngân hàng:</span>
+              <span class="font-bold text-on-surface font-mono">{{ settings.bankId === '970436' ? 'Vietcombank (VCB)' : (settings.bankId || 'Vietcombank') }}</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="text-outline">Số tài khoản:</span>
+              <div class="flex items-center gap-1">
+                <span class="font-bold text-primary font-mono text-sm">{{ settings.accountNo || '1018704944' }}</span>
+                <button @click="copyToClipboard(settings.accountNo || '1018704944', 'Đã sao chép số tài khoản!')" class="px-1.5 py-0.5 bg-surface-container rounded text-[10px] font-bold text-outline hover:text-primary">
+                  Copy
+                </button>
               </div>
             </div>
-            <div class="flex items-center justify-center gap-1">
-              <button @click="showFullscreenQR = true" class="text-[11px] font-bold text-primary hover:underline flex items-center gap-0.5">
-                <span class="material-symbols-outlined text-xs">zoom_in</span> Phóng to toàn màn hình
-              </button>
+            <div class="flex justify-between items-center">
+              <span class="text-outline">Chủ tài khoản:</span>
+              <span class="font-bold text-on-surface uppercase">{{ settings.accountName || 'TRUONG HOAI DINH' }}</span>
             </div>
-            <p class="text-[10px] text-outline font-medium">Chủ TK: <strong class="text-on-surface font-semibold">TRƯƠNG HOÀI DINH</strong> (MoMo / VietQR / Napas)</p>
-          </div>
-
-          <!-- Mode 2: Dynamic VietQR with Exact Amount -->
-          <div v-else class="space-y-1.5">
-            <div class="w-48 h-48 mx-auto bg-white p-2 rounded-2xl shadow-card border border-outline-variant/30 flex items-center justify-center">
-              <img :src="`https://img.vietqr.io/image/${settings.bankId}-${settings.accountNo}-compact2.png?amount=${checkoutOrderData.TotalAmount}&addInfo=TCL%20${checkoutOrderData.ID.slice(-4)}&accountName=${encodeURIComponent(settings.accountName || 'TRUONG HOAI DINH')}`" class="w-full h-full object-contain" alt="VietQR Động" />
+            <div class="flex justify-between items-center border-t border-outline-variant/20 pt-1.5">
+              <span class="text-outline">Số tiền:</span>
+              <span class="font-display font-black text-sm text-primary">{{ formatVND(checkoutOrderData.TotalAmount) }}</span>
             </div>
-            <div class="text-[11px] font-mono font-bold text-primary">
-              Số tiền: {{ formatVND(checkoutOrderData.TotalAmount) }} • Nội dung: TCL {{ checkoutOrderData.ID.slice(-4) }}
+            <div class="flex justify-between items-center">
+              <span class="text-outline">Nội dung CK:</span>
+              <div class="flex items-center gap-1">
+                <span class="font-bold text-emerald-700 font-mono">TCL {{ checkoutOrderData.ID.slice(-4) }}</span>
+                <button @click="copyToClipboard('TCL ' + checkoutOrderData.ID.slice(-4), 'Đã sao chép nội dung chuyển khoản!')" class="px-1.5 py-0.5 bg-surface-container rounded text-[10px] font-bold text-outline hover:text-primary">
+                  Copy
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -2522,7 +2524,19 @@ function launchVueApp() {
         };
 
         // Format Currency VND
-        const formatVND = (num) => {
+        
+        const copyToClipboard = (text, successMsg = 'Đã sao chép!') => {
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(text).then(() => {
+              showToast(successMsg, 'content_copy');
+            }).catch(() => {
+              showToast(text, 'info');
+            });
+          } else {
+            showToast(text, 'info');
+          }
+        };
+const formatVND = (num) => {
           if (!num || isNaN(num)) return '0 ₫';
           return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(num);
         };
@@ -3628,7 +3642,7 @@ function launchVueApp() {
           sizeOptions, iceOptions, sugarOptions, customizedPrice, isToppingSelected, toggleTopping,
           // KDS & Order History
           kitchenStatusFilter, filteredKitchenOrders, countOrdersByStatus, updateStatus, cancelCurrentOrder,
-          openCheckoutModal, showCheckoutModal, isCustomerMode, currentTableParam, receivedCashAmount, cashierName, checkoutOrderData, paymentMethod, confirmCheckout, shopLogo, shopBanner, shopOfficialQR, qrPaymentMode, showFullscreenQR, showShopStandeeModal,
+          openCheckoutModal, showCheckoutModal, copyToClipboard, isCustomerMode, currentTableParam, receivedCashAmount, cashierName, checkoutOrderData, paymentMethod, confirmCheckout, shopLogo, shopBanner, shopOfficialQR, qrPaymentMode, showFullscreenQR, showShopStandeeModal,
           setKitchenHistoryFilter, getStatusText, getStatusBadgeClass, getBorderColorByStatus,
           // Tables, QR Standee & Switch Table
           countTablesByStatus, getTableName, handleTableClick, getTableBorderClass, getTableDotClass, getTableStatusLabel,
