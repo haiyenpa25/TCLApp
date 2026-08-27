@@ -14,37 +14,11 @@ function sanitizeUrlParam(val) {
   return val.replace(/[^a-zA-Z0-9_\-]/g, '').substring(0, 30);
 }
 
-function getHtmlFileContent(name) {
-  try {
-    return HtmlService.createHtmlOutputFromFile(name).getContent();
-  } catch (e1) {
-    try {
-      return HtmlService.createHtmlOutputFromFile(name.toLowerCase()).getContent();
-    } catch (e2) {
-      return HtmlService.createHtmlOutputFromFile(name.charAt(0).toUpperCase() + name.slice(1)).getContent();
-    }
-  }
-}
-
 function doGet(e) {
-  let indexContent = getHtmlFileContent('index');
-  const stylesContent = getHtmlFileContent('Styles');
-  const jsContent = getHtmlFileContent('JavaScript');
-
-  // Exact plain string replacement + Regex fallback (100% bulletproof)
-  indexContent = indexContent.split("<?!= include('Styles'); ?>").join(stylesContent);
-  indexContent = indexContent.split("<?!= include('JavaScript'); ?>").join(jsContent);
-  indexContent = indexContent.split('<?!= include("Styles"); ?>').join(stylesContent);
-  indexContent = indexContent.split('<?!= include("JavaScript"); ?>').join(jsContent);
-
-  return HtmlService.createHtmlOutput(indexContent)
+  return HtmlService.createHtmlOutputFromFile('index')
     .setTitle('Ti\u1ec7m C\u1ee7a L\u00e1 \u2014 H\u1ec7 Th\u1ed1ng Qu\u1ea3n L\u00fd POS & F&B')
     .addMetaTag('viewport', 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no')
     .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
-}
-
-function include(filename) {
-  return getHtmlFileContent(filename);
 }
 
 function setupDatabase() {
