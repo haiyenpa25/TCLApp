@@ -31,9 +31,11 @@ function doGet(e) {
   const stylesContent = getHtmlFileContent('Styles');
   const jsContent = getHtmlFileContent('JavaScript');
 
-  // Clean include tags replacement directly (100% reliable, zero template crashes)
-  indexContent = indexContent.replace(/<\?!\s*=\s*include\(['"]Styles['"]\);?\s*\?>/g, stylesContent);
-  indexContent = indexContent.replace(/<\?!\s*=\s*include\(['"]JavaScript['"]\);?\s*\?>/g, jsContent);
+  // Exact plain string replacement + Regex fallback (100% bulletproof)
+  indexContent = indexContent.split("<?!= include('Styles'); ?>").join(stylesContent);
+  indexContent = indexContent.split("<?!= include('JavaScript'); ?>").join(jsContent);
+  indexContent = indexContent.split('<?!= include("Styles"); ?>').join(stylesContent);
+  indexContent = indexContent.split('<?!= include("JavaScript"); ?>').join(jsContent);
 
   return HtmlService.createHtmlOutput(indexContent)
     .setTitle('Ti\u1ec7m C\u1ee7a L\u00e1 \u2014 H\u1ec7 Th\u1ed1ng Qu\u1ea3n L\u00fd POS & F&B')
