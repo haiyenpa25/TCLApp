@@ -76,7 +76,10 @@ function getSheetData(sheetName, useCache = true) {
 
   if (useCache) {
     try {
-      cache.put(cacheKey, JSON.stringify(result), DB_CACHE_TIMEOUT);
+      const jsonStr = JSON.stringify(result);
+      if (jsonStr.length < 95000) {
+        cache.put(cacheKey, jsonStr, DB_CACHE_TIMEOUT);
+      }
     } catch (e) {
       Logger.log('[Cache Warning] ' + e.message);
     }
