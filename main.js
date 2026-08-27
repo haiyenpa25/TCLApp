@@ -14,16 +14,23 @@ function sanitizeUrlParam(val) {
   return val.replace(/[^a-zA-Z0-9_\-]/g, '').substring(0, 30);
 }
 
-/**
- * Entry point ch\u00ednh c\u1ee7a Web App GAS.
- * @param {GoogleAppsScript.Events.DoGet} e - Event object ch\u1ee9a URL parameters
- */
 function doGet(e) {
-  return HtmlService.createTemplateFromFile('index')
-    .evaluate()
+  let indexContent = HtmlService.createHtmlOutputFromFile('Index').getContent();
+  const stylesContent = HtmlService.createHtmlOutputFromFile('Styles').getContent();
+  const jsContent = HtmlService.createHtmlOutputFromFile('JavaScript').getContent();
+
+  // Clean include tags replacement directly (100% reliable, zero template crashes)
+  indexContent = indexContent.replace(/<\?!\s*=\s*include\(['"]Styles['"]\);?\s*\?>/g, stylesContent);
+  indexContent = indexContent.replace(/<\?!\s*=\s*include\(['"]JavaScript['"]\);?\s*\?>/g, jsContent);
+
+  return HtmlService.createHtmlOutput(indexContent)
     .setTitle('Ti\u1ec7m C\u1ee7a L\u00e1 \u2014 H\u1ec7 Th\u1ed1ng Qu\u1ea3n L\u00fd POS & F&B')
-    .addMetaTag('viewport', 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0')
+    .addMetaTag('viewport', 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no')
     .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
+}
+
+function include(filename) {
+  return HtmlService.createHtmlOutputFromFile(filename).getContent();
 }
 
 function setupDatabase() {
