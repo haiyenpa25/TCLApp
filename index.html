@@ -415,7 +415,7 @@
                 <div class="flex items-center gap-2">
                   <span class="font-display font-bold text-base text-primary">#{{ order.ID.slice(-4) }}</span>
                   <span class="px-2 py-0.5 rounded-full text-[10px] font-bold" :class="order.Status === 'COMPLETED' ? 'bg-status-free/15 text-status-free' : 'bg-status-urgent/15 text-status-urgent'">
-                    {{ order.Status === 'COMPLETED' ? 'ĐÃ HOÀN TẤT' : 'ĐÃ HỦY' }}
+                    {{ getHistoryOrderStatusLabel(order.Status) }}
                   </span>
                   <span class="text-outline font-mono text-[11px]">{{ formatTimeOnly(order.CreatedAt) }}</span>
                 </div>
@@ -1170,8 +1170,8 @@
                   <div class="flex items-center gap-1.5 shrink-0">
                     <!-- Quick Toggle Stock -->
                     <button @click="toggleStockStatus(p)" class="px-3 py-1.5 rounded-xl font-bold text-[11px] transition shadow-xs flex items-center gap-1" :class="p.Status === 'OUT_OF_STOCK' ? 'bg-error text-white hover:opacity-90' : 'bg-status-free text-white hover:opacity-90'">
-                      <span class="material-symbols-outlined text-xs">{{ p.Status === 'OUT_OF_STOCK' ? 'block' : 'check' }}</span>
-                      <span class="hidden sm:inline">{{ p.Status === 'OUT_OF_STOCK' ? 'Hết Hàng' : 'Đang Bán' }}</span>
+                      <span class="material-symbols-outlined text-xs">{{ getProductStockLabel(p.Status) }}</span>
+                      <span class="hidden sm:inline">{{ getProductStockLabel(p.Status) }}</span>
                     </button>
 
                     <!-- Duplicate Product -->
@@ -1571,7 +1571,7 @@
 
           <button @click="placeOrder" :disabled="cart.length === 0 || submittingOrder" class="w-full bg-primary text-on-primary py-3 rounded-2xl font-bold text-sm shadow-soft hover:opacity-95 transition flex items-center justify-center gap-2 disabled:opacity-50">
             <span v-if="submittingOrder" class="animate-spin material-symbols-outlined text-sm">progress_activity</span>
-            <span>{{ submittingOrder ? 'Đang gửi đơn...' : 'Xác Nhận & Gửi Đơn Bếp' }}</span>
+            <span>{{ submitOrderButtonText }}</span>
           </button>
         </div>
       </div>
@@ -1947,7 +1947,7 @@
 
         <button @click="submitProductForm" :disabled="!productForm.name || !productForm.price || uploadingImage" class="w-full bg-primary text-on-primary py-2.5 rounded-xl font-bold text-xs shadow-sm hover:opacity-90 transition disabled:opacity-50 flex items-center justify-center gap-1.5">
           <span v-if="uploadingImage" class="material-symbols-outlined text-sm animate-spin">progress_activity</span>
-          <span>{{ uploadingImage ? 'Đang lưu & tải ảnh lên Drive...' : (isEditingProduct ? 'Lưu Thay Đổi' : 'Tạo Món Mới') }}</span>
+          <span>{{ saveProductButtonText }}</span>
         </button>
       </div>
     </template>
@@ -1970,7 +1970,7 @@
             <input v-model.number="toppingForm.price" type="number" step="1000" placeholder="5000" class="w-full px-3 py-2 bg-surface-container border border-outline-variant/30 rounded-xl font-bold text-primary" />
           </div>
           <button @click="submitToppingForm" :disabled="!toppingForm.name || toppingForm.price === null" class="w-full bg-secondary text-white py-2.5 rounded-xl font-bold text-xs shadow-sm hover:opacity-90 transition disabled:opacity-50">
-            {{ isEditingTopping ? 'Lưu Thay Đổi' : 'Thêm Topping' }}
+            {{ saveToppingButtonText }}
           </button>
         </div>
       </div>
@@ -2077,7 +2077,7 @@
             </div>
           </div>
           <button @click="submitCustomerForm" :disabled="!customerForm.name.trim()" class="w-full bg-primary text-on-primary py-2.5 rounded-xl font-bold text-xs shadow-sm hover:opacity-90 transition disabled:opacity-50">
-            {{ isEditingCustomer ? 'Lưu Thay Đổi' : 'Tạo Hồ Sơ' }}
+            {{ saveCustomerButtonText }}
           </button>
         </div>
       </div>
@@ -2633,7 +2633,9 @@ const formatVND = (num) => {
         // Mock response helper for instant local browser preview
         const getMockResponse = (fn, args) => {
           if (fn === 'getMenu' || fn === 'getMenuAdmin') {
-            return {
+            
+        
+                        return {
               success: true,
               data: {
                 products: [
@@ -3586,6 +3588,12 @@ const formatVND = (num) => {
           }, 15000);
         });
 
+                const getHistoryOrderStatusLabel = (st) => st === 'COMPLETED' ? '\u0110\u00c3 HO\u00c0N T\u1ea4T' : '\u0110\u00c3 H\u1ee6Y';
+        const getProductStockLabel = (st) => st === 'OUT_OF_STOCK' ? 'H\u1ebft H\u00e0ng' : '\u0110ang B\u00e1n';
+        const submitOrderButtonText = computed(() => submittingOrder.value ? '\u0110ang g\u1eedi \u0111\u01a1n...' : 'X\u00e1c Nh\u1eadn & G\u1eedi \u0110\u01a1n B\u1ebfp');
+        const saveProductButtonText = computed(() => uploadingImage.value ? '\u0110ang l\u01b0u & t\u1ea3i \u1ea3nh l\u00ean Drive...' : (isEditingProduct.value ? 'L\u01b0u Thay \u0110\u1ed5i' : 'T\u1ea1o M\u00f3n M\u1edbi'));
+        const saveToppingButtonText = computed(() => isEditingTopping.value ? 'L\u01b0u Thay \u0110\u1ed5i' : 'Th\u00eam Topping');
+        const saveCustomerButtonText = computed(() => isEditingCustomer.value ? 'L\u01b0u Thay \u0110\u1ed5i' : 'T\u1ea1o H\u1ed3 S\u01a1');
         return {
           loading, isOnline, currentTab, settingsSubTab, navItems, activeTabTitle, activeProductsCount, outOfStockProductsCount,
           products, toppings, categories, tables, activeOrders, orderHistoryList, tasks, expenses, staffList, customerList, settings, reportData,
@@ -3633,7 +3641,7 @@ const formatVND = (num) => {
           // Report & Settings
           reportPreset, customDateFrom, customDateTo, applyCustomDateRange, calculateBarPercentage, saveShopSettings, handleLogoUpload, handleBannerUpload, removeLogo, removeBanner, setReportPreset,
           // UI Feedback
-          showToast, refreshData, setTab
+          getHistoryOrderStatusLabel, getProductStockLabel, submitOrderButtonText, saveProductButtonText, saveToppingButtonText, saveCustomerButtonText, getHistoryOrderStatusLabel, getProductStockLabel, submitOrderButtonText, saveProductButtonText, saveToppingButtonText, saveCustomerButtonText, showToast, refreshData, setTab
         };
       }
     });
