@@ -1,23 +1,23 @@
 /**
- * API v3.4 (Optimized Engine) — Tiệm Của Lá Full POS
+ * API v3.4 (Optimized Engine) \u2014 Ti\u1ec7m C\u1ee7a L\u00e1 Full POS
  * 
- * Áp dụng các tối ưu hiệu năng cao:
- * 1. O(N+M) Map Hash Indexing: Gom nhóm chi tiết đơn hàng bằng Map thay cho .filter() quét lồng nhau.
- * 2. Targeted Lock Concurrency: Sử dụng LockService với tryLock(2500) và try/finally bảo vệ giao dịch ghi.
- * 3. Batch Writes: Dùng appendRowsToSheet và setValues() hàng loạt.
- * 4. Entity Returns: Trả về đối tượng vừa lưu giúp Frontend cập nhật State 0ms (Optimistic UI).
+ * \u00c1p d\u1ee5ng c\u00e1c t\u1ed1i \u01b0u hi\u1ec7u n\u0103ng cao:
+ * 1. O(N+M) Map Hash Indexing: Gom nh\u00f3m chi ti\u1ebft \u0111\u01a1n h\u00e0ng b\u1eb1ng Map thay cho .filter() qu\u00e9t l\u1ed3ng nhau.
+ * 2. Targeted Lock Concurrency: S\u1eed d\u1ee5ng LockService v\u1edbi tryLock(2500) v\u00e0 try/finally b\u1ea3o v\u1ec7 giao d\u1ecbch ghi.
+ * 3. Batch Writes: D\u00f9ng appendRowsToSheet v\u00e0 setValues() h\u00e0ng lo\u1ea1t.
+ * 4. Entity Returns: Tr\u1ea3 v\u1ec1 \u0111\u1ed1i t\u01b0\u1ee3ng v\u1eeba l\u01b0u gi\u00fap Frontend c\u1eadp nh\u1eadt State 0ms (Optimistic UI).
  */
 
-// ── Helpers ───────────────────────────────────────────────────────────────────
+//  Helpers 
 
-/** Tạo ID duy nhất với prefix. */
+/** T\u1ea1o ID duy nh\u1ea5t v\u1edbi prefix. */
 function genId(prefix) {
   return prefix + '-' + new Date().getTime() + '-' + Math.floor(Math.random() * 1000);
 }
 
 /**
- * Wrapper DRY cho try/catch — bắt lỗi và trả JSON chuẩn.
- * @param {Function} fn - Hàm thuần logic, trả về data
+ * Wrapper DRY cho try/catch \u2014 b\u1eaft l\u1ed7i v\u00e0 tr\u1ea3 JSON chu\u1ea9n.
+ * @param {Function} fn - H\u00e0m thu\u1ea7n logic, tr\u1ea3 v\u1ec1 data
  * @returns {{ success: boolean, data?: any, error?: string }}
  */
 function withErrorHandling(fn) {
@@ -45,8 +45,8 @@ function withLock(fn, timeoutMs) {
 }
 
 /**
- * Lấy toàn bộ dữ liệu khởi động ứng dụng trong 1 lần gọi duy nhất (Single RPC Roundtrip).
- * Tối ưu theo tiêu chuẩn GGSheet-QLHT: Không gửi nhiều request lẻ gây lock contention trên Google Apps Script.
+ * L\u1ea5y to\u00e0n b\u1ed9 d\u1eef li\u1ec7u kh\u1edfi \u0111\u1ed9ng \u1ee9ng d\u1ee5ng trong 1 l\u1ea7n g\u1ecdi duy nh\u1ea5t (Single RPC Roundtrip).
+ * T\u1ed1i \u01b0u theo ti\u00eau chu\u1ea9n GGSheet-QLHT: Kh\u00f4ng g\u1eedi nhi\u1ec1u request l\u1ebb g\u00e2y lock contention tr\u00ean Google Apps Script.
  */
 function getInitialData() {
   return withErrorHandling(function() {
@@ -87,8 +87,8 @@ function getInitialData() {
 }
 
 /**
- * Helper gom nhóm mảng Order_Details theo OrderID bằng Map trong 1 lần duyệt O(M).
- * @param {Object[]} details - Danh sách chi tiết món
+ * Helper gom nh\u00f3m m\u1ea3ng Order_Details theo OrderID b\u1eb1ng Map trong 1 l\u1ea7n duy\u1ec7t O(M).
+ * @param {Object[]} details - Danh s\u00e1ch chi ti\u1ebft m\u00f3n
  * @returns {Map<string, Object[]>}
  */
 function _groupDetailsByOrderId(details) {
@@ -106,8 +106,8 @@ function _groupDetailsByOrderId(details) {
 }
 
 /**
- * Xử lý chuỗi tiền tệ linh hoạt (hỗ trợ số thuần hoặc chuỗi định dạng "12.000" / "415.000").
- * @param {any} val - Giá trị số hoặc chuỗi
+ * X\u1eed l\u00fd chu\u1ed7i ti\u1ec1n t\u1ec7 linh ho\u1ea1t (h\u1ed7 tr\u1ee3 s\u1ed1 thu\u1ea7n ho\u1eb7c chu\u1ed7i \u0111\u1ecbnh d\u1ea1ng "12.000" / "415.000").
+ * @param {any} val - Gi\u00e1 tr\u1ecb s\u1ed1 ho\u1eb7c chu\u1ed7i
  * @returns {number}
  */
 function _parseCurrency(val) {
@@ -119,9 +119,9 @@ function _parseCurrency(val) {
 }
 
 /**
- * Chuẩn hóa giá trị ngày tháng từ nhiều định dạng trong Google Sheets thành YYYY-MM-DD.
- * @param {any} val - Giá trị ngày tháng
- * @returns {string} Chuỗi YYYY-MM-DD
+ * Chu\u1ea9n h\u00f3a gi\u00e1 tr\u1ecb ng\u00e0y th\u00e1ng t\u1eeb nhi\u1ec1u \u0111\u1ecbnh d\u1ea1ng trong Google Sheets th\u00e0nh YYYY-MM-DD.
+ * @param {any} val - Gi\u00e1 tr\u1ecb ng\u00e0y th\u00e1ng
+ * @returns {string} Chu\u1ed7i YYYY-MM-DD
  */
 function _extractDateStr(val) {
   if (!val) return '';
@@ -141,9 +141,9 @@ function _extractDateStr(val) {
   return s.substring(0, 10);
 }
 
-// ── AUTH ──────────────────────────────────────────────────────────────────────
+//  AUTH 
 
-/** Xác minh PIN admin. */
+/** X\u00e1c minh PIN admin. */
 function verifyPin(pin) {
   return withErrorHandling(function() {
     var stored = PropertiesService.getScriptProperties().getProperty('ADMIN_PIN') || '1234';
@@ -151,17 +151,17 @@ function verifyPin(pin) {
   });
 }
 
-/** Đổi PIN admin. */
+/** \u0110\u1ed5i PIN admin. */
 function changePin(oldPin, newPin) {
   return withErrorHandling(function() {
     var stored = PropertiesService.getScriptProperties().getProperty('ADMIN_PIN') || '1234';
-    if (String(oldPin) !== stored) return { success: false, error: 'PIN cũ không đúng' };
+    if (String(oldPin) !== stored) return { success: false, error: 'PIN c\u0169 kh\u00f4ng \u0111\u00fang' };
     PropertiesService.getScriptProperties().setProperty('ADMIN_PIN', String(newPin));
     return { success: true };
   });
 }
 
-// ── SETTINGS ──────────────────────────────────────────────────────────────────
+//  SETTINGS 
 
 function getSettings() {
   return withErrorHandling(function() {
@@ -170,8 +170,8 @@ function getSettings() {
     if (hit) return { success: true, data: JSON.parse(hit) };
     var p = PropertiesService.getScriptProperties();
     var data = {
-      shopName:    p.getProperty('SHOP_NAME')    || 'Tiệm Của Lá',
-      slogan:      p.getProperty('SHOP_SLOGAN')  || 'Ngồi bên Lá quên vội vã',
+      shopName:    p.getProperty('SHOP_NAME')    || 'Ti\u1ec7m C\u1ee7a L\u00e1',
+      slogan:      p.getProperty('SHOP_SLOGAN')  || 'Ng\u1ed3i b\u00ean L\u00e1 qu\u00ean v\u1ed9i v\u00e3',
       phone:       p.getProperty('SHOP_PHONE')   || '0877 11 58 36',
       facebook:    p.getProperty('SHOP_FB')      || '',
       bankId:      p.getProperty('BANK_ID')      || '970436',
@@ -200,7 +200,7 @@ function saveSettings(data) {
   });
 }
 
-// ── MENU (Customer) ───────────────────────────────────────────────────────────
+//  MENU (Customer) 
 
 function getMenu() {
   return withErrorHandling(function() {
@@ -216,7 +216,7 @@ function getMenu() {
   });
 }
 
-// ── PRODUCTS CRUD (Admin) ─────────────────────────────────────────────────────
+//  PRODUCTS CRUD (Admin) 
 
 function getMenuAdmin() {
   return withErrorHandling(function() {
@@ -271,7 +271,7 @@ function deleteProduct(id) {
   });
 }
 
-// ── TOPPINGS CRUD ─────────────────────────────────────────────────────────────
+//  TOPPINGS CRUD 
 
 function addTopping(data) {
   return withLock(function() {
@@ -304,14 +304,14 @@ function deleteTopping(id) {
 }
 
 /**
- * Tải ảnh sản phẩm lên Google Drive và tạo direct link.
- * @param {string} base64Data - Dữ liệu base64 (có thể có tiền tố data:image/...)
- * @param {string} fileName - Tên file
+ * T\u1ea3i \u1ea3nh s\u1ea3n ph\u1ea9m l\u00ean Google Drive v\u00e0 t\u1ea1o direct link.
+ * @param {string} base64Data - D\u1eef li\u1ec7u base64 (c\u00f3 th\u1ec3 c\u00f3 ti\u1ec1n t\u1ed1 data:image/...)
+ * @param {string} fileName - T\u00ean file
  * @returns {{ success: boolean, url?: string, fileId?: string, error?: string }}
  */
 function uploadProductImage(base64Data, fileName) {
   return withErrorHandling(function() {
-    if (!base64Data) return { success: false, error: 'Dữ liệu ảnh rỗng' };
+    if (!base64Data) return { success: false, error: 'D\u1eef li\u1ec7u \u1ea3nh r\u1ed7ng' };
 
     var contentType = 'image/jpeg';
     var rawBase64 = base64Data;
@@ -343,9 +343,9 @@ function uploadProductImage(base64Data, fileName) {
   });
 }
 
-// ── ORDERS ────────────────────────────────────────────────────────────────────
+//  ORDERS 
 
-/** Tạo các hàng chi tiết đơn hàng (dùng chung cho submitOrder và editOrder). */
+/** T\u1ea1o c\u00e1c h\u00e0ng chi ti\u1ebft \u0111\u01a1n h\u00e0ng (d\u00f9ng chung cho submitOrder v\u00e0 editOrder). */
 function _buildOrderDetailRows(orderId, items, detSheet) {
   var headers = detSheet.getRange(1, 1, 1, detSheet.getLastColumn()).getValues()[0];
   return items.map(function(item, i) {
@@ -366,11 +366,11 @@ function _buildOrderDetailRows(orderId, items, detSheet) {
   });
 }
 
-/** Tối ưu submitOrder với LockService và Batch appendRowsToSheet */
+/** T\u1ed1i \u01b0u submitOrder v\u1edbi LockService v\u00e0 Batch appendRowsToSheet */
 
 /**
- * Thuật toán tính giá Authoritative trên Server (P0 Security & Data Integrity).
- * Server tự đọc bảng giá Products & Toppings từ Google Sheets để tính toán.
+ * Thu\u1eadt to\u00e1n t\u00ednh gi\u00e1 Authoritative tr\u00ean Server (P0 Security & Data Integrity).
+ * Server t\u1ef1 \u0111\u1ecdc b\u1ea3ng gi\u00e1 Products & Toppings t\u1eeb Google Sheets \u0111\u1ec3 t\u00ednh to\u00e1n.
  */
 function _calculateOrderAuthoritative(rawItems, products, toppings) {
   var prodMap = new Map();
@@ -415,10 +415,10 @@ function _calculateOrderAuthoritative(rawItems, products, toppings) {
 
     return {
       productId: item.productId || (p ? p.ID : ''),
-      productName: p ? p.Name : (item.productName || 'Món'),
+      productName: p ? p.Name : (item.productName || 'M\u00f3n'),
       size: item.size || 'M',
-      ice: item.ice || '100% Đá',
-      sugar: item.sugar || '100% Đường',
+      ice: item.ice || '100% \u0110\u00e1',
+      sugar: item.sugar || '100% \u0110\u01b0\u1eddng',
       toppings: topArr,
       quantity: qty,
       price: unitPrice,
@@ -430,12 +430,12 @@ function _calculateOrderAuthoritative(rawItems, products, toppings) {
   return { items: computedItems, totalAmount: total };
 }
 
-/** Tối ưu submitOrder với Server Authoritative Pricing, LockService và Batch writes */
+/** T\u1ed1i \u01b0u submitOrder v\u1edbi Server Authoritative Pricing, LockService v\u00e0 Batch writes */
 function submitOrder(payload) {
   return withErrorHandling(function() {
     var lock = LockService.getScriptLock();
     if (!lock.tryLock(3500)) {
-      return { success: false, error: 'Hệ thống đang xử lý đơn khác, vui lòng thử lại sau giây lát.' };
+      return { success: false, error: 'H\u1ec7 th\u1ed1ng \u0111ang x\u1eed l\u00fd \u0111\u01a1n kh\u00e1c, vui l\u00f2ng th\u1eed l\u1ea1i sau gi\u00e2y l\u00e1t.' };
     }
 
     try {
@@ -448,7 +448,7 @@ function submitOrder(payload) {
       var customerId = payload.customerId || '';
       var discountAmount = 0;
 
-      // Xử lý khách hàng và giảm giá tích điểm
+      // X l khch hng v gim gi tch im
       if (!customerId && payload.customerPhone) {
         var existingCust = getSheetData(SHEETS.CUSTOMERS, false).find(function(c) { return String(c.Phone) === String(payload.customerPhone); });
         if (existingCust) {
@@ -456,8 +456,8 @@ function submitOrder(payload) {
         } else {
           customerId = 'CUS-' + new Date().getTime();
           appendRowToSheet(SHEETS.CUSTOMERS, {
-            ID: customerId, Name: payload.customerName || 'Khách hàng',
-            Phone: payload.customerPhone || '', Type: 'Cá nhân', Company: '',
+            ID: customerId, Name: payload.customerName || 'Kh\u00e1ch h\u00e0ng',
+            Phone: payload.customerPhone || '', Type: 'C\u00e1 nh\u00e2n', Company: '',
             Address: payload.deliveryAddress || '', Email: '',
             Points: 0, TotalSpent: 0,
             CreatedAt: new Date().toISOString(), Note: '',
@@ -466,7 +466,7 @@ function submitOrder(payload) {
         }
       }
 
-      // Kiểm tra đổi điểm hợp lệ (10 điểm = 10.000đ)
+      // Kim tra i im hp l (10 im = 10.000)
       if (customerId && payload.usePointsDiscount) {
         var cust = getSheetData(SHEETS.CUSTOMERS, false).find(function(c) { return c.ID === customerId; });
         if (cust && (Number(cust.Points) || 0) >= 10) {
@@ -477,7 +477,7 @@ function submitOrder(payload) {
           appendRowToSheet(SHEETS.POINT_LEDGER, {
             ID: genId('LED'), CustomerID: customerId, OrderID: orderId,
             Type: 'REDEEM', Points: -10, CreatedAt: new Date().toISOString(),
-            Note: 'Đổi 10 điểm giảm 10.000đ cho đơn ' + orderId
+            Note: '\u0110\u1ed5i 10 \u0111i\u1ec3m gi\u1ea3m 10.000\u0111 cho \u0111\u01a1n ' + orderId
           });
           invalidateCache(SHEETS.CUSTOMERS);
         }
@@ -525,7 +525,7 @@ function submitOrder(payload) {
   });
 }
 
-/** TỐI ƯU P0: getOrders() dùng Map Grouping O(N+M) thay vì .filter() lồng O(N*M) */
+/** T\u1ed0I \u01afU P0: getOrders() d\u00f9ng Map Grouping O(N+M) thay v\u00ec .filter() l\u1ed3ng O(N*M) */
 function getOrders() {
   return withErrorHandling(function() {
     var orders     = getSheetData(SHEETS.ORDERS, false);
@@ -547,14 +547,14 @@ function getOrders() {
 function getOrderStatus(orderId) {
   return withErrorHandling(function() {
     var order = getSheetData(SHEETS.ORDERS, false).find(function(o) { return o.ID === orderId; });
-    if (!order) return { success: false, error: 'Không tìm thấy đơn' };
+    if (!order) return { success: false, error: 'Kh\u00f4ng t\u00ecm th\u1ea5y \u0111\u01a1n' };
     var details = getSheetData(SHEETS.ORDER_DETAILS, false);
     var items = details.filter(function(d) { return d.OrderID === orderId; });
     return { success: true, data: Object.assign({}, order, { items: items }) };
   });
 }
 
-/** TỐI ƯU P0: getOrderHistory() dùng Map Grouping và tính toán trong 1 lượt duyệt */
+/** T\u1ed0I \u01afU P0: getOrderHistory() d\u00f9ng Map Grouping v\u00e0 t\u00ednh to\u00e1n trong 1 l\u01b0\u1ee3t duy\u1ec7t */
 function getOrderHistory(params) {
   return withErrorHandling(function() {
     var orders  = getSheetData(SHEETS.ORDERS, false);
@@ -604,9 +604,9 @@ function updateOrderStatus(orderId, newStatus) {
   return withErrorHandling(function() {
     var orders = getSheetData(SHEETS.ORDERS, false);
     var order  = orders.find(function(o) { return o.ID === orderId; });
-    if (!order) return { success: false, error: 'Không tìm thấy đơn' };
+    if (!order) return { success: false, error: 'Kh\u00f4ng t\u00ecm th\u1ea5y \u0111\u01a1n' };
 
-    // Hoàn điểm khi hủy đơn có khách hàng
+    // Hon im khi hy n c khch hng
     if (newStatus === 'CANCELLED' && order.Status !== 'CANCELLED' && order.CustomerID) {
       var customer = getSheetData(SHEETS.CUSTOMERS, false).find(function(c) { return c.ID === order.CustomerID; });
       if (customer) {
@@ -620,7 +620,7 @@ function updateOrderStatus(orderId, newStatus) {
 
     var ok = updateRowInSheet(SHEETS.ORDERS, 'ID', orderId, { Status: newStatus });
 
-    // Giải phóng bàn khi đơn hoàn thành/hủy và không còn đơn active khác
+    // Gii phng bn khi n hon thnh/hy v khng cn n active khc
     if (ok && ['COMPLETED','CANCELLED'].includes(newStatus) && order.TableID) {
       var others = orders.filter(function(o) {
         return o.TableID === order.TableID && o.ID !== orderId &&
@@ -634,19 +634,19 @@ function updateOrderStatus(orderId, newStatus) {
   });
 }
 
-/** Tối ưu editOrder với Lock và Batch update details */
+/** T\u1ed1i \u01b0u editOrder v\u1edbi Lock v\u00e0 Batch update details */
 function editOrder(payload) {
   return withErrorHandling(function() {
     var lock = LockService.getScriptLock();
-    if (!lock.tryLock(2500)) return { success: false, error: 'Hệ thống đang bận, vui lòng thử lại.' };
+    if (!lock.tryLock(2500)) return { success: false, error: 'H\u1ec7 th\u1ed1ng \u0111ang b\u1eadn, vui l\u00f2ng th\u1eed l\u1ea1i.' };
 
     try {
       var orderId = payload.orderId;
       var orders  = getSheetData(SHEETS.ORDERS, false);
       var order   = orders.find(function(o) { return o.ID === orderId; });
-      if (!order) return { success: false, error: 'Không tìm thấy đơn hàng' };
+      if (!order) return { success: false, error: 'Kh\u00f4ng t\u00ecm th\u1ea5y \u0111\u01a1n h\u00e0ng' };
       if (!['NEW','PREPARING','PACKING'].includes(order.Status)) {
-        return { success: false, error: 'Chỉ có thể sửa đơn MỚI, ĐANG PHA hoặc ĐÓNG GÓI' };
+        return { success: false, error: 'Ch\u1ec9 c\u00f3 th\u1ec3 s\u1eeda \u0111\u01a1n M\u1edaI, \u0110ANG PHA ho\u1eb7c \u0110\u00d3NG G\u00d3I' };
       }
 
       var diff = (payload.totalAmount || 0) - (order.TotalAmount || 0);
@@ -666,20 +666,20 @@ function editOrder(payload) {
         Note: payload.note || ''
       });
 
-      // Tối ưu Batch: Lọc lại Order_Details trong RAM và ghi lại toàn bộ bảng
+      // Ti u Batch: Lc li Order_Details trong RAM v ghi li ton b bng
       var detSheet = getSheet(SHEETS.ORDER_DETAILS);
       var detData = detSheet.getDataRange().getValues();
       var headers = detData[0];
       var orderIdCol = headers.indexOf('OrderID');
 
-      // Giữ lại các dòng không thuộc order này
+      // Gi li cc dng khng thuc order ny
       var remainingRows = detData.slice(1).filter(function(r) { return r[orderIdCol] !== orderId; });
       
-      // Tạo các dòng mới
+      // To cc dng mi
       var newRows = _buildOrderDetailRows(orderId + '-E', payload.items, detSheet);
       var combined = remainingRows.concat(newRows);
 
-      // Xóa và ghi lại theo lô
+      // Xa v ghi li theo l
       detSheet.clearContents();
       detSheet.getRange(1, 1, 1, headers.length).setValues([headers]);
       if (combined.length > 0) {
@@ -694,14 +694,14 @@ function editOrder(payload) {
   });
 }
 
-// ── TABLES ────────────────────────────────────────────────────────────────────
+//  TABLES 
 
 function getTables() {
   return withErrorHandling(function() {
     var tables = getSheetData(SHEETS.TABLES, false);
     var orders = getSheetData(SHEETS.ORDERS, false);
     
-    // Đếm active orders bằng Map O(N+M)
+    // m active orders bng Map O(N+M)
     var countByTable = {};
     for (var i = 0; i < orders.length; i++) {
       var o = orders[i];
@@ -730,7 +730,7 @@ function addTable(data) {
     var existing = getSheetData(SHEETS.TABLES, false);
     var id = 'TBL' + String(existing.length + 1).padStart(2, '0');
     var item = {
-      ID: id, Name: data.name || ('Bàn ' + (existing.length + 1)),
+      ID: id, Name: data.name || ('B\u00e0n ' + (existing.length + 1)),
       Status: 'FREE', Capacity: data.capacity || 4, QR_URL: '',
     };
     appendRowToSheet(SHEETS.TABLES, item);
@@ -747,8 +747,8 @@ function deleteTable(id) {
 
 function switchTable(fromTableId, toTableId) {
   return withErrorHandling(function() {
-    if (!fromTableId || !toTableId) return { success: false, error: 'Thiếu thông tin bàn chuyển' };
-    if (fromTableId === toTableId) return { success: false, error: 'Bàn chuyển và bàn nhận phải khác nhau' };
+    if (!fromTableId || !toTableId) return { success: false, error: 'Thi\u1ebfu th\u00f4ng tin b\u00e0n chuy\u1ec3n' };
+    if (fromTableId === toTableId) return { success: false, error: 'B\u00e0n chuy\u1ec3n v\u00e0 b\u00e0n nh\u1eadn ph\u1ea3i kh\u00e1c nhau' };
 
     var orders = getSheetData(SHEETS.ORDERS, false);
     var activeFrom = orders.filter(function(o) {
@@ -756,15 +756,15 @@ function switchTable(fromTableId, toTableId) {
     });
 
     if (activeFrom.length === 0) {
-      return { success: false, error: 'Bàn nguồn không có đơn hàng đang phục vụ' };
+      return { success: false, error: 'B\u00e0n ngu\u1ed3n kh\u00f4ng c\u00f3 \u0111\u01a1n h\u00e0ng \u0111ang ph\u1ee5c v\u1ee5' };
     }
 
-    // Chuyển toàn bộ đơn active sang bàn mới
+    // Chuyn ton b n active sang bn mi
     for (var i = 0; i < activeFrom.length; i++) {
       updateRowInSheet(SHEETS.ORDERS, 'ID', activeFrom[i].ID, { TableID: toTableId });
     }
 
-    // Cập nhật trạng thái 2 bàn
+    // Cp nht trng thi 2 bn
     updateRowInSheet(SHEETS.TABLES, 'ID', fromTableId, { Status: 'FREE' });
     updateRowInSheet(SHEETS.TABLES, 'ID', toTableId, { Status: 'OCCUPIED' });
 
@@ -781,16 +781,16 @@ function getAppUrl() {
   });
 }
 
-// ── EXPENSES ──────────────────────────────────────────────────────────────────
+//  EXPENSES 
 
 function addExpense(data) {
   return withLock(function() {
     var id   = 'EXP-' + new Date().getTime();
     var date = data.date || new Date().toISOString().split('T')[0];
     var item = {
-      ID: id, Date: date, Category: data.category || 'Khác',
+      ID: id, Date: date, Category: data.category || 'Kh\u00e1c',
       Description: data.description, Amount: Number(data.amount),
-      Note: data.note || '', FundingSource: data.fundingSource || 'Tiền quán',
+      Note: data.note || '', FundingSource: data.fundingSource || 'Ti\u1ec1n qu\u00e1n',
       PerformedBy: data.performedBy || '', PerformedByName: data.performedByName || ''
     };
     appendRowToSheet(SHEETS.EXPENSES, item);
@@ -846,7 +846,7 @@ function getExpenseSummary(params) {
     var grandTotal = 0;
     for (var i = 0; i < filtered.length; i++) {
       var e = filtered[i];
-      var cat = e.Category || 'Khác';
+      var cat = e.Category || 'Kh\u00e1c';
       var amt = _parseCurrency(e.Amount);
       grandTotal += amt;
       if (!byCat[cat]) byCat[cat] = { category: cat, total: 0, count: 0 };
@@ -861,9 +861,9 @@ function getExpenseSummary(params) {
   });
 }
 
-// ── REPORT ────────────────────────────────────────────────────────────────────
+//  REPORT 
 
-/** TỐI ƯU P0: getReportByRange() dùng Map và Set để tổng hợp dữ liệu O(N) */
+/** T\u1ed0I \u01afU P0: getReportByRange() d\u00f9ng Map v\u00e0 Set \u0111\u1ec3 t\u1ed5ng h\u1ee3p d\u1eef li\u1ec7u O(N) */
 function getReportByRange(params) {
   return withErrorHandling(function() {
     var today = new Date().toISOString().split('T')[0];
@@ -875,7 +875,7 @@ function getReportByRange(params) {
     var allExp      = getSheetData(SHEETS.EXPENSES, false);
     var allProducts = getSheetData(SHEETS.PRODUCTS, false);
 
-    // Lọc đơn trong khoảng ngày
+    // Lc n trong khong ngy
     var orders = allOrders.filter(function(o) {
       if (!o.CreatedAt) return false;
       var d = _extractDateStr(o.CreatedAt);
@@ -929,7 +929,7 @@ function getReportByRange(params) {
       })
       .reduce(function(s, e) { return s + _parseCurrency(e.Amount); }, 0);
 
-    // Top sản phẩm O(M)
+    // Top sn phm O(M)
     var prodCount = {}, prodRevenue = {};
     for (var j = 0; j < allDetails.length; j++) {
       var dt = allDetails[j];
@@ -945,7 +945,7 @@ function getReportByRange(params) {
       .slice(0, 10)
       .map(function(e) { return { name: e[0], count: e[1], revenue: prodRevenue[e[0]] || 0 }; });
 
-    // So sánh kỳ trước
+    // So snh k trc
     var dFrom = new Date(from), dTo = new Date(to);
     var diff  = Math.round((dTo - dFrom) / 86400000) + 1;
     var prevTo   = new Date(dFrom); prevTo.setDate(prevTo.getDate() - 1);
@@ -989,7 +989,7 @@ function getReport() {
   return getReportByRange({ dateFrom: new Date().toISOString().split('T')[0] });
 }
 
-// ── CUSTOMERS ─────────────────────────────────────────────────────────────────
+//  CUSTOMERS 
 
 function getCustomers() {
   return withErrorHandling(function() {
@@ -1014,7 +1014,7 @@ function saveCustomer(data) {
     if (data.id) {
       updateRowInSheet(SHEETS.CUSTOMERS, 'ID', data.id, {
         Name: data.name || '', Phone: data.phone || '',
-        Type: data.type || 'Cá nhân', Company: data.company || '',
+        Type: data.type || 'C\u00e1 nh\u00e2n', Company: data.company || '',
         Address: data.address || '', Email: data.email || '', Note: data.note || '',
       });
       invalidateCache(SHEETS.CUSTOMERS);
@@ -1023,7 +1023,7 @@ function saveCustomer(data) {
     var id = 'CUS-' + new Date().getTime();
     var item = {
       ID: id, Name: data.name || '', Phone: data.phone || '',
-      Type: data.type || 'Cá nhân', Company: data.company || '',
+      Type: data.type || 'C\u00e1 nh\u00e2n', Company: data.company || '',
       Address: data.address || '', Email: data.email || '',
       Points: 0, TotalSpent: 0,
       CreatedAt: new Date().toISOString(), Note: data.note || '',
@@ -1049,7 +1049,7 @@ function getCustomerHistory(customerId) {
   });
 }
 
-// ── ALIAS BRIDGE (Frontend → Backend) ─────────────────────────────────────────
+//  ALIAS BRIDGE (Frontend  Backend) 
 
 function getActiveOrders() { return getOrders(); }
 function createOrder(data) { return submitOrder(data); }
@@ -1063,29 +1063,29 @@ function checkoutOrder(payload, extraData) {
     var pd = (typeof payload === 'object' && payload.method) ? payload : (extraData || {});
     var method = (pd.method || pd.paymentMethod || 'CASH').toUpperCase();
     var receivedAmount = Number(pd.receivedAmount || pd.cashAmount || pd.amount || 0);
-    var cashierName = pd.cashierName || 'Thu Ngân';
+    var cashierName = pd.cashierName || 'Thu Ng\u00e2n';
     var note = pd.note || '';
 
     var lock = LockService.getScriptLock();
-    if (!lock.tryLock(3500)) return { success: false, error: 'Hệ thống đang bận, vui lòng thử lại sau giây lát.' };
+    if (!lock.tryLock(3500)) return { success: false, error: 'H\u1ec7 th\u1ed1ng \u0111ang b\u1eadn, vui l\u00f2ng th\u1eed l\u1ea1i sau gi\u00e2y l\u00e1t.' };
 
     try {
       var orders = getSheetData(SHEETS.ORDERS, false);
       var order  = orders.find(function(o) { return o.ID === orderId; });
-      if (!order) return { success: false, error: 'Không tìm thấy đơn hàng: ' + orderId };
+      if (!order) return { success: false, error: 'Kh\u00f4ng t\u00ecm th\u1ea5y \u0111\u01a1n h\u00e0ng: ' + orderId };
 
       var total = Number(order.TotalAmount) || 0;
       if (receivedAmount <= 0) receivedAmount = total;
       var changeAmount = Math.max(0, receivedAmount - total);
 
-      // 1. Cập nhật Order trạng thái Đã Thanh Toán & Đã Hoàn Tất
+      // 1. Cp nht Order trng thi  Thanh Ton &  Hon Tt
       updateRowInSheet(SHEETS.ORDERS, 'ID', orderId, {
         Status: 'COMPLETED',
         PaymentStatus: 'PAID'
       });
       invalidateCache(SHEETS.ORDERS);
 
-      // 2. Ghi nhận giao dịch vào bảng Payments (P0 Money)
+      // 2. Ghi nhn giao dch vo bng Payments (P0 Money)
       var paymentRecord = {
         ID: genId('PAY'),
         OrderID: orderId,
@@ -1103,7 +1103,7 @@ function checkoutOrder(payload, extraData) {
       appendRowToSheet(SHEETS.PAYMENTS, paymentRecord);
       invalidateCache(SHEETS.PAYMENTS);
 
-      // 3. Giải phóng bàn nếu là DINE_IN
+      // 3. Gii phng bn nu l DINE_IN
       if (order.TableID) {
         var remainingTableOrders = orders.filter(function(o) {
           return o.TableID === order.TableID && o.ID !== orderId &&
@@ -1115,7 +1115,7 @@ function checkoutOrder(payload, extraData) {
         }
       }
 
-      // 4. Tích điểm hội viên an toàn vào CustomerPointLedger (10.000đ = 1 điểm, chỉ phát sinh khi PAID)
+      // 4. Tch im hi vin an ton vo CustomerPointLedger (10.000 = 1 im, ch pht sinh khi PAID)
       if (order.CustomerID) {
         var earnPts = Math.floor(total / 10000);
         if (earnPts > 0) {
@@ -1132,7 +1132,7 @@ function checkoutOrder(payload, extraData) {
               Type: 'EARN',
               Points: earnPts,
               CreatedAt: new Date().toISOString(),
-              Note: 'Tích ' + earnPts + ' điểm từ đơn hàng ' + orderId
+              Note: 'T\u00edch ' + earnPts + ' \u0111i\u1ec3m t\u1eeb \u0111\u01a1n h\u00e0ng ' + orderId
             });
             invalidateCache(SHEETS.CUSTOMERS);
             invalidateCache(SHEETS.POINT_LEDGER);
@@ -1168,7 +1168,7 @@ function updateTableStatus(tableId, status) {
   return withLock(function() {
     var allowed = ['FREE', 'OCCUPIED', 'RESERVED'];
     var st = String(status).toUpperCase();
-    if (!allowed.includes(st)) return { success: false, error: 'Trạng thái không hợp lệ: ' + status };
+    if (!allowed.includes(st)) return { success: false, error: 'Tr\u1ea1ng th\u00e1i kh\u00f4ng h\u1ee3p l\u1ec7: ' + status };
     var ok = updateRowInSheet(SHEETS.TABLES, 'ID', tableId, { Status: st });
     invalidateCache(SHEETS.TABLES);
     return { success: ok, tableId: tableId, status: st };
@@ -1177,7 +1177,7 @@ function updateTableStatus(tableId, status) {
 
 function getRevenueReport(params) { return getReportByRange(params); }
 
-// ── STAFF CRUD ────────────────────────────────────────────────────────────────
+//  STAFF CRUD 
 
 function getStaff() {
   return withErrorHandling(function() {
@@ -1190,7 +1190,7 @@ function getStaff() {
 function addStaff(data) {
   return withLock(function() {
     var name = (data && data.name) ? String(data.name).trim() : '';
-    if (!name) return { success: false, error: 'Tên nhân viên không được rỗng' };
+    if (!name) return { success: false, error: 'T\u00ean nh\u00e2n vi\u00ean kh\u00f4ng \u0111\u01b0\u1ee3c r\u1ed7ng' };
     var id = genId('NV');
     var item = { ID: id, Name: name, Status: 'ACTIVE' };
     appendRowToSheet(SHEETS.STAFF, item);
@@ -1201,7 +1201,7 @@ function addStaff(data) {
 
 function updateStaff(data) {
   return withLock(function() {
-    if (!data || !data.id) return { success: false, error: 'Thiếu ID' };
+    if (!data || !data.id) return { success: false, error: 'Thi\u1ebfu ID' };
     var updates = {};
     if (data.name)   updates.Name   = String(data.name).trim();
     if (data.status) updates.Status = data.status;
@@ -1219,7 +1219,7 @@ function deactivateStaff(id) {
   });
 }
 
-// ── TASK TEMPLATES CRUD ───────────────────────────────────────────────────────
+//  TASK TEMPLATES CRUD 
 
 function getTaskTemplates() {
   return withErrorHandling(function() {
@@ -1252,7 +1252,7 @@ function addTaskTemplate(data) {
 
 function updateTaskTemplate(data) {
   return withLock(function() {
-    if (!data || !data.id) return { success: false, error: 'Thiếu ID template' };
+    if (!data || !data.id) return { success: false, error: 'Thi\u1ebfu ID template' };
     var updates = {};
     if (data.title        !== undefined) updates.Title        = data.title;
     if (data.description  !== undefined) updates.Description  = data.description;
@@ -1281,7 +1281,7 @@ function toggleTaskTemplate(id) {
   return withLock(function() {
     var templates = getSheetData(SHEETS.TASK_TEMPLATES, false);
     var t = templates.find(function(x) { return x.ID === id; });
-    if (!t) return { success: false, error: 'Template không tồn tại' };
+    if (!t) return { success: false, error: 'Template kh\u00f4ng t\u1ed3n t\u1ea1i' };
     var newStatus = (t.Status === 'ACTIVE') ? 'PAUSED' : 'ACTIVE';
     updateRowInSheet(SHEETS.TASK_TEMPLATES, 'ID', id, { Status: newStatus });
     invalidateCache(SHEETS.TASK_TEMPLATES);
@@ -1289,7 +1289,7 @@ function toggleTaskTemplate(id) {
   });
 }
 
-// ── Task Instance helpers & API ───────────────────────────────────────────────
+//  Task Instance helpers & API 
 
 function _shouldRunOnDate(template, dateStr) {
   var d     = new Date(dateStr + 'T00:00:00');
@@ -1402,7 +1402,7 @@ function skipTask(id, note) {
 }
 
 /**
- * Tạo công việc đột xuất trong ngày (Ad-hoc Task) không cần qua template.
+ * T\u1ea1o c\u00f4ng vi\u1ec7c \u0111\u1ed9t xu\u1ea5t trong ng\u00e0y (Ad-hoc Task) kh\u00f4ng c\u1ea7n qua template.
  * @param {{ title, assignedTo, assignedName, priority, note? }} data
  */
 function createAdhocTask(data) {
@@ -1412,7 +1412,7 @@ function createAdhocTask(data) {
     var item = {
       ID:           id,
       TemplateID:   'ADHOC',
-      Title:        data.title || 'Công việc đột xuất',
+      Title:        data.title || 'C\u00f4ng vi\u1ec7c \u0111\u1ed9t xu\u1ea5t',
       AssignedTo:   data.assignedTo   || '',
       AssignedName: data.assignedName || '',
       DueDate:      todayStr,
@@ -1429,7 +1429,7 @@ function createAdhocTask(data) {
 }
 
 /**
- * Bật/tắt nhanh trạng thái hết hàng của sản phẩm.
+ * B\u1eadt/t\u1eaft nhanh tr\u1ea1ng th\u00e1i h\u1ebft h\u00e0ng c\u1ee7a s\u1ea3n ph\u1ea9m.
  * @param {string} productId
  * @param {'ACTIVE'|'OUT_OF_STOCK'|'INACTIVE'} status
  */
@@ -1443,8 +1443,8 @@ function toggleProductStock(productId, status) {
 
 
 /**
- * Bootstrap an toàn dành riêng cho Khách Quét QR Bàn (Customer Mode).
- * Chỉ trả Menu & Thông tin bàn, tuyệt đối cách ly khỏi CRM, Staff, Chi phí & Báo cáo.
+ * Bootstrap an to\u00e0n d\u00e0nh ri\u00eang cho Kh\u00e1ch Qu\u00e9t QR B\u00e0n (Customer Mode).
+ * Ch\u1ec9 tr\u1ea3 Menu & Th\u00f4ng tin b\u00e0n, tuy\u1ec7t \u0111\u1ed1i c\u00e1ch ly kh\u1ecfi CRM, Staff, Chi ph\u00ed & B\u00e1o c\u00e1o.
  */
 function getCustomerBootstrap(tableId) {
   return withErrorHandling(function() {
@@ -1459,7 +1459,7 @@ function getCustomerBootstrap(tableId) {
     var pubSettings = {};
     if (settingsRes && settingsRes.data) {
       pubSettings = {
-        shopName: settingsRes.data.shopName || 'Tiệm Của Lá',
+        shopName: settingsRes.data.shopName || 'Ti\u1ec7m C\u1ee7a L\u00e1',
         slogan: settingsRes.data.slogan || '',
         phone: settingsRes.data.phone || '',
         bankId: settingsRes.data.bankId || '970436',

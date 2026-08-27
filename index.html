@@ -445,7 +445,7 @@
         <div v-else-if="filteredKitchenOrders.length === 0" class="py-16 text-center text-on-surface-variant">
           <span class="material-symbols-outlined text-5xl text-status-free mb-2">task_alt</span>
           <p class="text-sm font-semibold text-on-surface">Quầy pha chế đang trống đơn</p>
-          <p class="text-xs text-outline">Tất cả món đã được chuẩn bị xong!</p>
+          <p class="text-xs text-outline">Tất cả món &#273;&atilde; được chuẩn bị xong!</p>
         </div>
 
         <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -578,7 +578,7 @@
           <div class="flex justify-between items-center">
             <h3 class="font-display font-bold text-sm text-on-surface flex items-center gap-2">
               <span class="material-symbols-outlined text-base text-primary">receipt_long</span>
-              Danh Sách Các Khoản Chi Đã Ghi
+              Danh Sách Các Khoản Chi &#272;&atilde; Ghi
             </h3>
             <span class="text-xs text-on-surface-variant font-medium px-2.5 py-1 bg-surface-container rounded-full">{{ expenses.length }} khoản chi</span>
           </div>
@@ -617,7 +617,7 @@
           <div>
             <span class="text-xs font-semibold text-on-primary-container uppercase tracking-wider">Tiến độ hôm nay</span>
             <h2 class="font-display font-bold text-2xl text-on-primary mt-0.5">{{ completedTasksCount }} / {{ tasks.length }} Nhiệm vụ</h2>
-            <p class="text-xs text-on-primary/80 mt-1">{{ taskCompletionPercentage }}% đã hoàn tất</p>
+            <p class="text-xs text-on-primary/80 mt-1">{{ taskCompletionPercentage }}% &#273;&atilde; hoàn tất</p>
           </div>
           <!-- Radial Progress Ring -->
           <div class="w-16 h-16 relative flex items-center justify-center">
@@ -668,7 +668,7 @@
 
           <div v-if="pendingTodayTasks.length === 0" class="py-8 text-center text-on-surface-variant bg-surface-container-lowest rounded-2xl border border-outline-variant/20">
             <span class="material-symbols-outlined text-3xl text-status-free mb-1">done_all</span>
-            <p class="text-xs font-semibold">Tất cả việc hôm nay đã hoàn thành!</p>
+            <p class="text-xs font-semibold">Tất cả việc hôm nay &#273;&atilde; hoàn thành!</p>
           </div>
 
           <div v-else class="space-y-2">
@@ -701,7 +701,7 @@
         <!-- Section: Completed Tasks -->
         <div v-if="completedTasks.length > 0" class="space-y-2 pt-2">
           <h3 class="font-display font-bold text-xs text-outline flex items-center gap-1 uppercase tracking-wider">
-            <span class="material-symbols-outlined text-sm">check_circle</span> Đã Hoàn Thành ({{ completedTasks.length }})
+            <span class="material-symbols-outlined text-sm">check_circle</span> &#272;&atilde; Hoàn Thành ({{ completedTasks.length }})
           </h3>
           <div class="space-y-1.5 opacity-60">
             <div v-for="t in completedTasks" :key="t.ID" class="bg-surface-container-low rounded-xl p-3 border border-outline-variant/20 flex items-center justify-between text-xs">
@@ -802,7 +802,7 @@
               <span class="text-xs font-bold uppercase tracking-wider">Tổng Chi Phí</span>
             </div>
             <div class="font-display font-bold text-xl text-error">{{ formatVND(reportData.totalExpenses) }}</div>
-            <div class="text-[11px] text-on-surface-variant mt-1">Đã cân đối quỹ</div>
+            <div class="text-[11px] text-on-surface-variant mt-1">&#272;&atilde; cân đối quỹ</div>
           </div>
         </div>
 
@@ -947,7 +947,7 @@
             <div class="font-display font-bold text-xl text-status-occupied">{{ countTablesByStatus('OCCUPIED') }}</div>
           </div>
           <div class="bg-surface-container-lowest p-3 rounded-2xl border border-outline-variant/30 text-center shadow-card">
-            <span class="text-xs text-on-surface-variant font-medium">Đã Đặt</span>
+            <span class="text-xs text-on-surface-variant font-medium">&#272;&atilde; Đặt</span>
             <div class="font-display font-bold text-xl text-status-reserved">{{ countTablesByStatus('RESERVED') }}</div>
           </div>
         </div>
@@ -3709,7 +3709,7 @@ const formatVND = (num) => {
             if (appEl) {
               appEl.removeAttribute('v-cloak');
               appEl.style.display = 'block';
-              appEl.innerHTML = '<div style="padding:24px;background:#fef2f2;color:#991b1b;font-family:sans-serif;border-radius:12px;margin:20px;"><h3 style="margin-top:0;">Không thể tải thư viện Vue 3</h3><p>Trình duyệt hoặc phần mềm chặn quảng cáo / Tracking Prevention đã chặn tải thư viện Vue từ CDN. Vui lòng tắt chặn theo dõi hoặc thử lại trên trình duyệt khác.</p></div>';
+              appEl.innerHTML = '<div style="padding:24px;background:#fef2f2;color:#991b1b;font-family:sans-serif;border-radius:12px;margin:20px;"><h3 style="margin-top:0;">Không thể tải thư viện Vue 3</h3><p>Trình duyệt hoặc phần mềm chặn quảng cáo / Tracking Prevention &#273;&atilde; chặn tải thư viện Vue từ CDN. Vui lòng tắt chặn theo dõi hoặc thử lại trên trình duyệt khác.</p></div>';
             }
           };
           document.head.appendChild(s);
