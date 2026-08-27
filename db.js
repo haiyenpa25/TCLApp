@@ -27,7 +27,15 @@ const SHEETS = {
 
 const DB_CACHE_TIMEOUT = 300; // 5 phút (seconds)
 
-// ── Core DB Functions ────────────────────────────────────────────────────────
+const SPREADSHEET_ID = '1co9xhrZFdYi649Dl1OrWDuRAwbs4HsCoPTlt6i9QYw4';
+
+function getSpreadsheet() {
+  try {
+    const ss = SpreadsheetApp.getActiveSpreadsheet();
+    if (ss && ss.getId()) return ss;
+  } catch (e) {}
+  return SpreadsheetApp.openById(SPREADSHEET_ID);
+}
 
 /**
  * Lấy Sheet object theo tên.
@@ -35,7 +43,7 @@ const DB_CACHE_TIMEOUT = 300; // 5 phút (seconds)
  * @returns {GoogleAppsScript.Spreadsheet.Sheet|null}
  */
 function getSheet(sheetName) {
-  return SpreadsheetApp.getActiveSpreadsheet().getSheetByName(sheetName);
+  return getSpreadsheet().getSheetByName(sheetName);
 }
 
 /**
@@ -68,6 +76,8 @@ function getSheetData(sheetName, useCache = true) {
       var val = row[i];
       if (val instanceof Date) {
         val = Utilities.formatDate(val, tz, 'yyyy-MM-dd HH:mm:ss');
+      } else if (typeof val === 'string' && /^\d{1,3}(\.\d{3})+$/.test(val.trim())) {
+        val = parseFloat(val.replace(/\./g, ''));
       }
       obj[header] = val;
     });

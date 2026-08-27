@@ -22,7 +22,7 @@ function doGet(e) {
 }
 
 function setupDatabase() {
-  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const ss = getSpreadsheet();
 
   const schema = {
     'Products':        ['ID','Name','Category','Price','Image','HasSize','HasIce','HasSugar','Status'],
@@ -143,7 +143,7 @@ function seedSampleData(ss) {
 }
 
 function resetMenu() {
-  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const ss = getSpreadsheet();
   const prodSheet = ss.getSheetByName('Products');
   if (prodSheet) {
     const lastRow = prodSheet.getLastRow();
