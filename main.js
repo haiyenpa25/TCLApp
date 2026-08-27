@@ -14,10 +14,22 @@ function sanitizeUrlParam(val) {
   return val.replace(/[^a-zA-Z0-9_\-]/g, '').substring(0, 30);
 }
 
+function getHtmlFileContent(name) {
+  try {
+    return HtmlService.createHtmlOutputFromFile(name).getContent();
+  } catch (e1) {
+    try {
+      return HtmlService.createHtmlOutputFromFile(name.toLowerCase()).getContent();
+    } catch (e2) {
+      return HtmlService.createHtmlOutputFromFile(name.charAt(0).toUpperCase() + name.slice(1)).getContent();
+    }
+  }
+}
+
 function doGet(e) {
-  let indexContent = HtmlService.createHtmlOutputFromFile('Index').getContent();
-  const stylesContent = HtmlService.createHtmlOutputFromFile('Styles').getContent();
-  const jsContent = HtmlService.createHtmlOutputFromFile('JavaScript').getContent();
+  let indexContent = getHtmlFileContent('index');
+  const stylesContent = getHtmlFileContent('Styles');
+  const jsContent = getHtmlFileContent('JavaScript');
 
   // Clean include tags replacement directly (100% reliable, zero template crashes)
   indexContent = indexContent.replace(/<\?!\s*=\s*include\(['"]Styles['"]\);?\s*\?>/g, stylesContent);
@@ -30,7 +42,7 @@ function doGet(e) {
 }
 
 function include(filename) {
-  return HtmlService.createHtmlOutputFromFile(filename).getContent();
+  return getHtmlFileContent(filename);
 }
 
 function setupDatabase() {
