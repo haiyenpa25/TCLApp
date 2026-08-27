@@ -19,7 +19,8 @@ function sanitizeUrlParam(val) {
  * @param {GoogleAppsScript.Events.DoGet} e - Event object ch\u1ee9a URL parameters
  */
 function doGet(e) {
-  return HtmlService.createHtmlOutputFromFile('index')
+  return HtmlService.createTemplateFromFile('index')
+    .evaluate()
     .setTitle('Ti\u1ec7m C\u1ee7a L\u00e1 \u2014 H\u1ec7 Th\u1ed1ng Qu\u1ea3n L\u00fd POS & F&B')
     .addMetaTag('viewport', 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0')
     .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
