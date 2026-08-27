@@ -3660,24 +3660,62 @@ const formatVND = (num) => {
 
     
   
-    //  Synchronous Instant Launch (Zero CDN Latency) 
-    // Robust Launcher with CDN fallback
+    // P0.7 Global Error Diagnostics
+    window.onerror = function(msg, url, lineNo, columnNo, error) {
+      console.error('[GLOBAL ONERROR]', msg, url, lineNo, columnNo, error);
+      var appEl = document.getElementById('app');
+      if (appEl) appEl.removeAttribute('v-cloak');
+    };
+    window.onunhandledrejection = function(event) {
+      console.error('[GLOBAL UNHANDLED REJECTION]', event.reason);
+    };
+
+    // P0.2 / P0.8 Deterministic Vue Bootstrap Flow
+    function bootApp() {
+      if (typeof Vue === 'undefined') {
+        console.warn('[BOOT] Vue not yet defined, waiting for load...');
+        return;
+      }
+      console.log('[BOOT] Vue loaded successfully, version:', Vue.version);
+      try {
+        console.log('[BOOT] app mount started');
+        launchVueApp();
+        console.log('[BOOT] app mount successful');
+      } catch (err) {
+        console.error('[BOOT] mount failure:', err);
+        var appEl = document.getElementById('app');
+        if (appEl) {
+          appEl.removeAttribute('v-cloak');
+          appEl.style.display = 'block';
+          appEl.innerHTML = '<div style="padding:24px;background:#fef2f2;color:#991b1b;font-family:sans-serif;border-radius:12px;margin:20px;border:1px solid #fecaca;"><h3 style="margin-top:0;font-size:18px;">Lỗi khởi động ứng dụng (Bootstrap Error)</h3><pre style="background:#fff;padding:12px;border-radius:6px;overflow:auto;">' + (err.stack || err.message || err) + '</pre><p style="margin-bottom:0;font-size:13px;color:#7f1d1d;">Vui lòng thử tải lại trang hoặc kiểm tra kết nối mạng.</p></div>';
+        }
+      }
+    }
+
     if (typeof Vue !== 'undefined') {
-      launchVueApp();
+      bootApp();
     } else {
       window.addEventListener('load', function() {
         if (typeof Vue !== 'undefined') {
-          launchVueApp();
+          bootApp();
         } else {
-          // Dynamic backup CDN
+          console.warn('[BOOT] Primary CDN blocked/delayed. Loading secondary mirror jsDelivr...');
           var s = document.createElement('script');
           s.src = 'https://cdn.jsdelivr.net/npm/vue@3.4.21/dist/vue.global.prod.js';
-          s.onload = launchVueApp;
+          s.onload = bootApp;
+          s.onerror = function() {
+            console.error('[BOOT] Both Vue CDNs failed to load.');
+            var appEl = document.getElementById('app');
+            if (appEl) {
+              appEl.removeAttribute('v-cloak');
+              appEl.style.display = 'block';
+              appEl.innerHTML = '<div style="padding:24px;background:#fef2f2;color:#991b1b;font-family:sans-serif;border-radius:12px;margin:20px;"><h3 style="margin-top:0;">Không thể tải thư viện Vue 3</h3><p>Trình duyệt hoặc phần mềm chặn quảng cáo / Tracking Prevention đã chặn tải thư viện Vue từ CDN. Vui lòng tắt chặn theo dõi hoặc thử lại trên trình duyệt khác.</p></div>';
+            }
+          };
           document.head.appendChild(s);
         }
       });
     }
-  
 </script>
 </body>
 </html>
