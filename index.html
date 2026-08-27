@@ -153,20 +153,10 @@
   <!-- Vue 3 Engine (Standard Head Script for Google Apps Script Sandbox) -->
   
     <!-- Fast Worldwide CDN for Vue 3.4.21 -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.4.21/vue.global.prod.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vue@3.4.21/dist/vue.global.prod.js" crossorigin="anonymous"></script>
 </head>
 
 <body class="bg-surface font-body text-on-surface antialiased min-h-screen overflow-x-hidden">
-  <!-- Preloader Screen (Hides immediately when Vue mounts) -->
-    <!-- HIGH-PRIORITY FAIL-SAFE BRANDED PRELOADER (Pure Inline CSS - Zero Dependency) -->
-  
-  <style>
-    @keyframes spinLoader {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-  </style>
-
   <div id="app" v-cloak class="flex flex-col min-h-screen">
 
     <!-- TOP APP BAR -->
