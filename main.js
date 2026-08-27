@@ -54,10 +54,12 @@ function setupDatabase() {
       sheet.setFrozenRows(1);
     } else {
       // Add missing columns to existing sheets
-      const existing = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
-      headers.forEach((h, i) => {
+      const lastCol = sheet.getLastColumn();
+      const existing = lastCol > 0 ? sheet.getRange(1, 1, 1, lastCol).getValues()[0] : [];
+      headers.forEach((h) => {
         if (!existing.includes(h)) {
-          sheet.getRange(1, existing.length + 1).setValue(h);
+          existing.push(h);
+          sheet.getRange(1, existing.length).setValue(h);
         }
       });
     }

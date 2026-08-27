@@ -173,12 +173,14 @@ function getSettings() {
       shopName:    p.getProperty('SHOP_NAME')    || 'Tiệm Của Lá',
       slogan:      p.getProperty('SHOP_SLOGAN')  || 'Ngồi bên Lá quên vội vã',
       phone:       p.getProperty('SHOP_PHONE')   || '0877 11 58 36',
-      facebook:    p.getProperty('SHOP_FB')      || 'https://facebook.com/tiem.cua.la.417',
-      bankId:      p.getProperty('BANK_ID')      || '971025',
-      accountNo:   p.getProperty('ACCOUNT_NO')   || 'PSP2612215800000207',
-      accountName: p.getProperty('ACCOUNT_NAME') || 'TRƯƠNG HOÀI DINH',
+      facebook:    p.getProperty('SHOP_FB')      || '',
+      bankId:      p.getProperty('BANK_ID')      || '970436',
+      accountNo:   p.getProperty('ACCOUNT_NO')   || '1018704944',
+      accountName: p.getProperty('ACCOUNT_NAME') || 'TRUONG HOAI DINH',
+      logoUrl:     p.getProperty('SHOP_LOGO_URL') || '',
+      bannerUrl:   p.getProperty('SHOP_BANNER_URL') || ''
     };
-    try { cache.put('settings', JSON.stringify(data), 1800); } catch(e) {}
+    cache.put('settings', JSON.stringify(data), 300);
     return { success: true, data: data };
   });
 }
