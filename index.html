@@ -1904,53 +1904,343 @@
       reportSelectedMonth: '',
       expenseSelectedMonth: '',
 
-      // Data Collections (Pre-seeded with Instant Fast-Boot Default Menu)
+      // Data Collections (Synchronized directly with User Google Sheet 1co9xhrZFdYi649Dl1OrWDuRAwbs4HsCoPTlt6i9QYw4)
       products: [
-        { ID: 'P-CF01', Name: 'Cà Phê Sữa Sài Gòn', Category: 'Cà Phê', Price: 20000, HasSize: true, HasIce: true, HasSugar: true, Status: 'ACTIVE' },
-        { ID: 'P-CF02', Name: 'Bạc Xỉu Sương Mù', Category: 'Cà Phê', Price: 22000, HasSize: true, HasIce: true, HasSugar: true, Status: 'ACTIVE' },
-        { ID: 'P-TS01', Name: 'Trà Sữa Truyền Thống', Category: 'Trà Sữa', Price: 23000, HasSize: true, HasIce: true, HasSugar: true, Status: 'ACTIVE' },
-        { ID: 'P-TS02', Name: 'Trà Sữa Oolong Lài', Category: 'Trà Sữa', Price: 26000, HasSize: true, HasIce: true, HasSugar: true, Status: 'ACTIVE' },
-        { ID: 'P-TS03', Name: 'Matcha Latte Kem Sữa', Category: 'Trà Sữa', Price: 30000, HasSize: true, HasIce: true, HasSugar: true, Status: 'ACTIVE' },
-        { ID: 'P-TC01', Name: 'Hồng Trà Tắc Mật Ong', Category: 'Trà Trái Cây', Price: 18000, HasSize: true, HasIce: true, HasSugar: true, Status: 'ACTIVE' },
-        { ID: 'P-TC02', Name: 'Trà Đào Cam Sả', Category: 'Trà Trái Cây', Price: 25000, HasSize: true, HasIce: true, HasSugar: true, Status: 'ACTIVE' },
-        { ID: 'P-TC03', Name: 'Trà Ổi Hồng Hạt Lựu', Category: 'Trà Trái Cây', Price: 28000, HasSize: true, HasIce: true, HasSugar: true, Status: 'ACTIVE' },
-        { ID: 'P-SN01', Name: 'Bánh Tráng Trộn Của Lá', Category: 'Đồ Ăn Vặt', Price: 20000, HasSize: false, HasIce: false, HasSugar: false, Status: 'ACTIVE' },
-        { ID: 'P-SN02', Name: 'Bánh Tráng Cuốn Sốt Bơ', Category: 'Đồ Ăn Vặt', Price: 22000, HasSize: false, HasIce: false, HasSugar: false, Status: 'ACTIVE' },
-        { ID: 'P-SN03', Name: 'Khô Gà Lá Chanh', Category: 'Đồ Ăn Vặt', Price: 25000, HasSize: false, HasIce: false, HasSugar: false, Status: 'ACTIVE' },
-        { ID: 'P-SN04', Name: 'Cá Viên Chiên Mắm Tỏi', Category: 'Đồ Ăn Vặt', Price: 30000, HasSize: false, HasIce: false, HasSugar: false, Status: 'ACTIVE' }
-      ],
+        {
+                "ID": "P01",
+                "Name": "Trà Thơm Nhiệt Đới (Summer Pineapple)",
+                "Category": "Trà Trái Cây",
+                "Price": 23000,
+                "Image": "data:image/webp;base64,UklGRqBRAABXRUJQVlA4IJRRAADw8ACdASosASwBPm0skUWkIqGkMBcr6IANiWxt68iTui2DQ/1XUfif+B5wPGfZt70+6edLuo7L80TqTzs/7r1Uf07/W+wZ+ynnv+rv92/UX+5XrK/9f1i/3z1Bv7B/wetC9BX92fWW/+Pswf3v/u/uJ7Tf///7PuAf/v2y/4BwOfpG8r/zP5Q+ePlg9rfvP7Z/479tPlazJ9nOpH8y/CH6X+7fu3/kPnl/df8Hwz+aH+f6gv5L/P/8l+bH9t4sK337SewR7qfY/9z/iPye+M/6z/mejP2V/6HuAfz3+r/63/A/u",
+                "HasSize": true,
+                "HasIce": true,
+                "HasSugar": true,
+                "Status": "ACTIVE"
+        },
+        {
+                "ID": "P02",
+                "Name": "Trà Xoài Nhiệt Đới (Summer Mango)",
+                "Category": "Trà Trái Cây",
+                "Price": 23000,
+                "Image": "",
+                "HasSize": true,
+                "HasIce": true,
+                "HasSugar": true,
+                "Status": "ACTIVE"
+        },
+        {
+                "ID": "P03",
+                "Name": "Trà Sữa Olong lài",
+                "Category": "Trà Sữa",
+                "Price": 23000,
+                "Image": "",
+                "HasSize": true,
+                "HasIce": true,
+                "HasSugar": true,
+                "Status": "ACTIVE"
+        },
+        {
+                "ID": "P04",
+                "Name": "Hồng Trà Tắc Mật Ong",
+                "Category": "Trà Trái Cây",
+                "Price": 18000,
+                "Image": "",
+                "HasSize": true,
+                "HasIce": true,
+                "HasSugar": true,
+                "Status": "ACTIVE"
+        },
+        {
+                "ID": "P05",
+                "Name": "Trà Dâu Tằm",
+                "Category": "Trà Trái Cây",
+                "Price": 23000,
+                "Image": "",
+                "HasSize": true,
+                "HasIce": true,
+                "HasSugar": true,
+                "Status": "ACTIVE"
+        },
+        {
+                "ID": "P06",
+                "Name": "Matcha Latte",
+                "Category": "Trà Sữa",
+                "Price": 25000,
+                "Image": "",
+                "HasSize": true,
+                "HasIce": true,
+                "HasSugar": true,
+                "Status": "ACTIVE"
+        },
+        {
+                "ID": "P07",
+                "Name": "Bánh Tráng Trộn",
+                "Category": "Đồ Ăn Vặt",
+                "Price": 15000,
+                "Image": "",
+                "HasSize": false,
+                "HasIce": false,
+                "HasSugar": false,
+                "Status": "ACTIVE"
+        },
+        {
+                "ID": "P08",
+                "Name": "Trà Sen Vàng",
+                "Category": "Trà Trái Cây",
+                "Price": 30000,
+                "Image": "",
+                "HasSize": true,
+                "HasIce": true,
+                "HasSugar": true,
+                "Status": "ACTIVE"
+        },
+        {
+                "ID": "P-1783096644752",
+                "Name": "Trà ổi hồng",
+                "Category": "Trà Trái Cây",
+                "Price": 23000,
+                "Image": "",
+                "HasSize": true,
+                "HasIce": true,
+                "HasSugar": true,
+                "Status": "ACTIVE"
+        },
+        {
+                "ID": "P-1783096727585",
+                "Name": "Trà Artiso",
+                "Category": "Trà Trái Cây",
+                "Price": 23000,
+                "Image": "",
+                "HasSize": true,
+                "HasIce": true,
+                "HasSugar": true,
+                "Status": "ACTIVE"
+        },
+        {
+                "ID": "P-1783096794690",
+                "Name": "Sữa chua dâu sấy thăng hoa",
+                "Category": "Trà Sữa",
+                "Price": 30000,
+                "Image": "",
+                "HasSize": true,
+                "HasIce": true,
+                "HasSugar": true,
+                "Status": "ACTIVE"
+        },
+        {
+                "ID": "P-1783946880512",
+                "Name": "Bánh tráng trộn - khô gà",
+                "Category": "Đồ Ăn Vặt",
+                "Price": 20000,
+                "Image": "",
+                "HasSize": false,
+                "HasIce": false,
+                "HasSugar": false,
+                "Status": "ACTIVE"
+        },
+        {
+                "ID": "P-1784021178178",
+                "Name": "Sữa chua Xoài",
+                "Category": "Trà Sữa",
+                "Price": 30000,
+                "Image": "",
+                "HasSize": true,
+                "HasIce": true,
+                "HasSugar": true,
+                "Status": "ACTIVE"
+        },
+        {
+                "ID": "P-1784021181201",
+                "Name": "Matcha caramel",
+                "Category": "Trà Sữa",
+                "Price": 30000,
+                "Image": "",
+                "HasSize": true,
+                "HasIce": true,
+                "HasSugar": true,
+                "Status": "ACTIVE"
+        },
+        {
+                "ID": "P-1785845319090",
+                "Name": "Trà Thơm muối ớt",
+                "Category": "Trà Trái Cây",
+                "Price": 28000,
+                "Image": "",
+                "HasSize": true,
+                "HasIce": true,
+                "HasSugar": true,
+                "Status": "ACTIVE"
+        },
+        {
+                "ID": "P-CF03",
+                "Name": "Bạc Xỉu Lá",
+                "Category": "Cà Phê",
+                "Price": 25000,
+                "Image": "",
+                "HasSize": true,
+                "HasIce": true,
+                "HasSugar": true,
+                "Status": "ACTIVE"
+        },
+        {
+                "ID": "P-CF04",
+                "Name": "Cà Phê Đen Đá",
+                "Category": "Cà Phê",
+                "Price": 18000,
+                "Image": "",
+                "HasSize": true,
+                "HasIce": true,
+                "HasSugar": true,
+                "Status": "ACTIVE"
+        },
+        {
+                "ID": "P-CF01",
+                "Name": "Cà Phê Muối",
+                "Category": "Cà Phê",
+                "Price": 28000,
+                "Image": "",
+                "HasSize": true,
+                "HasIce": true,
+                "HasSugar": true,
+                "Status": "ACTIVE"
+        },
+        {
+                "ID": "P-CF02",
+                "Name": "Cà Phê Sữa Pha Phin",
+                "Category": "Cà Phê",
+                "Price": 22000,
+                "Image": "",
+                "HasSize": true,
+                "HasIce": true,
+                "HasSugar": true,
+                "Status": "ACTIVE"
+        }
+],
       toppings: [
-        { ID: 'T01', Name: 'Trân Châu Đen', Price: 5000, Status: 'ACTIVE' },
-        { ID: 'T02', Name: 'Trân Châu Trắng 3Q', Price: 6000, Status: 'ACTIVE' },
-        { ID: 'T03', Name: 'Pudding Trứng', Price: 7000, Status: 'ACTIVE' },
-        { ID: 'T04', Name: 'Kem Cheese Macchiato', Price: 8000, Status: 'ACTIVE' },
-        { ID: 'T05', Name: 'Thạch Trái Cây', Price: 5000, Status: 'ACTIVE' },
-        { ID: 'T06', Name: 'Đào Miếng (2 lát)', Price: 7000, Status: 'ACTIVE' }
-      ],
-      categories: ['Cà Phê', 'Trà Sữa', 'Trà Trái Cây', 'Đồ Ăn Vặt'],
+        {
+                "ID": "T01",
+                "Name": "Thạch Lá",
+                "Price": 3000,
+                "Status": "ACTIVE"
+        },
+        {
+                "ID": "T02",
+                "Name": "Sương Sáo",
+                "Price": 3000,
+                "Status": "ACTIVE"
+        },
+        {
+                "ID": "T03",
+                "Name": "Trân Châu Trắng",
+                "Price": 3000,
+                "Status": "ACTIVE"
+        },
+        {
+                "ID": "T04",
+                "Name": "Trân Châu Olong",
+                "Price": 3000,
+                "Status": "ACTIVE"
+        },
+        {
+                "ID": "T05",
+                "Name": "Thạch Phô Mai",
+                "Price": 5000,
+                "Status": "ACTIVE"
+        },
+        {
+                "ID": "T06",
+                "Name": "Full Topping",
+                "Price": 10000,
+                "Status": "ACTIVE"
+        },
+        {
+                "ID": "T-1784795391071",
+                "Name": "Kem machiato",
+                "Price": 5000,
+                "Status": "ACTIVE"
+        },
+        {
+                "ID": "T08",
+                "Name": "Hạt Đác Rim Thơm",
+                "Price": 5000,
+                "Status": "ACTIVE"
+        }
+],
+      categories: ['Trà Trái Cây', 'Trà Sữa', 'Cà Phê', 'Đồ Ăn Vặt'],
       tables: [
-        { ID: 'TB01', Name: 'Bàn 01', Status: 'FREE', Capacity: 4 },
-        { ID: 'TB02', Name: 'Bàn 02', Status: 'FREE', Capacity: 2 },
-        { ID: 'TB03', Name: 'Bàn 03', Status: 'FREE', Capacity: 6 },
-        { ID: 'TB04', Name: 'Bàn 04', Status: 'FREE', Capacity: 4 },
-        { ID: 'TB05', Name: 'Bàn 05', Status: 'FREE', Capacity: 2 },
-        { ID: 'TB06', Name: 'Bàn 06', Status: 'FREE', Capacity: 8 },
-        { ID: 'TB07', Name: 'Bàn Ngoài Trời 1', Status: 'FREE', Capacity: 4 },
-        { ID: 'TB08', Name: 'Bàn Ngoài Trời 2', Status: 'FREE', Capacity: 4 }
-      ],
+        {
+                "ID": "TBL01",
+                "Name": "Bàn 1",
+                "Status": "FREE",
+                "Capacity": 4
+        },
+        {
+                "ID": "TBL02",
+                "Name": "Bàn 2",
+                "Status": "FREE",
+                "Capacity": 2
+        },
+        {
+                "ID": "TBL03",
+                "Name": "Bàn 3",
+                "Status": "FREE",
+                "Capacity": 6
+        },
+        {
+                "ID": "TBL04",
+                "Name": "Bàn 4",
+                "Status": "FREE",
+                "Capacity": 4
+        },
+        {
+                "ID": "TBL05",
+                "Name": "Bàn 5",
+                "Status": "FREE",
+                "Capacity": 4
+        }
+],
       activeOrders: [],
       orderHistoryList: [],
       tasks: [],
       expenses: [],
       staffList: [
-        { ID: 'NV-ADMIN', Name: 'Chủ Quán (Admin)', Role: 'ADMIN', Status: 'ACTIVE' },
-        { ID: 'NV01', Name: 'Trí', Role: 'MANAGER', Status: 'ACTIVE' },
-        { ID: 'NV02', Name: 'Yến', Role: 'CASHIER', Status: 'ACTIVE' },
-        { ID: 'NV03', Name: 'Dinh', Role: 'CASHIER', Status: 'ACTIVE' },
-        { ID: 'NV04', Name: 'Nhung', Role: 'BARISTA', Status: 'ACTIVE' },
-        { ID: 'NV05', Name: 'Linh', Role: 'BARISTA', Status: 'ACTIVE' },
-        { ID: 'NV06', Name: 'An', Role: 'WAITER', Status: 'ACTIVE' }
-      ],
+        {
+                "ID": "NV-ADMIN",
+                "Name": "Chủ Quán (Admin)",
+                "Role": "ADMIN",
+                "Status": "ACTIVE"
+        },
+        {
+                "ID": "NV-1779170042617-780",
+                "Name": "Yến",
+                "Role": "CASHIER",
+                "Status": "ACTIVE"
+        },
+        {
+                "ID": "NV-1779170062215-621",
+                "Name": "Hải",
+                "Role": "MANAGER",
+                "Status": "ACTIVE"
+        },
+        {
+                "ID": "NV-1779170076175-246",
+                "Name": "Dinh",
+                "Role": "CASHIER",
+                "Status": "ACTIVE"
+        },
+        {
+                "ID": "NV-1779170084982-485",
+                "Name": "Nhung",
+                "Role": "BARISTA",
+                "Status": "ACTIVE"
+        },
+        {
+                "ID": "NV-1779170093279-942",
+                "Name": "Trí",
+                "Role": "MANAGER",
+                "Status": "ACTIVE"
+        }
+],
       customerList: [],
       settings: {
         shopName: 'Tiệm Của Lá',
@@ -2445,29 +2735,107 @@
       }
     }
 
+    var GOOGLE_SHEET_ID = '1co9xhrZFdYi649Dl1OrWDuRAwbs4HsCoPTlt6i9QYw4';
+
+    async function fetchSheetViaGviz(sheetName) {
+      var url = 'https://docs.google.com/spreadsheets/d/' + GOOGLE_SHEET_ID + '/gviz/tq?tqx=out:json&sheet=' + encodeURIComponent(sheetName) + '&_t=' + Date.now();
+      var res = await fetch(url);
+      var text = await res.text();
+      var jsonMatch = text.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\);/);
+      if (!jsonMatch) return [];
+      var gviz = JSON.parse(jsonMatch[1]);
+      var headers = gviz.table.cols.map(function(c) { return c.label || c.id || ''; });
+      return gviz.table.rows.map(function(r) {
+        var obj = {};
+        r.c.forEach(function(cell, idx) {
+          var h = headers[idx];
+          if (h) {
+            obj[h] = cell ? (cell.v !== null && cell.v !== undefined ? cell.v : (cell.f || '')) : '';
+          }
+        });
+        return obj;
+      });
+    }
+
     async function refreshData(toastFeedback) {
       state.loading = true;
       updateSyncIcon(true);
       try {
-        var res = await callGAS('getInitialData');
-        if (res && res.success && res.data) {
-          var d = res.data;
-          if (d.menu && d.menu.products && d.menu.products.length > 0) state.products = d.menu.products;
-          if (d.menu && d.menu.toppings && d.menu.toppings.length > 0) state.toppings = d.menu.toppings;
-          if (d.tables && d.tables.length > 0) state.tables = d.tables;
-          if (d.activeOrders) state.activeOrders = d.activeOrders;
-          if (d.tasks) state.tasks = d.tasks;
-          
-          if (d.expenses) {
-            if (Array.isArray(d.expenses)) state.expenses = d.expenses;
-            else if (Array.isArray(d.expenses.expenses)) state.expenses = d.expenses.expenses;
+        // 1. Đồng bộ trực tiếp từ Google Sheet của bạn (GViz API)
+        try {
+          var pRows = await fetchSheetViaGviz('Products');
+          if (pRows && pRows.length > 0) {
+            state.products = pRows.map(function(p) {
+              return {
+                ID: p.ID || p.id,
+                Name: p.Name || p.name,
+                Category: p.Category || p.category || 'Món Nước',
+                Price: typeof p.Price === 'number' ? p.Price : (parseFloat(String(p.Price || 0).replace(/\./g, '').replace(/,/g, '')) || 0),
+                Image: p.Image || '',
+                HasSize: p.HasSize === true || p.HasSize === 'TRUE' || p.HasSize === 'true',
+                HasIce: p.HasIce === true || p.HasIce === 'TRUE' || p.HasIce === 'true',
+                HasSugar: p.HasSugar === true || p.HasSugar === 'TRUE' || p.HasSugar === 'true',
+                Status: p.Status || 'ACTIVE'
+              };
+            });
           }
-          
-          if (d.staff && d.staff.length > 0) state.staffList = d.staff;
-          if (d.customers && d.customers.length > 0) state.customerList = d.customers;
-          if (d.settings) state.settings = Object.assign({}, state.settings, d.settings);
-          if (d.report && d.report.data) state.reportData = d.report.data;
-          else if (d.report) state.reportData = d.report;
+
+          var tRows = await fetchSheetViaGviz('Toppings');
+          if (tRows && tRows.length > 0) {
+            state.toppings = tRows.map(function(t) {
+              return {
+                ID: t.ID || t.id,
+                Name: t.Name || t.name,
+                Price: typeof t.Price === 'number' ? t.Price : (parseFloat(String(t.Price || 0).replace(/\./g, '').replace(/,/g, '')) || 0),
+                Status: t.Status || 'ACTIVE'
+              };
+            });
+          }
+
+          var tblRows = await fetchSheetViaGviz('Tables');
+          if (tblRows && tblRows.length > 0) {
+            state.tables = tblRows.map(function(tb) {
+              return {
+                ID: tb.ID || tb.id,
+                Name: tb.Name || tb.name || 'Bàn',
+                Status: tb.Status || 'FREE',
+                Capacity: parseInt(tb.Capacity) || 4
+              };
+            });
+          }
+
+          var stRows = await fetchSheetViaGviz('Staff');
+          if (stRows && stRows.length > 0) {
+            state.staffList = stRows.map(function(s) {
+              return {
+                ID: s.ID || s.id,
+                Name: s.Name || s.name,
+                Role: s.Role || 'CASHIER',
+                Status: s.Status || 'ACTIVE'
+              };
+            });
+          }
+
+          var expRows = await fetchSheetViaGviz('Expenses');
+          if (expRows && expRows.length > 0) {
+            state.expenses = expRows.map(function(e) {
+              return {
+                ID: e.ID || e.id,
+                Date: String(e.Date || '').substring(0, 10),
+                Category: e.Category || 'Nguyên liệu',
+                Description: e.Description || '',
+                Amount: typeof e.Amount === 'number' ? e.Amount : (parseFloat(String(e.Amount || 0).replace(/\./g, '').replace(/,/g, '')) || 0),
+                FundingSource: e.FundingSource || 'Tiền quán',
+                PerformedByName: e.PerformedByName || e.PerformedBy || '',
+                Note: e.Note || ''
+              };
+            });
+          }
+
+          var cusRows = await fetchSheetViaGviz('Customers');
+          if (cusRows && cusRows.length > 0) {
+            state.customerList = cusRows;
+          }
 
           var catSet = new Set();
           state.products.forEach(function(p) { if (p.Category) catSet.add(p.Category); });
@@ -2476,6 +2844,18 @@
           saveLocalCache();
           if (toastFeedback) {
             showToast('Đã đồng bộ ' + state.products.length + ' món & ' + state.expenses.length + ' khoản chi từ Google Sheet!', 'verified');
+          }
+        } catch(gvizErr) {
+          console.warn('[GViz Sync Notice, fallback to GAS RPC]', gvizErr);
+          var res = await callGAS('getInitialData');
+          if (res && res.success && res.data) {
+            var d = res.data;
+            if (d.menu && d.menu.products && d.menu.products.length > 0) state.products = d.menu.products;
+            if (d.menu && d.menu.toppings && d.menu.toppings.length > 0) state.toppings = d.menu.toppings;
+            if (d.tables && d.tables.length > 0) state.tables = d.tables;
+            if (d.expenses) state.expenses = Array.isArray(d.expenses) ? d.expenses : (d.expenses.expenses || []);
+            if (d.staff && d.staff.length > 0) state.staffList = d.staff;
+            saveLocalCache();
           }
         }
       } catch (err) {
@@ -2486,6 +2866,7 @@
         renderApp();
       }
     }
+
 
     function updateSyncIcon(syncing) {
       var icon = document.getElementById('sync-icon');
