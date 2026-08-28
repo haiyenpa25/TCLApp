@@ -6,13 +6,13 @@
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport" />
   <title>Tiệm Của Lá — Hệ Thống Bán Hàng POS & Quản Lý Quán F&B</title>
 
-  <!-- SEO & Standard Meta -->
-  <meta name="description" content="Hệ thống quản lý POS bán hàng, quản lý thực đơn menu, sơ đồ bàn, bếp KDS, sổ quỹ thu chi, nhiệm vụ checklist và báo cáo tài chính Tiệm Của Lá." />
+  <!-- SEO & Meta -->
+  <meta name="description" content="Hệ thống quản lý POS bán hàng, quản lý thực đơn menu, sổ quỹ thu chi, chốt ca két tiền, khách hàng CRM và báo cáo tài chính Tiệm Của Lá." />
   <meta name="theme-color" content="#154212" />
 
-  <!-- Google Fonts & Material Icons -->
+  <!-- Google Fonts & Material Symbols -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@600;700;800&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap" rel="stylesheet" />
 
   <!-- Tailwind CSS Engine -->
@@ -80,8 +80,8 @@
     .hidden { display: none !important; }
     @media print {
       body * { visibility: hidden; }
-      #printable-receipt, #printable-receipt * { visibility: visible; }
-      #printable-receipt { position: absolute; left: 0; top: 0; width: 80mm; margin: 0 auto; padding: 10px; }
+      #printable-receipt, #printable-receipt *, #printable-shift, #printable-shift * { visibility: visible; }
+      #printable-receipt, #printable-shift { position: absolute; left: 0; top: 0; width: 80mm; margin: 0 auto; padding: 10px; }
     }
   </style>
 </head>
@@ -104,6 +104,12 @@
     </div>
 
     <div class="flex items-center gap-2">
+      <!-- Shift Handover Button -->
+      <button onclick="openShiftModal()" title="Chốt ca & Bàn giao két tiền" class="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-surface-container hover:bg-surface-container-high transition text-xs font-bold text-on-surface border border-outline-variant/40 shadow-xs">
+        <span class="material-symbols-outlined text-sm text-status-occupied">point_of_sale</span>
+        <span>Chốt Ca</span>
+      </button>
+
       <!-- Table Selector Button -->
       <button onclick="openTableSelector()" class="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-surface-container hover:bg-surface-container-high transition text-xs font-bold text-on-surface border border-outline-variant/40 shadow-xs">
         <span class="material-symbols-outlined text-sm text-primary">table_restaurant</span>
@@ -158,7 +164,6 @@
 
     <!-- ── VIEW 3: EXPENSES & SỔ QUỸ (NÂNG CAO) ─────────────────────────────── -->
     <section id="view-expenses" class="hidden space-y-4 animate-fade-in">
-      <!-- Expense Filter Header -->
       <div class="bg-surface-container-lowest rounded-2xl p-4 border border-outline-variant/30 shadow-card space-y-3">
         <div class="flex flex-col md:flex-row justify-between md:items-center gap-3">
           <div>
@@ -189,7 +194,7 @@
           <input id="exp-custom-to" type="date" onchange="applyExpenseFilter()" class="px-2.5 py-1 bg-surface-container-lowest border border-outline-variant/40 rounded-lg text-xs font-medium" />
         </div>
 
-        <!-- Category & Funding Filter -->
+        <!-- Multi-filter Row -->
         <div class="flex flex-wrap items-center gap-3 pt-2 text-xs">
           <div class="flex items-center gap-1.5">
             <span class="font-bold text-outline">Danh mục:</span>
@@ -224,7 +229,36 @@
       </div>
     </section>
 
-    <!-- ── VIEW 4: TASKS & CHECKLIST ────────────────────────────────────────── -->
+    <!-- ── VIEW 4: CRM KHÁCH HÀNG & THÀNH VIÊN ───────────────────────────────── -->
+    <section id="view-customers" class="hidden space-y-4 animate-fade-in">
+      <div class="bg-surface-container-lowest rounded-2xl p-4 border border-outline-variant/30 shadow-card space-y-3">
+        <div class="flex flex-col md:flex-row justify-between md:items-center gap-3">
+          <div>
+            <h2 class="font-display font-bold text-base text-on-surface flex items-center gap-2">
+              <span class="material-symbols-outlined text-primary">groups</span>
+              Quản Lý Khách Hàng Thân Thiết & Tích Điểm
+            </h2>
+            <p class="text-xs text-outline">Tra cứu lịch sử mua hàng, điểm thưởng và chính sách thành viên</p>
+          </div>
+          <button onclick="openCustomerEditModal(null)" class="px-4 py-2.5 bg-primary text-on-primary rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 shadow-sm hover:bg-primary-container transition">
+            <span class="material-symbols-outlined text-sm">person_add</span> + Thêm Khách Hàng
+          </button>
+        </div>
+
+        <div class="relative">
+          <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-lg">search</span>
+          <input oninput="onCustomerSearchInput(this.value)" type="text" placeholder="Tìm theo tên hoặc số điện thoại khách..." class="w-full pl-9 pr-4 py-2 bg-surface-container border border-outline-variant/40 rounded-xl text-xs font-medium focus:outline-none focus:border-primary" />
+        </div>
+      </div>
+
+      <div class="bg-surface-container-lowest rounded-2xl p-4 border border-outline-variant/30 shadow-card">
+        <div id="customers-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+          <!-- Rendered via JS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ── VIEW 5: TASKS & CHECKLIST ────────────────────────────────────────── -->
     <section id="view-tasks" class="hidden space-y-4 animate-fade-in">
       <div class="bg-surface-container-lowest rounded-2xl p-4 border border-outline-variant/30 shadow-card flex justify-between items-center">
         <div>
@@ -247,16 +281,14 @@
       </div>
     </section>
 
-    <!-- ── VIEW 5: REPORTS & BI (CHI TIẾT) ──────────────────────────────────── -->
+    <!-- ── VIEW 6: REPORTS & BI (CHI TIẾT) ──────────────────────────────────── -->
     <section id="view-reports" class="hidden space-y-4 animate-fade-in">
-      <!-- Date Range Controls -->
       <div class="bg-surface-container-lowest p-4 rounded-2xl border border-outline-variant/30 shadow-card space-y-3">
         <div class="flex flex-col md:flex-row justify-between md:items-center gap-2">
           <h2 class="font-display font-bold text-base text-on-surface flex items-center gap-2">
             <span class="material-symbols-outlined text-primary">analytics</span>
             Báo Cáo Hoạt Động & Tài Chính Chi Tiết
           </h2>
-          <!-- Preset Buttons -->
           <div class="flex flex-wrap items-center gap-1.5 text-xs">
             <button id="rep-filter-today" onclick="setReportPeriod('today')" class="px-3 py-1.5 rounded-xl font-bold bg-primary text-on-primary shadow-xs">Hôm Nay</button>
             <button id="rep-filter-yesterday" onclick="setReportPeriod('yesterday')" class="px-3 py-1.5 rounded-xl font-medium bg-surface-container text-on-surface hover:bg-surface-container-high">Hôm Qua</button>
@@ -266,7 +298,6 @@
           </div>
         </div>
 
-        <!-- Custom Date Inputs -->
         <div id="rep-custom-date-container" class="hidden flex flex-wrap items-center gap-2 pt-2 border-t border-outline-variant/20 text-xs">
           <span class="font-semibold text-outline">Từ ngày:</span>
           <input id="rep-custom-from" type="date" onchange="fetchReportForPeriod()" class="px-2.5 py-1 bg-surface-container-lowest border border-outline-variant/40 rounded-lg text-xs font-medium" />
@@ -301,7 +332,6 @@
 
       <!-- Payment Breakdown & Best Sellers -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <!-- Payment Breakdown -->
         <div class="bg-surface-container-lowest p-4 rounded-2xl border border-outline-variant/30 shadow-card">
           <h3 class="font-display font-bold text-sm text-on-surface mb-3 flex items-center gap-2">
             <span class="material-symbols-outlined text-primary">pie_chart</span>
@@ -312,7 +342,6 @@
           </div>
         </div>
 
-        <!-- Top Best Sellers -->
         <div class="bg-surface-container-lowest p-4 rounded-2xl border border-outline-variant/30 shadow-card">
           <h3 class="font-display font-bold text-sm text-on-surface mb-3 flex items-center gap-2">
             <span class="material-symbols-outlined text-primary">local_fire_department</span>
@@ -347,9 +376,8 @@
       </div>
     </section>
 
-    <!-- ── VIEW 6: SETTINGS & MENU QUẢN LÝ ─────────────────────────────────── -->
+    <!-- ── VIEW 7: SETTINGS & MENU QUẢN LÝ ─────────────────────────────────── -->
     <section id="view-settings" class="hidden space-y-4 animate-fade-in">
-      <!-- Settings Sub-Navigation Tabs -->
       <div class="flex gap-2 overflow-x-auto pb-1 border-b border-outline-variant/30 text-xs font-bold">
         <button id="set-subtab-store" onclick="setSettingsSubTab('store')" class="px-4 py-2 rounded-xl bg-primary text-on-primary shadow-xs">Cấu Hình Quán & VietQR</button>
         <button id="set-subtab-menu" onclick="setSettingsSubTab('menu')" class="px-4 py-2 rounded-xl bg-surface-container text-on-surface hover:bg-surface-container-high">Quản Lý Món Nước</button>
@@ -474,7 +502,7 @@
     </button>
   </div>
 
-  <!-- ── 4. BOTTOM NAVIGATION BAR ─────────────────────────────────────────── -->
+  <!-- ── 4. BOTTOM NAVIGATION BAR (7 PHÂN HỆ) ──────────────────────────────── -->
   <nav data-bottom-nav class="fixed bottom-0 left-0 right-0 z-40 bg-surface-container-lowest/95 backdrop-blur-lg border-t border-outline-variant/30 flex items-center justify-around px-2 py-1 shadow-soft">
     <button data-tab="pos" onclick="setTab('pos')" class="flex-1 flex flex-col items-center justify-center py-2 text-primary font-bold transition">
       <span class="material-symbols-outlined text-xl">point_of_sale</span>
@@ -487,6 +515,10 @@
     <button data-tab="expenses" onclick="setTab('expenses')" class="flex-1 flex flex-col items-center justify-center py-2 text-on-surface-variant font-medium opacity-70 hover:opacity-100 transition">
       <span class="material-symbols-outlined text-xl">receipt_long</span>
       <span class="text-[10px] mt-0.5">Sổ Quỹ</span>
+    </button>
+    <button data-tab="customers" onclick="setTab('customers')" class="flex-1 flex flex-col items-center justify-center py-2 text-on-surface-variant font-medium opacity-70 hover:opacity-100 transition">
+      <span class="material-symbols-outlined text-xl">groups</span>
+      <span class="text-[10px] mt-0.5">Khách Hàng</span>
     </button>
     <button data-tab="tasks" onclick="setTab('tasks')" class="flex-1 flex flex-col items-center justify-center py-2 text-on-surface-variant font-medium opacity-70 hover:opacity-100 transition">
       <span class="material-symbols-outlined text-xl">task_alt</span>
@@ -652,6 +684,58 @@
     </div>
   </div>
 
+  <!-- MODAL: Chốt Ca & Bàn Giao Két Tiền -->
+  <div id="modal-shift-handover" class="modal-overlay hidden">
+    <div class="modal-container max-w-md animate-scale-up">
+      <div class="p-4 border-b border-outline-variant/30 flex justify-between items-center">
+        <div>
+          <h3 class="font-display font-bold text-base text-on-surface flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-status-occupied">point_of_sale</span>
+            Chốt Ca Bán & Kiểm Két Tiền
+          </h3>
+          <span class="text-[11px] text-outline font-semibold">Đối soát tiền mặt & doanh thu trong ca</span>
+        </div>
+        <button onclick="closeModal('modal-shift-handover')" class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center text-outline"><span class="material-symbols-outlined text-base">close</span></button>
+      </div>
+
+      <div class="p-4 space-y-3 overflow-y-auto max-h-[60vh] text-xs">
+        <div>
+          <label class="font-bold text-outline block mb-1">Tiền Lẻ Ban Đầu Trong Két (VNĐ)</label>
+          <input id="shift-opening-cash" oninput="calculateShiftVariance()" type="number" value="500000" class="w-full px-3 py-2 bg-surface-container border border-outline-variant/40 rounded-xl font-bold text-sm" />
+        </div>
+
+        <div class="p-3 bg-surface-container rounded-xl space-y-1.5">
+          <div class="flex justify-between"><span>+ Doanh thu Tiền Mặt trong ca:</span><span id="shift-cash-in" class="font-mono font-bold text-primary">0 ₫</span></div>
+          <div class="flex justify-between"><span>+ Doanh thu Chuyển Khoản VietQR:</span><span id="shift-transfer-in" class="font-mono font-bold text-primary">0 ₫</span></div>
+          <div class="flex justify-between"><span>- Tiền Mặt chi từ két quán:</span><span id="shift-cash-out" class="font-mono font-bold text-error">0 ₫</span></div>
+          <div class="flex justify-between pt-1 border-t border-outline-variant/20 font-bold">
+            <span>= Tiền Mặt Lý Thuyết Phải Có:</span>
+            <span id="shift-expected-cash" class="font-display font-extrabold text-sm text-on-surface">0 ₫</span>
+          </div>
+        </div>
+
+        <div>
+          <label class="font-bold text-outline block mb-1">Tiền Mặt Thực Tế Đếm Được (VNĐ)</label>
+          <input id="shift-actual-cash" oninput="calculateShiftVariance()" type="number" placeholder="Nhập số tiền thực tế trong két..." class="w-full px-3 py-2 bg-surface-container-lowest border border-primary rounded-xl font-bold text-base text-primary" />
+        </div>
+
+        <div class="p-3 bg-surface-container rounded-xl flex justify-between items-center font-bold">
+          <span>Chênh Lệch Tiền Mặt:</span>
+          <span id="shift-variance-badge" class="font-display font-extrabold text-base text-status-free">0 ₫ (Khớp)</span>
+        </div>
+      </div>
+
+      <div class="p-4 border-t border-outline-variant/30 flex gap-2">
+        <button onclick="printShiftReceipt()" class="px-4 py-3 bg-surface-container text-on-surface font-bold rounded-xl text-xs hover:bg-surface-container-high transition flex items-center gap-1.5">
+          <span class="material-symbols-outlined text-sm">print</span> In Bàn Giao
+        </button>
+        <button onclick="confirmCloseShift()" class="flex-1 py-3 bg-primary text-on-primary font-bold rounded-xl text-xs shadow-sm hover:bg-primary-container transition">
+          Xác Nhận & Đóng Ca Bán
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- MODAL: Checkout & VietQR -->
   <div id="modal-checkout" class="modal-overlay hidden">
     <div class="modal-container max-w-md animate-scale-up">
@@ -712,7 +796,6 @@
         <button onclick="closeModal('modal-receipt')" class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center text-outline"><span class="material-symbols-outlined text-base">close</span></button>
       </div>
 
-      <!-- Printable 80mm ESC/POS Bill Container -->
       <div id="printable-receipt" class="p-4 bg-white text-black font-mono text-xs space-y-3 overflow-y-auto max-h-[60vh]">
         <div class="text-center border-b border-dashed border-gray-400 pb-3">
           <h2 class="font-bold text-base tracking-wider">TIỆM CỦA LÁ</h2>
@@ -761,29 +844,84 @@
           <label class="font-bold text-outline block mb-1">Nội Dung Chi</label>
           <input id="expense-desc" type="text" placeholder="VD: Mua sữa đặc, đá viên, túi nilon..." class="w-full px-3 py-2 bg-surface-container border border-outline-variant/40 rounded-xl font-medium" />
         </div>
-        <div>
-          <label class="font-bold text-outline block mb-1">Số Tiền (VNĐ)</label>
-          <input id="expense-amount" type="number" placeholder="50000" class="w-full px-3 py-2 bg-surface-container border border-outline-variant/40 rounded-xl font-bold text-sm" />
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="font-bold text-outline block mb-1">Số Tiền (VNĐ)</label>
+            <input id="expense-amount" type="number" placeholder="50000" class="w-full px-3 py-2 bg-surface-container border border-outline-variant/40 rounded-xl font-bold text-sm" />
+          </div>
+          <div>
+            <label class="font-bold text-outline block mb-1">Người Chi</label>
+            <select id="expense-performed-by" class="w-full px-3 py-2 bg-surface-container border border-outline-variant/40 rounded-xl font-medium">
+              <option value="Yến">Yến</option>
+              <option value="Trí">Trí</option>
+              <option value="Linh">Linh</option>
+              <option value="An">An</option>
+            </select>
+          </div>
         </div>
-        <div>
-          <label class="font-bold text-outline block mb-1">Danh Mục Chi</label>
-          <select id="expense-category" class="w-full px-3 py-2 bg-surface-container border border-outline-variant/40 rounded-xl font-medium">
-            <option value="Nguyên liệu">Nguyên liệu</option>
-            <option value="Dụng cụ & Bao bì">Dụng cụ & Bao bì</option>
-            <option value="Điện nước / Internet">Điện nước / Internet</option>
-            <option value="Khác">Khác</option>
-          </select>
-        </div>
-        <div>
-          <label class="font-bold text-outline block mb-1">Nguồn Tiền</label>
-          <select id="expense-funding" class="w-full px-3 py-2 bg-surface-container border border-outline-variant/40 rounded-xl font-medium">
-            <option value="Tiền quán">Tiền quán</option>
-            <option value="Tiền túi chủ">Tiền túi chủ</option>
-          </select>
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="font-bold text-outline block mb-1">Danh Mục Chi</label>
+            <select id="expense-category" class="w-full px-3 py-2 bg-surface-container border border-outline-variant/40 rounded-xl font-medium">
+              <option value="Nguyên liệu">Nguyên liệu</option>
+              <option value="Dụng cụ & Bao bì">Dụng cụ & Bao bì</option>
+              <option value="Điện nước / Internet">Điện nước / Internet</option>
+              <option value="Khác">Khác</option>
+            </select>
+          </div>
+          <div>
+            <label class="font-bold text-outline block mb-1">Nguồn Tiền</label>
+            <select id="expense-funding" class="w-full px-3 py-2 bg-surface-container border border-outline-variant/40 rounded-xl font-medium">
+              <option value="Tiền quán">Tiền quán</option>
+              <option value="Tiền túi chủ">Tiền túi chủ</option>
+            </select>
+          </div>
         </div>
       </div>
       <div class="p-4 border-t border-outline-variant/30">
         <button onclick="saveNewExpense()" class="w-full py-3 bg-primary text-on-primary font-bold rounded-xl text-xs shadow-sm hover:bg-primary-container transition">Lưu Khoản Chi</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Thêm / Sửa Khách Hàng CRM -->
+  <div id="modal-edit-customer" class="modal-overlay hidden">
+    <div class="modal-container max-w-md animate-scale-up">
+      <div class="p-4 border-b border-outline-variant/30 flex justify-between items-center">
+        <h3 id="modal-cus-title" class="font-display font-bold text-base text-on-surface">Thêm Khách Hàng Mới</h3>
+        <button onclick="closeModal('modal-edit-customer')" class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center text-outline"><span class="material-symbols-outlined text-base">close</span></button>
+      </div>
+      <div class="p-4 space-y-3 text-xs">
+        <input id="edit-cus-id" type="hidden" />
+        <div>
+          <label class="font-bold text-outline block mb-1">Tên Khách Hàng</label>
+          <input id="edit-cus-name" type="text" placeholder="VD: Anh Hiếu, Chị Phương..." class="w-full px-3 py-2 bg-surface-container border border-outline-variant/40 rounded-xl font-medium" />
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="font-bold text-outline block mb-1">Số Điện Thoại</label>
+            <input id="edit-cus-phone" type="tel" placeholder="0901234567" class="w-full px-3 py-2 bg-surface-container border border-outline-variant/40 rounded-xl font-medium" />
+          </div>
+          <div>
+            <label class="font-bold text-outline block mb-1">Loại Khách</label>
+            <select id="edit-cus-type" class="w-full px-3 py-2 bg-surface-container border border-outline-variant/40 rounded-xl font-medium">
+              <option value="Cá nhân">Cá nhân</option>
+              <option value="Công ty / Doanh nghiệp">Công ty / Doanh nghiệp</option>
+              <option value="Khách VIP">Khách VIP</option>
+            </select>
+          </div>
+        </div>
+        <div>
+          <label class="font-bold text-outline block mb-1">Địa Chỉ / Công Ty</label>
+          <input id="edit-cus-company" type="text" placeholder="VD: Global City, Tòa nhà ACB..." class="w-full px-3 py-2 bg-surface-container border border-outline-variant/40 rounded-xl font-medium" />
+        </div>
+        <div>
+          <label class="font-bold text-outline block mb-1">Ghi Chú Khách Hàng (Sở thích/Khẩu vị)</label>
+          <input id="edit-cus-note" type="text" placeholder="VD: Thích uống trà ít ngọt, nhiều đá..." class="w-full px-3 py-2 bg-surface-container border border-outline-variant/40 rounded-xl font-medium" />
+        </div>
+      </div>
+      <div class="p-4 border-t border-outline-variant/30">
+        <button onclick="saveCustomerCurrent()" class="w-full py-3 bg-primary text-on-primary font-bold rounded-xl text-xs shadow-sm hover:bg-primary-container transition">Lưu Thông Tin Khách Hàng</button>
       </div>
     </div>
   </div>
@@ -857,7 +995,6 @@
           <label class="font-bold text-outline block mb-1">Link Ảnh Sản Phẩm (URL)</label>
           <input id="edit-prod-image" type="url" placeholder="https://..." class="w-full px-3 py-2 bg-surface-container border border-outline-variant/40 rounded-xl font-mono text-[11px]" />
         </div>
-        <!-- Option Checkboxes -->
         <div class="p-3 bg-surface-container rounded-xl space-y-2">
           <span class="font-bold text-outline block mb-1">Tùy Chọn Khi Khách Gọi:</span>
           <div class="grid grid-cols-3 gap-2">
@@ -927,6 +1064,7 @@
       currentTab: 'pos',
       settingsSubTab: 'store',
       searchQuery: '',
+      customerSearchQuery: '',
       selectedCategory: 'all',
       selectedTable: null,
       currentTableName: '',
@@ -976,7 +1114,11 @@
       tasks: [],
       expenses: [],
       staffList: [],
-      customerList: [],
+      customerList: [
+        { ID: 'CUS-01', Name: 'Anh Hiếu', Phone: '0339849159', Type: 'Khách VIP', Company: 'Global City', Points: 15, TotalSpent: 450000, Note: 'Trà ít đường' },
+        { ID: 'CUS-02', Name: 'Chị Yến', Phone: '0909123456', Type: 'Công ty', Company: 'Cty Huy Hoàng', Points: 28, TotalSpent: 890000, Note: 'Giao lầu 3' },
+        { ID: 'CUS-03', Name: 'Cty Nhung', Phone: '0988765432', Type: 'Công ty', Company: 'Nhung Design', Points: 42, TotalSpent: 1350000, Note: 'Ly giấy' }
+      ],
       settings: {
         shopName: 'Tiệm Của Lá',
         slogan: 'Ngồi bên Lá quên vội vã',
@@ -1040,7 +1182,7 @@
           if (d.tasks) state.tasks = d.tasks;
           if (d.expenses) state.expenses = d.expenses;
           if (d.staff) state.staffList = d.staff;
-          if (d.customers) state.customerList = d.customers;
+          if (d.customers && d.customers.length > 0) state.customerList = d.customers;
           if (d.settings) state.settings = Object.assign({}, state.settings, d.settings);
           if (d.report) state.reportData = d.report;
 
@@ -1136,6 +1278,11 @@
       renderPOS();
     }
 
+    function onCustomerSearchInput(val) {
+      state.customerSearchQuery = val.trim().toLowerCase();
+      renderCustomers();
+    }
+
     function setKitchenFilter(f) {
       state.kitchenFilter = f;
       var btnActive = document.getElementById('kds-filter-active');
@@ -1148,6 +1295,83 @@
         if (btnActive) btnActive.className = 'px-3 py-1.5 rounded-xl text-xs font-medium bg-surface-container text-on-surface hover:bg-surface-container-high';
       }
       renderKitchen();
+    }
+
+    // ── SHIFT HANDOVER & DRAWER CASH BALANCING ──────────────────────────────────
+    function openShiftModal() {
+      var cashIn = 0;
+      var transferIn = 0;
+      state.activeOrders.forEach(function(o) {
+        if (o.Status === 'COMPLETED') {
+          if (o.PaymentMethod === 'CASH') cashIn += (o.TotalAmount || 0);
+          else transferIn += (o.TotalAmount || 0);
+        }
+      });
+
+      var todayStr = new Date().toISOString().substring(0, 10);
+      var cashOut = state.expenses
+        .filter(function(e) { return String(e.Date || '').substring(0, 10) === todayStr && (e.FundingSource === 'Tiền quán'); })
+        .reduce(function(sum, e) { return sum + (e.Amount || 0); }, 0);
+
+      var cashInEl = document.getElementById('shift-cash-in');
+      var transferInEl = document.getElementById('shift-transfer-in');
+      var cashOutEl = document.getElementById('shift-cash-out');
+
+      if (cashInEl) cashInEl.innerText = formatVND(cashIn);
+      if (transferInEl) transferInEl.innerText = formatVND(transferIn);
+      if (cashOutEl) cashOutEl.innerText = '-' + formatVND(cashOut);
+
+      calculateShiftVariance();
+      openModal('modal-shift-handover');
+    }
+
+    function calculateShiftVariance() {
+      var opening = parseFloat(document.getElementById('shift-opening-cash')?.value) || 0;
+      var cashIn = 0;
+      state.activeOrders.forEach(function(o) {
+        if (o.Status === 'COMPLETED' && o.PaymentMethod === 'CASH') cashIn += (o.TotalAmount || 0);
+      });
+      var todayStr = new Date().toISOString().substring(0, 10);
+      var cashOut = state.expenses
+        .filter(function(e) { return String(e.Date || '').substring(0, 10) === todayStr && (e.FundingSource === 'Tiền quán'); })
+        .reduce(function(sum, e) { return sum + (e.Amount || 0); }, 0);
+
+      var expected = opening + cashIn - cashOut;
+      var expectedEl = document.getElementById('shift-expected-cash');
+      if (expectedEl) expectedEl.innerText = formatVND(expected);
+
+      var actual = parseFloat(document.getElementById('shift-actual-cash')?.value);
+      var varianceEl = document.getElementById('shift-variance-badge');
+      if (varianceEl) {
+        if (isNaN(actual)) {
+          varianceEl.innerText = '0 ₫ (Chưa đếm)';
+          varianceEl.className = 'font-display font-extrabold text-base text-outline';
+        } else {
+          var diff = actual - expected;
+          if (diff === 0) {
+            varianceEl.innerText = '0 ₫ (Khớp chuẩn 100%)';
+            varianceEl.className = 'font-display font-extrabold text-base text-status-free';
+          } else if (diff > 0) {
+            varianceEl.innerText = '+' + formatVND(diff) + ' (Thừa tiền)';
+            varianceEl.className = 'font-display font-extrabold text-base text-primary';
+          } else {
+            varianceEl.innerText = '-' + formatVND(Math.abs(diff)) + ' (Thiếu hụt tiền)';
+            varianceEl.className = 'font-display font-extrabold text-base text-error';
+          }
+        }
+      }
+    }
+
+    function printShiftReceipt() {
+      window.print();
+    }
+
+    async function confirmCloseShift() {
+      var opening = parseFloat(document.getElementById('shift-opening-cash')?.value) || 0;
+      var actual = parseFloat(document.getElementById('shift-actual-cash')?.value) || 0;
+      var payload = { openingCash: opening, actualCash: actual, closedAt: new Date().toISOString() };
+      showToast('Đã lưu chốt ca bán & bàn giao két tiền thành công!', 'verified');
+      closeModal('modal-shift-handover');
     }
 
     // ── EXPENSE FILTER CONTROLS ────────────────────────────────────────────────
@@ -1474,11 +1698,12 @@
       var amount = parseFloat(document.getElementById('expense-amount')?.value) || 0;
       var cat = document.getElementById('expense-category')?.value || 'Nguyên liệu';
       var funding = document.getElementById('expense-funding')?.value || 'Tiền quán';
+      var performedBy = document.getElementById('expense-performed-by')?.value || 'Yến';
       if (!desc || amount <= 0) {
         showToast('Vui lòng điền nội dung và số tiền hợp lệ', 'warning');
         return;
       }
-      var payload = { description: desc, amount: amount, category: cat, fundingSource: funding };
+      var payload = { description: desc, amount: amount, category: cat, fundingSource: funding, performedByName: performedBy };
       var res = await callGAS('addExpense', payload);
       if (res && res.success) {
         closeModal('modal-add-expense');
@@ -1497,6 +1722,62 @@
         refreshData();
       } else {
         showToast('Lỗi xóa chi phí: ' + (res ? res.error : ''), 'error');
+      }
+    }
+
+    // ── CRM KHÁCH HÀNG CRUD ────────────────────────────────────────────────────
+    function openCustomerEditModal(customerId) {
+      var titleEl = document.getElementById('modal-cus-title');
+      var idInput = document.getElementById('edit-cus-id');
+      var nameInput = document.getElementById('edit-cus-name');
+      var phoneInput = document.getElementById('edit-cus-phone');
+      var typeSelect = document.getElementById('edit-cus-type');
+      var companyInput = document.getElementById('edit-cus-company');
+      var noteInput = document.getElementById('edit-cus-note');
+
+      if (customerId) {
+        var cus = state.customerList.find(function(c) { return c.ID === customerId; });
+        if (!cus) return;
+        if (titleEl) titleEl.innerText = 'Chỉnh Sửa Khách Hàng';
+        if (idInput) idInput.value = cus.ID;
+        if (nameInput) nameInput.value = cus.Name || '';
+        if (phoneInput) phoneInput.value = cus.Phone || '';
+        if (typeSelect) typeSelect.value = cus.Type || 'Cá nhân';
+        if (companyInput) companyInput.value = cus.Company || '';
+        if (noteInput) noteInput.value = cus.Note || '';
+      } else {
+        if (titleEl) titleEl.innerText = 'Thêm Khách Hàng Mới';
+        if (idInput) idInput.value = '';
+        if (nameInput) nameInput.value = '';
+        if (phoneInput) phoneInput.value = '';
+        if (typeSelect) typeSelect.value = 'Cá nhân';
+        if (companyInput) companyInput.value = '';
+        if (noteInput) noteInput.value = '';
+      }
+      openModal('modal-edit-customer');
+    }
+
+    async function saveCustomerCurrent() {
+      var id = document.getElementById('edit-cus-id')?.value;
+      var name = document.getElementById('edit-cus-name')?.value;
+      var phone = document.getElementById('edit-cus-phone')?.value;
+      var type = document.getElementById('edit-cus-type')?.value || 'Cá nhân';
+      var company = document.getElementById('edit-cus-company')?.value || '';
+      var note = document.getElementById('edit-cus-note')?.value || '';
+
+      if (!name || !phone) {
+        showToast('Vui lòng nhập họ tên và số điện thoại', 'warning');
+        return;
+      }
+
+      var payload = { id: id, name: name, phone: phone, type: type, company: company, note: note };
+      var res = await callGAS('saveCustomer', payload);
+      if (res && res.success) {
+        closeModal('modal-edit-customer');
+        showToast('Đã lưu thông tin khách hàng!', 'verified');
+        refreshData();
+      } else {
+        showToast('Lỗi: ' + (res ? res.error : ''), 'error');
       }
     }
 
@@ -1721,7 +2002,7 @@
 
       var subTitleEl = document.getElementById('header-sub-title');
       if (subTitleEl) {
-        var titles = { pos: 'Bán Hàng / Menu', kitchen: 'Bếp KDS Pha Chế', expenses: 'Sổ Quỹ Thu Chi', tasks: 'Nhiệm Vụ Checklist', reports: 'Báo Cáo Doanh Thu', settings: 'Cài Đặt Quán' };
+        var titles = { pos: 'Bán Hàng / Menu', kitchen: 'Bếp KDS Pha Chế', expenses: 'Sổ Quỹ Thu Chi', customers: 'Khách Hàng & Loyalty', tasks: 'Nhiệm Vụ Checklist', reports: 'Báo Cáo Doanh Thu', settings: 'Cài Đặt Quán' };
         subTitleEl.innerText = state.currentTableName ? 'Bàn: ' + state.currentTableName : (titles[state.currentTab] || 'Menu');
       }
 
@@ -1752,7 +2033,7 @@
         }
       });
 
-      ['pos', 'kitchen', 'expenses', 'tasks', 'reports', 'settings'].forEach(function(v) {
+      ['pos', 'kitchen', 'expenses', 'customers', 'tasks', 'reports', 'settings'].forEach(function(v) {
         var el = document.getElementById('view-' + v);
         if (el) {
           if (v === state.currentTab) el.classList.remove('hidden');
@@ -1763,6 +2044,7 @@
       if (state.currentTab === 'pos') renderPOS();
       else if (state.currentTab === 'kitchen') renderKitchen();
       else if (state.currentTab === 'expenses') renderExpenses();
+      else if (state.currentTab === 'customers') renderCustomers();
       else if (state.currentTab === 'tasks') renderTasks();
       else if (state.currentTab === 'reports') renderReports();
       else if (state.currentTab === 'settings') renderSettings();
@@ -1934,7 +2216,7 @@
         html += '<div class="bg-surface-container-lowest p-3 rounded-xl border border-outline-variant/30 flex items-center justify-between text-xs shadow-card hover:border-primary/30 transition">';
         html += '  <div>';
         html += '    <div class="font-bold text-sm text-on-surface">' + e.Description + '</div>';
-        html += '    <div class="text-[11px] text-outline mt-0.5"><span class="font-semibold text-primary">' + (e.Category || 'Chi tiêu') + '</span> • ' + (e.Date || '') + ' • <span class="text-on-surface font-medium">' + (e.FundingSource || 'Tiền quán') + '</span></div>';
+        html += '    <div class="text-[11px] text-outline mt-0.5"><span class="font-semibold text-primary">' + (e.Category || 'Chi tiêu') + '</span> • ' + (e.Date || '') + ' • <span class="text-on-surface font-medium">' + (e.FundingSource || 'Tiền quán') + '</span> • ' + (e.PerformedByName || 'NV') + '</div>';
         html += '  </div>';
         html += '  <div class="flex items-center gap-3">';
         html += '    <div class="font-display font-bold text-sm text-error">' + formatVND(e.Amount) + '</div>';
@@ -1943,6 +2225,44 @@
         html += '</div>';
       });
       listEl.innerHTML = html;
+    }
+
+    function renderCustomers() {
+      var grid = document.getElementById('customers-grid');
+      if (!grid) return;
+
+      var q = state.customerSearchQuery;
+      var filtered = state.customerList.filter(function(c) {
+        if (!q) return true;
+        var mName = (c.Name || '').toLowerCase().includes(q);
+        var mPhone = String(c.Phone || '').includes(q);
+        return mName || mPhone;
+      });
+
+      if (filtered.length === 0) {
+        grid.innerHTML = '<div class="col-span-full py-12 text-center text-outline text-xs"><span class="material-symbols-outlined text-4xl mb-1 opacity-50">person_off</span><p>Không tìm thấy khách hàng</p></div>';
+        return;
+      }
+
+      var html = '';
+      filtered.forEach(function(c) {
+        html += '<div class="bg-surface-container-lowest p-3.5 rounded-2xl border border-outline-variant/30 shadow-card flex flex-col justify-between gap-3 text-xs">';
+        html += '  <div>';
+        html += '    <div class="flex items-center justify-between">';
+        html += '      <h3 class="font-display font-bold text-sm text-on-surface">' + c.Name + '</h3>';
+        html += '      <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-primary/10 text-primary">' + (c.Type || 'Cá nhân') + '</span>';
+        html += '    </div>';
+        html += '    <div class="font-mono text-outline text-[11px] mt-0.5 flex items-center gap-1"><span class="material-symbols-outlined text-xs">call</span>' + (c.Phone || '---') + '</div>';
+        if (c.Company) html += '    <div class="text-[11px] text-on-surface-variant mt-1">🏢 ' + c.Company + '</div>';
+        if (c.Note) html += '    <div class="text-[10px] text-outline italic mt-1">"' + c.Note + '"</div>';
+        html += '  </div>';
+        html += '  <div class="pt-2 border-t border-outline-variant/20 flex items-center justify-between">';
+        html += '    <div><span class="text-[10px] text-outline uppercase block">Tích lũy:</span><span class="font-bold text-primary text-sm">' + (c.Points || 0) + ' điểm</span></div>';
+        html += '    <button onclick="openCustomerEditModal(\'' + c.ID + '\')" class="px-3 py-1.5 rounded-xl bg-surface-container text-on-surface font-bold text-xs hover:bg-surface-container-high transition flex items-center gap-1"><span class="material-symbols-outlined text-xs">edit</span> Sửa</button>';
+        html += '  </div>';
+        html += '</div>';
+      });
+      grid.innerHTML = html;
     }
 
     function renderTasks() {
@@ -1995,7 +2315,6 @@
       if (marginEl) marginEl.innerText = 'Tỷ suất: ' + marginPct + '%';
       if (avgEl) avgEl.innerText = formatVND(aov);
 
-      // Payment Breakdown
       var payContainer = document.getElementById('report-payment-breakdown');
       if (payContainer && r.paymentBreakdown) {
         var pb = r.paymentBreakdown;
@@ -2011,7 +2330,6 @@
           '</div>';
       }
 
-      // Top Best Sellers
       var topContainer = document.getElementById('report-top-products');
       if (topContainer) {
         var prodSales = {};
@@ -2039,7 +2357,6 @@
         }
       }
 
-      // Hourly Stats
       var hourlyContainer = document.getElementById('report-hourly-bars');
       if (hourlyContainer) {
         var stats = r.hourlyStats || [];
@@ -2053,7 +2370,6 @@
         hourlyContainer.innerHTML = hHtml;
       }
 
-      // Detailed Orders Table
       var ordersTableContainer = document.getElementById('report-orders-table');
       if (ordersTableContainer) {
         if (state.activeOrders.length === 0) {
