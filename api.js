@@ -23,7 +23,12 @@ function genId(prefix) {
 function withErrorHandling(fn) {
   try {
     var result = fn();
-    return result !== undefined ? result : { success: true }
+    return result !== undefined ? result : { success: true };
+  } catch (e) {
+    Logger.log('[API Error] ' + e.message + '\n' + (e.stack || ''));
+    return { success: false, error: String(e && e.message ? e.message : e) };
+  }
+}
 
 function withLock(fn, timeoutMs) {
   timeoutMs = timeoutMs || 10000;
@@ -36,12 +41,6 @@ function withLock(fn, timeoutMs) {
       try { lock.releaseLock(); } catch(e) {}
     }
   });
-}
-;
-  } catch (e) {
-    Logger.log('[API Error] ' + e.message + '\n' + (e.stack || ''));
-    return { success: false, error: String(e && e.message ? e.message : e) };
-  }
 }
 
 /**
