@@ -3251,20 +3251,7 @@
       reader.onload = function(e) {
         var img = new Image();
         img.onload = function() {
-          var canvas = document.createElement('canvas');
-          var maxDim = 500;
-          var width = img.width;
-          var height = img.height;
-          if (width > height) {
-            if (width > maxDim) { height *= maxDim / width; width = maxDim; }
-          } else {
-            if (height > maxDim) { width *= maxDim / height; height = maxDim; }
-          }
-          canvas.width = width;
-          canvas.height = height;
-          var ctx = canvas.getContext('2d');
-          ctx.drawImage(img, 0, 0, width, height);
-          var compressedBase64 = canvas.toDataURL('image/jpeg', 0.8);
+          var compressedBase64 = compressImageUnderLimit(img, 40000);
           var urlInput = document.getElementById('expense-receipt-url');
           if (urlInput) urlInput.value = compressedBase64;
           updateExpenseReceiptPreview(compressedBase64);
@@ -3976,32 +3963,60 @@
       if (input) input.click();
     }
 
+    function compressImageUnderLimit(img, targetMaxChars) {
+      targetMaxChars = targetMaxChars || 40000; // An toàn tuyệt đối dưới giới hạn 50.000 ký tự của 1 ô Google Sheet
+      var maxDim = 250;
+      var quality = 0.75;
+      var width = img.width;
+      var height = img.height;
+      
+      if (width > height) {
+        if (width > maxDim) { height = Math.round(height * maxDim / width); width = maxDim; }
+      } else {
+        if (height > maxDim) { width = Math.round(width * maxDim / height); height = maxDim; }
+      }
+
+      var canvas = document.createElement('canvas');
+      var ctx = canvas.getContext('2d');
+      var result = '';
+
+      for (var attempt = 0; attempt < 5; attempt++) {
+        canvas.width = width;
+        canvas.height = height;
+        ctx.clearRect(0, 0, width, height);
+        ctx.drawImage(img, 0, 0, width, height);
+        
+        // Thử WebP trước (nén tốt nhất), fallback JPEG
+        try {
+          result = canvas.toDataURL('image/webp', quality);
+        } catch(e) {
+          result = canvas.toDataURL('image/jpeg', quality);
+        }
+
+        if (result.length <= targetMaxChars) {
+          break;
+        }
+        // Giảm kích thước và chất lượng nếu vẫn trên 40k ký tự
+        width = Math.round(width * 0.85);
+        height = Math.round(height * 0.85);
+        quality = Math.max(0.4, quality - 0.1);
+      }
+      return result;
+    }
+
     function handleProductFileSelect(event) {
       var file = event.target.files && event.target.files[0];
       if (!file) return;
-      showToast('Đang nén & mã hóa hình ảnh...', 'image');
+      showToast('Đang nén & tối ưu hóa ảnh cho Google Sheet...', 'image');
       var reader = new FileReader();
       reader.onload = function(e) {
         var img = new Image();
         img.onload = function() {
-          var canvas = document.createElement('canvas');
-          var maxDim = 400;
-          var width = img.width;
-          var height = img.height;
-          if (width > height) {
-            if (width > maxDim) { height *= maxDim / width; width = maxDim; }
-          } else {
-            if (height > maxDim) { width *= maxDim / height; height = maxDim; }
-          }
-          canvas.width = width;
-          canvas.height = height;
-          var ctx = canvas.getContext('2d');
-          ctx.drawImage(img, 0, 0, width, height);
-          var compressedBase64 = canvas.toDataURL('image/jpeg', 0.85);
+          var compressedBase64 = compressImageUnderLimit(img, 40000);
           var imgInput = document.getElementById('edit-prod-image');
           if (imgInput) imgInput.value = compressedBase64;
           updateImagePreview(compressedBase64);
-          showToast('Đã tải ảnh lên thành công!', 'check_circle');
+          showToast('Đã nén ảnh siêu nhẹ (' + Math.round(compressedBase64.length / 1024) + ' KB) sẵn sàng lưu!', 'check_circle');
         };
         img.src = e.target.result;
       };

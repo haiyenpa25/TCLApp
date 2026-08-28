@@ -242,9 +242,11 @@ function getMenuAdmin() {
 function addProduct(data) {
   return withLock(function() {
     var id = 'P-' + new Date().getTime();
+    var imgVal = data.image || '';
+    if (imgVal.length > 49000) imgVal = ''; // Bảo vệ giới hạn 50k ký tự ô Google Sheet
     var item = {
       ID: id, Name: data.name, Category: data.category,
-      Price: Number(data.price), Image: data.image || '',
+      Price: Number(data.price), Image: imgVal,
       HasSize: !!data.hasSize, HasIce: !!data.hasIce, HasSugar: !!data.hasSugar, Status: 'ACTIVE'
     };
     appendRowToSheet(SHEETS.PRODUCTS, item);
@@ -259,7 +261,11 @@ function updateProduct(id, data) {
     if (data.name     !== undefined) updates.Name     = data.name;
     if (data.category !== undefined) updates.Category = data.category;
     if (data.price    !== undefined) updates.Price    = Number(data.price);
-    if (data.image    !== undefined) updates.Image    = data.image;
+    if (data.image    !== undefined) {
+      var imgVal = data.image || '';
+      if (imgVal.length > 49000) imgVal = ''; // Bảo vệ giới hạn 50k ký tự ô Google Sheet
+      updates.Image = imgVal;
+    }
     if (data.hasSize  !== undefined) updates.HasSize  = !!data.hasSize;
     if (data.hasIce   !== undefined) updates.HasIce   = !!data.hasIce;
     if (data.hasSugar !== undefined) updates.HasSugar = !!data.hasSugar;
