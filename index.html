@@ -1904,16 +1904,53 @@
       reportSelectedMonth: '',
       expenseSelectedMonth: '',
 
-      // Data Collections
-      products: [],
-      toppings: [],
-      categories: [],
-      tables: [],
+      // Data Collections (Pre-seeded with Instant Fast-Boot Default Menu)
+      products: [
+        { ID: 'P-CF01', Name: 'Cà Phê Sữa Sài Gòn', Category: 'Cà Phê', Price: 20000, HasSize: true, HasIce: true, HasSugar: true, Status: 'ACTIVE' },
+        { ID: 'P-CF02', Name: 'Bạc Xỉu Sương Mù', Category: 'Cà Phê', Price: 22000, HasSize: true, HasIce: true, HasSugar: true, Status: 'ACTIVE' },
+        { ID: 'P-TS01', Name: 'Trà Sữa Truyền Thống', Category: 'Trà Sữa', Price: 23000, HasSize: true, HasIce: true, HasSugar: true, Status: 'ACTIVE' },
+        { ID: 'P-TS02', Name: 'Trà Sữa Oolong Lài', Category: 'Trà Sữa', Price: 26000, HasSize: true, HasIce: true, HasSugar: true, Status: 'ACTIVE' },
+        { ID: 'P-TS03', Name: 'Matcha Latte Kem Sữa', Category: 'Trà Sữa', Price: 30000, HasSize: true, HasIce: true, HasSugar: true, Status: 'ACTIVE' },
+        { ID: 'P-TC01', Name: 'Hồng Trà Tắc Mật Ong', Category: 'Trà Trái Cây', Price: 18000, HasSize: true, HasIce: true, HasSugar: true, Status: 'ACTIVE' },
+        { ID: 'P-TC02', Name: 'Trà Đào Cam Sả', Category: 'Trà Trái Cây', Price: 25000, HasSize: true, HasIce: true, HasSugar: true, Status: 'ACTIVE' },
+        { ID: 'P-TC03', Name: 'Trà Ổi Hồng Hạt Lựu', Category: 'Trà Trái Cây', Price: 28000, HasSize: true, HasIce: true, HasSugar: true, Status: 'ACTIVE' },
+        { ID: 'P-SN01', Name: 'Bánh Tráng Trộn Của Lá', Category: 'Đồ Ăn Vặt', Price: 20000, HasSize: false, HasIce: false, HasSugar: false, Status: 'ACTIVE' },
+        { ID: 'P-SN02', Name: 'Bánh Tráng Cuốn Sốt Bơ', Category: 'Đồ Ăn Vặt', Price: 22000, HasSize: false, HasIce: false, HasSugar: false, Status: 'ACTIVE' },
+        { ID: 'P-SN03', Name: 'Khô Gà Lá Chanh', Category: 'Đồ Ăn Vặt', Price: 25000, HasSize: false, HasIce: false, HasSugar: false, Status: 'ACTIVE' },
+        { ID: 'P-SN04', Name: 'Cá Viên Chiên Mắm Tỏi', Category: 'Đồ Ăn Vặt', Price: 30000, HasSize: false, HasIce: false, HasSugar: false, Status: 'ACTIVE' }
+      ],
+      toppings: [
+        { ID: 'T01', Name: 'Trân Châu Đen', Price: 5000, Status: 'ACTIVE' },
+        { ID: 'T02', Name: 'Trân Châu Trắng 3Q', Price: 6000, Status: 'ACTIVE' },
+        { ID: 'T03', Name: 'Pudding Trứng', Price: 7000, Status: 'ACTIVE' },
+        { ID: 'T04', Name: 'Kem Cheese Macchiato', Price: 8000, Status: 'ACTIVE' },
+        { ID: 'T05', Name: 'Thạch Trái Cây', Price: 5000, Status: 'ACTIVE' },
+        { ID: 'T06', Name: 'Đào Miếng (2 lát)', Price: 7000, Status: 'ACTIVE' }
+      ],
+      categories: ['Cà Phê', 'Trà Sữa', 'Trà Trái Cây', 'Đồ Ăn Vặt'],
+      tables: [
+        { ID: 'TB01', Name: 'Bàn 01', Status: 'FREE', Capacity: 4 },
+        { ID: 'TB02', Name: 'Bàn 02', Status: 'FREE', Capacity: 2 },
+        { ID: 'TB03', Name: 'Bàn 03', Status: 'FREE', Capacity: 6 },
+        { ID: 'TB04', Name: 'Bàn 04', Status: 'FREE', Capacity: 4 },
+        { ID: 'TB05', Name: 'Bàn 05', Status: 'FREE', Capacity: 2 },
+        { ID: 'TB06', Name: 'Bàn 06', Status: 'FREE', Capacity: 8 },
+        { ID: 'TB07', Name: 'Bàn Ngoài Trời 1', Status: 'FREE', Capacity: 4 },
+        { ID: 'TB08', Name: 'Bàn Ngoài Trời 2', Status: 'FREE', Capacity: 4 }
+      ],
       activeOrders: [],
       orderHistoryList: [],
       tasks: [],
       expenses: [],
-      staffList: [],
+      staffList: [
+        { ID: 'NV-ADMIN', Name: 'Chủ Quán (Admin)', Role: 'ADMIN', Status: 'ACTIVE' },
+        { ID: 'NV01', Name: 'Trí', Role: 'MANAGER', Status: 'ACTIVE' },
+        { ID: 'NV02', Name: 'Yến', Role: 'CASHIER', Status: 'ACTIVE' },
+        { ID: 'NV03', Name: 'Dinh', Role: 'CASHIER', Status: 'ACTIVE' },
+        { ID: 'NV04', Name: 'Nhung', Role: 'BARISTA', Status: 'ACTIVE' },
+        { ID: 'NV05', Name: 'Linh', Role: 'BARISTA', Status: 'ACTIVE' },
+        { ID: 'NV06', Name: 'An', Role: 'WAITER', Status: 'ACTIVE' }
+      ],
       customerList: [],
       settings: {
         shopName: 'Tiệm Của Lá',
