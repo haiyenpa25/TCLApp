@@ -7,12 +7,12 @@
   <title>Tiệm Của Lá — Hệ Thống Bán Hàng POS & Quản Lý Quán F&B</title>
 
   <!-- SEO & Standard Meta -->
-  <meta name="description" content="Hệ thống quản lý POS bán hàng, sơ đồ bàn, bếp KDS, sổ quỹ thu chi, nhiệm vụ checklist và báo cáo tài chính Tiệm Của Lá." />
+  <meta name="description" content="Hệ thống quản lý POS bán hàng, quản lý thực đơn menu, sơ đồ bàn, bếp KDS, sổ quỹ thu chi, nhiệm vụ checklist và báo cáo tài chính Tiệm Của Lá." />
   <meta name="theme-color" content="#154212" />
 
   <!-- Google Fonts & Material Icons -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preconnect" href="https://fonts.gstatic.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@600;700;800&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap" rel="stylesheet" />
 
   <!-- Tailwind CSS Engine -->
@@ -76,7 +76,7 @@
     .modal-overlay { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(4px); z-index: 50; display: flex; align-items: center; justify-content: center; padding: 12px; }
     .modal-container { background: #ffffff; border-radius: 1.5rem; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); border: 1px solid var(--color-outline-variant); max-height: 92vh; display: flex; flex-direction: column; overflow: hidden; width: 100%; }
     #toast-container { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); z-index: 9999; display: flex; flex-direction: column; gap: 8px; pointer-events: none; }
-    .toast-item { pointer-events: auto; background: #191c1a; color: #ffffff; padding: 10px 18px; border-radius: 9999px; font-size: 13px; font-weight: 600; display: flex; items-center; gap: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); animation: fadeIn 0.2s ease-out forwards; }
+    .toast-item { pointer-events: auto; background: #191c1a; color: #ffffff; padding: 10px 18px; border-radius: 9999px; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); animation: fadeIn 0.2s ease-out forwards; }
     .hidden { display: none !important; }
     @media print {
       body * { visibility: hidden; }
@@ -156,18 +156,63 @@
       </div>
     </section>
 
-    <!-- ── VIEW 3: EXPENSES & SỔ QUỸ ────────────────────────────────────────── -->
+    <!-- ── VIEW 3: EXPENSES & SỔ QUỸ (NÂNG CAO) ─────────────────────────────── -->
     <section id="view-expenses" class="hidden space-y-4 animate-fade-in">
-      <div class="bg-surface-container-lowest rounded-2xl p-4 border border-outline-variant/30 shadow-card flex justify-between items-center">
-        <div>
-          <span class="text-xs font-bold text-outline uppercase tracking-wider">Tổng Chi Hôm Nay</span>
-          <div id="expenses-total-amount" class="font-display font-extrabold text-2xl text-error mt-0.5">0 ₫</div>
+      <!-- Expense Filter Header -->
+      <div class="bg-surface-container-lowest rounded-2xl p-4 border border-outline-variant/30 shadow-card space-y-3">
+        <div class="flex flex-col md:flex-row justify-between md:items-center gap-3">
+          <div>
+            <span class="text-xs font-bold text-outline uppercase tracking-wider">Tổng Chi Phí (Theo Bộ Lọc)</span>
+            <div id="expenses-total-amount" class="font-display font-extrabold text-2xl text-error mt-0.5">0 ₫</div>
+            <span id="expenses-count-summary" class="text-xs text-outline font-medium">0 khoản chi</span>
+          </div>
+          <button onclick="openModal('modal-add-expense')" class="px-4 py-2.5 bg-primary text-on-primary rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 shadow-sm hover:bg-primary-container transition">
+            <span class="material-symbols-outlined text-sm">add</span> Ghi Khoản Chi Mới
+          </button>
         </div>
-        <button onclick="openModal('modal-add-expense')" class="px-4 py-2.5 bg-primary text-on-primary rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-sm hover:bg-primary-container transition">
-          <span class="material-symbols-outlined text-sm">add</span> Ghi Khoản Chi
-        </button>
+
+        <!-- Date Range Filter Chips -->
+        <div class="flex flex-wrap items-center gap-2 pt-2 border-t border-outline-variant/20 text-xs">
+          <span class="font-bold text-outline mr-1">Thời gian:</span>
+          <button id="exp-filter-today" onclick="setExpensePeriod('today')" class="px-3 py-1.5 rounded-xl font-bold bg-primary text-on-primary shadow-xs">Hôm Nay</button>
+          <button id="exp-filter-yesterday" onclick="setExpensePeriod('yesterday')" class="px-3 py-1.5 rounded-xl font-medium bg-surface-container text-on-surface hover:bg-surface-container-high">Hôm Qua</button>
+          <button id="exp-filter-week" onclick="setExpensePeriod('week')" class="px-3 py-1.5 rounded-xl font-medium bg-surface-container text-on-surface hover:bg-surface-container-high">Tuần Này (7 ngày)</button>
+          <button id="exp-filter-month" onclick="setExpensePeriod('month')" class="px-3 py-1.5 rounded-xl font-medium bg-surface-container text-on-surface hover:bg-surface-container-high">Tháng Này</button>
+          <button id="exp-filter-custom" onclick="setExpensePeriod('custom')" class="px-3 py-1.5 rounded-xl font-medium bg-surface-container text-on-surface hover:bg-surface-container-high">Tùy Chọn</button>
+        </div>
+
+        <!-- Custom Date Range Inputs -->
+        <div id="exp-custom-date-container" class="hidden flex flex-wrap items-center gap-2 p-2.5 bg-surface-container-low rounded-xl text-xs">
+          <span class="font-semibold text-outline">Từ ngày:</span>
+          <input id="exp-custom-from" type="date" onchange="applyExpenseFilter()" class="px-2.5 py-1 bg-surface-container-lowest border border-outline-variant/40 rounded-lg text-xs font-medium" />
+          <span class="font-semibold text-outline">Đến ngày:</span>
+          <input id="exp-custom-to" type="date" onchange="applyExpenseFilter()" class="px-2.5 py-1 bg-surface-container-lowest border border-outline-variant/40 rounded-lg text-xs font-medium" />
+        </div>
+
+        <!-- Category & Funding Filter -->
+        <div class="flex flex-wrap items-center gap-3 pt-2 text-xs">
+          <div class="flex items-center gap-1.5">
+            <span class="font-bold text-outline">Danh mục:</span>
+            <select id="exp-filter-category" onchange="applyExpenseFilter()" class="px-2.5 py-1 bg-surface-container border border-outline-variant/40 rounded-lg text-xs font-medium">
+              <option value="ALL">Tất Cả Danh Mục</option>
+              <option value="Nguyên liệu">Nguyên liệu</option>
+              <option value="Dụng cụ & Bao bì">Dụng cụ & Bao bì</option>
+              <option value="Điện nước / Internet">Điện nước / Internet</option>
+              <option value="Khác">Khác</option>
+            </select>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <span class="font-bold text-outline">Nguồn tiền:</span>
+            <select id="exp-filter-funding" onchange="applyExpenseFilter()" class="px-2.5 py-1 bg-surface-container border border-outline-variant/40 rounded-lg text-xs font-medium">
+              <option value="ALL">Tất Cả Nguồn</option>
+              <option value="Tiền quán">Tiền quán</option>
+              <option value="Tiền túi chủ">Tiền túi chủ</option>
+            </select>
+          </div>
+        </div>
       </div>
 
+      <!-- Expenses List -->
       <div class="bg-surface-container-lowest rounded-2xl p-4 border border-outline-variant/30 shadow-card">
         <h3 class="font-display font-bold text-sm text-on-surface mb-3 flex items-center gap-2">
           <span class="material-symbols-outlined text-base text-primary">receipt_long</span>
@@ -202,30 +247,61 @@
       </div>
     </section>
 
-    <!-- ── VIEW 5: REPORTS & BI ─────────────────────────────────────────────── -->
+    <!-- ── VIEW 5: REPORTS & BI (CHI TIẾT) ──────────────────────────────────── -->
     <section id="view-reports" class="hidden space-y-4 animate-fade-in">
-      <!-- KPI Metric Cards -->
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
-        <div class="bg-surface-container-lowest p-4 rounded-2xl border border-outline-variant/30 shadow-card">
-          <span class="text-xs font-bold text-outline uppercase">Doanh Thu</span>
-          <div id="report-revenue" class="font-display font-extrabold text-xl text-primary mt-1">0 ₫</div>
+      <!-- Date Range Controls -->
+      <div class="bg-surface-container-lowest p-4 rounded-2xl border border-outline-variant/30 shadow-card space-y-3">
+        <div class="flex flex-col md:flex-row justify-between md:items-center gap-2">
+          <h2 class="font-display font-bold text-base text-on-surface flex items-center gap-2">
+            <span class="material-symbols-outlined text-primary">analytics</span>
+            Báo Cáo Hoạt Động & Tài Chính Chi Tiết
+          </h2>
+          <!-- Preset Buttons -->
+          <div class="flex flex-wrap items-center gap-1.5 text-xs">
+            <button id="rep-filter-today" onclick="setReportPeriod('today')" class="px-3 py-1.5 rounded-xl font-bold bg-primary text-on-primary shadow-xs">Hôm Nay</button>
+            <button id="rep-filter-yesterday" onclick="setReportPeriod('yesterday')" class="px-3 py-1.5 rounded-xl font-medium bg-surface-container text-on-surface hover:bg-surface-container-high">Hôm Qua</button>
+            <button id="rep-filter-week" onclick="setReportPeriod('week')" class="px-3 py-1.5 rounded-xl font-medium bg-surface-container text-on-surface hover:bg-surface-container-high">7 Ngày Qua</button>
+            <button id="rep-filter-month" onclick="setReportPeriod('month')" class="px-3 py-1.5 rounded-xl font-medium bg-surface-container text-on-surface hover:bg-surface-container-high">Tháng Này</button>
+            <button id="rep-filter-custom" onclick="setReportPeriod('custom')" class="px-3 py-1.5 rounded-xl font-medium bg-surface-container text-on-surface hover:bg-surface-container-high">Tùy Chọn</button>
+          </div>
         </div>
-        <div class="bg-surface-container-lowest p-4 rounded-2xl border border-outline-variant/30 shadow-card">
-          <span class="text-xs font-bold text-outline uppercase">Đơn Hàng</span>
-          <div id="report-orders" class="font-display font-extrabold text-xl text-on-surface mt-1">0 Đơn</div>
-        </div>
-        <div class="bg-surface-container-lowest p-4 rounded-2xl border border-outline-variant/30 shadow-card">
-          <span class="text-xs font-bold text-outline uppercase">Tổng Chi</span>
-          <div id="report-expenses" class="font-display font-extrabold text-xl text-error mt-1">0 ₫</div>
-        </div>
-        <div class="bg-surface-container-lowest p-4 rounded-2xl border border-outline-variant/30 shadow-card">
-          <span class="text-xs font-bold text-outline uppercase">Lợi Nhuận</span>
-          <div id="report-profit" class="font-display font-extrabold text-xl text-status-free mt-1">0 ₫</div>
+
+        <!-- Custom Date Inputs -->
+        <div id="rep-custom-date-container" class="hidden flex flex-wrap items-center gap-2 pt-2 border-t border-outline-variant/20 text-xs">
+          <span class="font-semibold text-outline">Từ ngày:</span>
+          <input id="rep-custom-from" type="date" onchange="fetchReportForPeriod()" class="px-2.5 py-1 bg-surface-container-lowest border border-outline-variant/40 rounded-lg text-xs font-medium" />
+          <span class="font-semibold text-outline">Đến ngày:</span>
+          <input id="rep-custom-to" type="date" onchange="fetchReportForPeriod()" class="px-2.5 py-1 bg-surface-container-lowest border border-outline-variant/40 rounded-lg text-xs font-medium" />
         </div>
       </div>
 
-      <!-- Payment Breakdown -->
+      <!-- 4 Financial KPI Metric Cards -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <div class="bg-surface-container-lowest p-4 rounded-2xl border border-outline-variant/30 shadow-card">
+          <span class="text-xs font-bold text-outline uppercase tracking-wider">Doanh Thu Thuần</span>
+          <div id="report-revenue" class="font-display font-extrabold text-xl text-primary mt-1">0 ₫</div>
+          <span id="report-orders-badge" class="text-[11px] text-outline font-semibold mt-0.5 block">0 đơn hoàn tất</span>
+        </div>
+        <div class="bg-surface-container-lowest p-4 rounded-2xl border border-outline-variant/30 shadow-card">
+          <span class="text-xs font-bold text-outline uppercase tracking-wider">Tổng Chi Phí</span>
+          <div id="report-expenses" class="font-display font-extrabold text-xl text-error mt-1">0 ₫</div>
+          <span id="report-expenses-count" class="text-[11px] text-outline font-semibold mt-0.5 block">0 khoản chi</span>
+        </div>
+        <div class="bg-surface-container-lowest p-4 rounded-2xl border border-outline-variant/30 shadow-card">
+          <span class="text-xs font-bold text-outline uppercase tracking-wider">Lợi Nhuận Thuần</span>
+          <div id="report-profit" class="font-display font-extrabold text-xl text-status-free mt-1">0 ₫</div>
+          <span id="report-profit-margin" class="text-[11px] text-status-free font-semibold mt-0.5 block">Tỷ suất: 0%</span>
+        </div>
+        <div class="bg-surface-container-lowest p-4 rounded-2xl border border-outline-variant/30 shadow-card">
+          <span class="text-xs font-bold text-outline uppercase tracking-wider">Giá Trị TB / Đơn</span>
+          <div id="report-avg-order" class="font-display font-extrabold text-xl text-on-surface mt-1">0 ₫</div>
+          <span class="text-[11px] text-outline font-semibold mt-0.5 block">AOV (Average Order)</span>
+        </div>
+      </div>
+
+      <!-- Payment Breakdown & Best Sellers -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- Payment Breakdown -->
         <div class="bg-surface-container-lowest p-4 rounded-2xl border border-outline-variant/30 shadow-card">
           <h3 class="font-display font-bold text-sm text-on-surface mb-3 flex items-center gap-2">
             <span class="material-symbols-outlined text-primary">pie_chart</span>
@@ -236,63 +312,144 @@
           </div>
         </div>
 
+        <!-- Top Best Sellers -->
         <div class="bg-surface-container-lowest p-4 rounded-2xl border border-outline-variant/30 shadow-card">
           <h3 class="font-display font-bold text-sm text-on-surface mb-3 flex items-center gap-2">
-            <span class="material-symbols-outlined text-primary">schedule</span>
-            Doanh Thu Theo Khung Giờ
+            <span class="material-symbols-outlined text-primary">local_fire_department</span>
+            Top Món Nước Bán Chạy Nhất
           </h3>
-          <div id="report-hourly-bars" class="space-y-2 text-xs">
+          <div id="report-top-products" class="space-y-2 text-xs">
             <!-- Rendered via JS -->
           </div>
         </div>
       </div>
-    </section>
 
-    <!-- ── VIEW 6: SETTINGS & BRANDING ──────────────────────────────────────── -->
-    <section id="view-settings" class="hidden space-y-4 animate-fade-in">
-      <!-- Store Info Card -->
-      <div class="bg-surface-container-lowest rounded-2xl p-5 border border-outline-variant/30 shadow-card space-y-4">
-        <h3 class="font-display font-bold text-base text-on-surface flex items-center gap-2">
-          <span class="material-symbols-outlined text-primary">storefront</span>
-          Thông Tin Quán & Thanh Toán VietQR
+      <!-- Hourly Sales Breakdown -->
+      <div class="bg-surface-container-lowest p-4 rounded-2xl border border-outline-variant/30 shadow-card">
+        <h3 class="font-display font-bold text-sm text-on-surface mb-3 flex items-center gap-2">
+          <span class="material-symbols-outlined text-primary">schedule</span>
+          Doanh Thu Theo Khung Giờ Hoạt Động
         </h3>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
-          <div>
-            <label class="font-bold text-outline block mb-1">Tên Quán</label>
-            <input id="settings-shop-name" type="text" class="w-full px-3 py-2 bg-surface-container border border-outline-variant/40 rounded-xl font-medium" />
-          </div>
-          <div>
-            <label class="font-bold text-outline block mb-1">Khẩu Hiệu / Slogan</label>
-            <input id="settings-slogan" type="text" class="w-full px-3 py-2 bg-surface-container border border-outline-variant/40 rounded-xl font-medium" />
-          </div>
-          <div>
-            <label class="font-bold text-outline block mb-1">Số Điện Thoại</label>
-            <input id="settings-phone" type="text" class="w-full px-3 py-2 bg-surface-container border border-outline-variant/40 rounded-xl font-medium" />
-          </div>
-          <div>
-            <label class="font-bold text-outline block mb-1">Số Tài Khoản Vietcombank</label>
-            <input id="settings-account-no" type="text" class="w-full px-3 py-2 bg-surface-container border border-outline-variant/40 rounded-xl font-medium" />
-          </div>
-          <div class="col-span-full">
-            <label class="font-bold text-outline block mb-1">Tên Chủ Tài Khoản</label>
-            <input id="settings-account-name" type="text" class="w-full px-3 py-2 bg-surface-container border border-outline-variant/40 rounded-xl font-medium" />
-          </div>
+        <div id="report-hourly-bars" class="space-y-2 text-xs">
+          <!-- Rendered via JS -->
         </div>
-        <button onclick="saveSettingsForm()" class="px-5 py-2.5 bg-primary text-on-primary rounded-xl text-xs font-bold shadow-sm hover:bg-primary-container transition">
-          Lưu Cài Đặt
-        </button>
       </div>
 
-      <!-- Tables Management Card -->
-      <div class="bg-surface-container-lowest rounded-2xl p-5 border border-outline-variant/30 shadow-card space-y-4">
-        <div class="flex justify-between items-center">
+      <!-- Detailed Orders Log Table -->
+      <div class="bg-surface-container-lowest p-4 rounded-2xl border border-outline-variant/30 shadow-card">
+        <h3 class="font-display font-bold text-sm text-on-surface mb-3 flex items-center gap-2">
+          <span class="material-symbols-outlined text-primary">receipt_long</span>
+          Bảng Kê Chi Tiết Đơn Hàng Trong Kỳ
+        </h3>
+        <div id="report-orders-table" class="space-y-2 overflow-x-auto text-xs">
+          <!-- Rendered via JS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ── VIEW 6: SETTINGS & MENU QUẢN LÝ ─────────────────────────────────── -->
+    <section id="view-settings" class="hidden space-y-4 animate-fade-in">
+      <!-- Settings Sub-Navigation Tabs -->
+      <div class="flex gap-2 overflow-x-auto pb-1 border-b border-outline-variant/30 text-xs font-bold">
+        <button id="set-subtab-store" onclick="setSettingsSubTab('store')" class="px-4 py-2 rounded-xl bg-primary text-on-primary shadow-xs">Cấu Hình Quán & VietQR</button>
+        <button id="set-subtab-menu" onclick="setSettingsSubTab('menu')" class="px-4 py-2 rounded-xl bg-surface-container text-on-surface hover:bg-surface-container-high">Quản Lý Món Nước</button>
+        <button id="set-subtab-topping" onclick="setSettingsSubTab('topping')" class="px-4 py-2 rounded-xl bg-surface-container text-on-surface hover:bg-surface-container-high">Quản Lý Topping</button>
+        <button id="set-subtab-tables" onclick="setSettingsSubTab('tables')" class="px-4 py-2 rounded-xl bg-surface-container text-on-surface hover:bg-surface-container-high">Sơ Đồ Bàn</button>
+      </div>
+
+      <!-- SUB-PANEL 1: Store Info & VietQR -->
+      <div id="settings-panel-store" class="space-y-4">
+        <div class="bg-surface-container-lowest rounded-2xl p-5 border border-outline-variant/30 shadow-card space-y-4">
+          <h3 class="font-display font-bold text-base text-on-surface flex items-center gap-2">
+            <span class="material-symbols-outlined text-primary">storefront</span>
+            Thông Tin Quán & Cấu Hình Nhận Tiền VietQR
+          </h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+            <div>
+              <label class="font-bold text-outline block mb-1">Tên Quán</label>
+              <input id="settings-shop-name" type="text" class="w-full px-3 py-2 bg-surface-container border border-outline-variant/40 rounded-xl font-medium" />
+            </div>
+            <div>
+              <label class="font-bold text-outline block mb-1">Khẩu Hiệu / Slogan</label>
+              <input id="settings-slogan" type="text" class="w-full px-3 py-2 bg-surface-container border border-outline-variant/40 rounded-xl font-medium" />
+            </div>
+            <div>
+              <label class="font-bold text-outline block mb-1">Số Điện Thoại Hotline</label>
+              <input id="settings-phone" type="text" class="w-full px-3 py-2 bg-surface-container border border-outline-variant/40 rounded-xl font-medium" />
+            </div>
+            <div>
+              <label class="font-bold text-outline block mb-1">Mã Ngân Hàng (NAPAS Bank ID)</label>
+              <input id="settings-bank-id" type="text" placeholder="970436 (Vietcombank)" class="w-full px-3 py-2 bg-surface-container border border-outline-variant/40 rounded-xl font-medium" />
+            </div>
+            <div>
+              <label class="font-bold text-outline block mb-1">Số Tài Khoản Nhận Tiền</label>
+              <input id="settings-account-no" type="text" class="w-full px-3 py-2 bg-surface-container border border-outline-variant/40 rounded-xl font-medium" />
+            </div>
+            <div>
+              <label class="font-bold text-outline block mb-1">Tên Chủ Tài Khoản</label>
+              <input id="settings-account-name" type="text" class="w-full px-3 py-2 bg-surface-container border border-outline-variant/40 rounded-xl font-medium" />
+            </div>
+          </div>
+          <button onclick="saveSettingsForm()" class="px-5 py-2.5 bg-primary text-on-primary rounded-xl text-xs font-bold shadow-sm hover:bg-primary-container transition">
+            Lưu Cài Đặt Quán
+          </button>
+        </div>
+      </div>
+
+      <!-- SUB-PANEL 2: Menu Products CRUD -->
+      <div id="settings-panel-menu" class="hidden space-y-4">
+        <div class="bg-surface-container-lowest rounded-2xl p-5 border border-outline-variant/30 shadow-card space-y-4">
+          <div class="flex justify-between items-center">
+            <div>
+              <h3 class="font-display font-bold text-base text-on-surface flex items-center gap-2">
+                <span class="material-symbols-outlined text-primary">local_cafe</span>
+                Danh Mục Thực Đơn Món Nước
+              </h3>
+              <p class="text-xs text-outline">Thêm mới, sửa giá, đổi ảnh hoặc tạm ngưng bán món</p>
+            </div>
+            <button onclick="openProductEditModal(null)" class="px-4 py-2.5 bg-primary text-on-primary rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-sm hover:bg-primary-container transition">
+              <span class="material-symbols-outlined text-sm">add</span> + Thêm Món Mới
+            </button>
+          </div>
+
+          <div id="settings-products-table" class="space-y-2">
+            <!-- Rendered via JS -->
+          </div>
+        </div>
+      </div>
+
+      <!-- SUB-PANEL 3: Topping CRUD -->
+      <div id="settings-panel-topping" class="hidden space-y-4">
+        <div class="bg-surface-container-lowest rounded-2xl p-5 border border-outline-variant/30 shadow-card space-y-4">
+          <div class="flex justify-between items-center">
+            <div>
+              <h3 class="font-display font-bold text-base text-on-surface flex items-center gap-2">
+                <span class="material-symbols-outlined text-primary">icecream</span>
+                Danh Sách Topping Thêm
+              </h3>
+              <p class="text-xs text-outline">Quản lý các loại topping và đơn giá cộng thêm</p>
+            </div>
+            <button onclick="openToppingEditModal(null)" class="px-4 py-2.5 bg-primary text-on-primary rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-sm hover:bg-primary-container transition">
+              <span class="material-symbols-outlined text-sm">add</span> + Thêm Topping
+            </button>
+          </div>
+
+          <div id="settings-toppings-table" class="space-y-2">
+            <!-- Rendered via JS -->
+          </div>
+        </div>
+      </div>
+
+      <!-- SUB-PANEL 4: Tables Management -->
+      <div id="settings-panel-tables" class="hidden space-y-4">
+        <div class="bg-surface-container-lowest rounded-2xl p-5 border border-outline-variant/30 shadow-card space-y-4">
           <h3 class="font-display font-bold text-base text-on-surface flex items-center gap-2">
             <span class="material-symbols-outlined text-primary">table_restaurant</span>
             Danh Sách Sơ Đồ Bàn
           </h3>
-        </div>
-        <div id="settings-tables-grid" class="grid grid-cols-2 md:grid-cols-4 gap-3">
-          <!-- Rendered via JS -->
+          <div id="settings-tables-grid" class="grid grid-cols-2 md:grid-cols-4 gap-3">
+            <!-- Rendered via JS -->
+          </div>
         </div>
       </div>
     </section>
@@ -602,15 +759,15 @@
       <div class="p-4 space-y-3 text-xs">
         <div>
           <label class="font-bold text-outline block mb-1">Nội Dung Chi</label>
-          <input id="expense-desc" type="text" placeholder="VD: Mua sữa đặc, đá viên, túi nilon..." class="w-full px-3 py-2 bg-surface-container border border-outline-variant/40 rounded-xl" />
+          <input id="expense-desc" type="text" placeholder="VD: Mua sữa đặc, đá viên, túi nilon..." class="w-full px-3 py-2 bg-surface-container border border-outline-variant/40 rounded-xl font-medium" />
         </div>
         <div>
           <label class="font-bold text-outline block mb-1">Số Tiền (VNĐ)</label>
-          <input id="expense-amount" type="number" placeholder="50000" class="w-full px-3 py-2 bg-surface-container border border-outline-variant/40 rounded-xl" />
+          <input id="expense-amount" type="number" placeholder="50000" class="w-full px-3 py-2 bg-surface-container border border-outline-variant/40 rounded-xl font-bold text-sm" />
         </div>
         <div>
-          <label class="font-bold text-outline block mb-1">Danh Mục</label>
-          <select id="expense-category" class="w-full px-3 py-2 bg-surface-container border border-outline-variant/40 rounded-xl">
+          <label class="font-bold text-outline block mb-1">Danh Mục Chi</label>
+          <select id="expense-category" class="w-full px-3 py-2 bg-surface-container border border-outline-variant/40 rounded-xl font-medium">
             <option value="Nguyên liệu">Nguyên liệu</option>
             <option value="Dụng cụ & Bao bì">Dụng cụ & Bao bì</option>
             <option value="Điện nước / Internet">Điện nước / Internet</option>
@@ -619,14 +776,14 @@
         </div>
         <div>
           <label class="font-bold text-outline block mb-1">Nguồn Tiền</label>
-          <select id="expense-funding" class="w-full px-3 py-2 bg-surface-container border border-outline-variant/40 rounded-xl">
+          <select id="expense-funding" class="w-full px-3 py-2 bg-surface-container border border-outline-variant/40 rounded-xl font-medium">
             <option value="Tiền quán">Tiền quán</option>
             <option value="Tiền túi chủ">Tiền túi chủ</option>
           </select>
         </div>
       </div>
       <div class="p-4 border-t border-outline-variant/30">
-        <button onclick="saveNewExpense()" class="w-full py-3 bg-primary text-on-primary font-bold rounded-xl text-xs shadow-sm">Lưu Khoản Chi</button>
+        <button onclick="saveNewExpense()" class="w-full py-3 bg-primary text-on-primary font-bold rounded-xl text-xs shadow-sm hover:bg-primary-container transition">Lưu Khoản Chi</button>
       </div>
     </div>
   </div>
@@ -641,11 +798,11 @@
       <div class="p-4 space-y-3 text-xs">
         <div>
           <label class="font-bold text-outline block mb-1">Tên Công Việc</label>
-          <input id="task-title" type="text" placeholder="VD: Nhận giao đá viên, đổ rác quầy bar..." class="w-full px-3 py-2 bg-surface-container border border-outline-variant/40 rounded-xl" />
+          <input id="task-title" type="text" placeholder="VD: Nhận giao đá viên, đổ rác quầy bar..." class="w-full px-3 py-2 bg-surface-container border border-outline-variant/40 rounded-xl font-medium" />
         </div>
         <div>
           <label class="font-bold text-outline block mb-1">Mức Độ Ưu Tiên</label>
-          <select id="task-priority" class="w-full px-3 py-2 bg-surface-container border border-outline-variant/40 rounded-xl">
+          <select id="task-priority" class="w-full px-3 py-2 bg-surface-container border border-outline-variant/40 rounded-xl font-medium">
             <option value="high">Ưu Tiên Cao (Cần làm ngay)</option>
             <option value="medium" selected>Bình Thường</option>
             <option value="low">Thấp</option>
@@ -653,7 +810,7 @@
         </div>
         <div>
           <label class="font-bold text-outline block mb-1">Giao Cho Nhân Viên</label>
-          <select id="task-assigned" class="w-full px-3 py-2 bg-surface-container border border-outline-variant/40 rounded-xl">
+          <select id="task-assigned" class="w-full px-3 py-2 bg-surface-container border border-outline-variant/40 rounded-xl font-medium">
             <option value="Linh (Pha chế)">Linh (Pha chế)</option>
             <option value="An (Phục vụ)">An (Phục vụ)</option>
             <option value="Yến">Yến</option>
@@ -662,7 +819,99 @@
         </div>
       </div>
       <div class="p-4 border-t border-outline-variant/30">
-        <button onclick="saveNewTask()" class="w-full py-3 bg-primary text-on-primary font-bold rounded-xl text-xs shadow-sm">Lưu Nhiệm Vụ</button>
+        <button onclick="saveNewTask()" class="w-full py-3 bg-primary text-on-primary font-bold rounded-xl text-xs shadow-sm hover:bg-primary-container transition">Lưu Nhiệm Vụ</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Thêm / Sửa Món Nước (Menu CRUD) -->
+  <div id="modal-edit-product" class="modal-overlay hidden">
+    <div class="modal-container max-w-md animate-scale-up">
+      <div class="p-4 border-b border-outline-variant/30 flex justify-between items-center">
+        <h3 id="modal-prod-title" class="font-display font-bold text-base text-on-surface">Thêm Món Nước Mới</h3>
+        <button onclick="closeModal('modal-edit-product')" class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center text-outline"><span class="material-symbols-outlined text-base">close</span></button>
+      </div>
+      <div class="p-4 space-y-3 text-xs overflow-y-auto max-h-[60vh]">
+        <input id="edit-prod-id" type="hidden" />
+        <div>
+          <label class="font-bold text-outline block mb-1">Tên Món Nước</label>
+          <input id="edit-prod-name" type="text" placeholder="VD: Trà Trái Cây Summer, Cà Phê Muối..." class="w-full px-3 py-2 bg-surface-container border border-outline-variant/40 rounded-xl font-medium" />
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="font-bold text-outline block mb-1">Danh Mục</label>
+            <input id="edit-prod-category" list="category-suggestions" type="text" placeholder="Trà Trái Cây" class="w-full px-3 py-2 bg-surface-container border border-outline-variant/40 rounded-xl font-medium" />
+            <datalist id="category-suggestions">
+              <option value="Trà Trái Cây">
+              <option value="Trà Sữa">
+              <option value="Cà Phê">
+              <option value="Ăn Vặt">
+            </datalist>
+          </div>
+          <div>
+            <label class="font-bold text-outline block mb-1">Giá Bán (VNĐ)</label>
+            <input id="edit-prod-price" type="number" placeholder="28000" class="w-full px-3 py-2 bg-surface-container border border-outline-variant/40 rounded-xl font-bold text-sm" />
+          </div>
+        </div>
+        <div>
+          <label class="font-bold text-outline block mb-1">Link Ảnh Sản Phẩm (URL)</label>
+          <input id="edit-prod-image" type="url" placeholder="https://..." class="w-full px-3 py-2 bg-surface-container border border-outline-variant/40 rounded-xl font-mono text-[11px]" />
+        </div>
+        <!-- Option Checkboxes -->
+        <div class="p-3 bg-surface-container rounded-xl space-y-2">
+          <span class="font-bold text-outline block mb-1">Tùy Chọn Khi Khách Gọi:</span>
+          <div class="grid grid-cols-3 gap-2">
+            <label class="flex items-center gap-1.5 cursor-pointer">
+              <input id="edit-prod-has-size" type="checkbox" class="rounded text-primary" checked />
+              <span>Có Size S/M/L</span>
+            </label>
+            <label class="flex items-center gap-1.5 cursor-pointer">
+              <input id="edit-prod-has-ice" type="checkbox" class="rounded text-primary" checked />
+              <span>Chọn Mức Đá</span>
+            </label>
+            <label class="flex items-center gap-1.5 cursor-pointer">
+              <input id="edit-prod-has-sugar" type="checkbox" class="rounded text-primary" checked />
+              <span>Chọn Mức Đường</span>
+            </label>
+          </div>
+        </div>
+        <div>
+          <label class="font-bold text-outline block mb-1">Trạng Thái Món</label>
+          <select id="edit-prod-status" class="w-full px-3 py-2 bg-surface-container border border-outline-variant/40 rounded-xl font-medium">
+            <option value="ACTIVE">Đang Bán (ACTIVE)</option>
+            <option value="OUT_OF_STOCK">Hết Hàng (OUT_OF_STOCK)</option>
+            <option value="INACTIVE">Tạm Ẩn (INACTIVE)</option>
+          </select>
+        </div>
+      </div>
+      <div class="p-4 border-t border-outline-variant/30 flex gap-2">
+        <button id="btn-delete-prod" onclick="deleteProductCurrent()" class="hidden px-4 py-3 bg-surface-container text-error font-bold rounded-xl text-xs hover:bg-error-container/20 transition">Xóa Món</button>
+        <button onclick="saveProductCurrent()" class="flex-1 py-3 bg-primary text-on-primary font-bold rounded-xl text-xs shadow-sm hover:bg-primary-container transition">Lưu Món Nước</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: Thêm / Sửa Topping -->
+  <div id="modal-edit-topping" class="modal-overlay hidden">
+    <div class="modal-container max-w-sm animate-scale-up">
+      <div class="p-4 border-b border-outline-variant/30 flex justify-between items-center">
+        <h3 id="modal-top-title" class="font-display font-bold text-base text-on-surface">Thêm Topping Mới</h3>
+        <button onclick="closeModal('modal-edit-topping')" class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center text-outline"><span class="material-symbols-outlined text-base">close</span></button>
+      </div>
+      <div class="p-4 space-y-3 text-xs">
+        <input id="edit-top-id" type="hidden" />
+        <div>
+          <label class="font-bold text-outline block mb-1">Tên Topping</label>
+          <input id="edit-top-name" type="text" placeholder="VD: Thạch Lá Dứa, Trân Châu..." class="w-full px-3 py-2 bg-surface-container border border-outline-variant/40 rounded-xl font-medium" />
+        </div>
+        <div>
+          <label class="font-bold text-outline block mb-1">Giá Bán Thêm (VNĐ)</label>
+          <input id="edit-top-price" type="number" placeholder="5000" class="w-full px-3 py-2 bg-surface-container border border-outline-variant/40 rounded-xl font-bold text-sm" />
+        </div>
+      </div>
+      <div class="p-4 border-t border-outline-variant/30 flex gap-2">
+        <button id="btn-delete-top" onclick="deleteToppingCurrent()" class="hidden px-4 py-3 bg-surface-container text-error font-bold rounded-xl text-xs hover:bg-error-container/20 transition">Xóa</button>
+        <button onclick="saveToppingCurrent()" class="flex-1 py-3 bg-primary text-on-primary font-bold rounded-xl text-xs shadow-sm hover:bg-primary-container transition">Lưu Topping</button>
       </div>
     </div>
   </div>
@@ -672,9 +921,11 @@
 
   <!-- ── 7. APPLICATION JAVASCRIPT ENGINE ──────────────────────────────────── -->
   <script>
+
     var state = {
       loading: false,
       currentTab: 'pos',
+      settingsSubTab: 'store',
       searchQuery: '',
       selectedCategory: 'all',
       selectedTable: null,
@@ -689,9 +940,13 @@
       lastCreatedOrder: null,
       kitchenFilter: 'ACTIVE',
 
+      // Filter States
+      expensePeriod: 'today',
+      expenseCategoryFilter: 'ALL',
+      expenseFundingFilter: 'ALL',
+      reportPeriod: 'today',
+
       // Data Collections
-      
-      // Pre-loaded initial fallback products (Rich catalog)
       products: [
         { ID: 'P01', Name: 'Trà Trái Cây Summer Pineapple', Category: 'Trà Trái Cây', Price: 28000, Image: 'https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=300', HasSize: true, HasIce: true, HasSugar: true, Status: 'ACTIVE' },
         { ID: 'P02', Name: 'Trà Sữa Oolong Nướng', Category: 'Trà Sữa', Price: 32000, Image: 'https://images.unsplash.com/photo-1558857563-b37cf05d8a58?w=300', HasSize: true, HasIce: true, HasSugar: true, Status: 'ACTIVE' },
@@ -708,6 +963,7 @@
         { ID: 'T03', Name: 'Hạt Sen Nấu Đường Phèn', Price: 7000, Status: 'ACTIVE' },
         { ID: 'T04', Name: 'Kem Cheese Macchiato', Price: 8000, Status: 'ACTIVE' }
       ],
+      categories: ['Trà Trái Cây', 'Trà Sữa', 'Cà Phê'],
       tables: [
         { ID: 'TBL01', Name: 'Bàn 1 (Sân vườn)', Status: 'FREE', Capacity: 4 },
         { ID: 'TBL02', Name: 'Bàn 2 (Sân vườn)', Status: 'FREE', Capacity: 4 },
@@ -715,7 +971,6 @@
         { ID: 'TBL04', Name: 'Bàn 4 (Trong nhà)', Status: 'FREE', Capacity: 6 },
         { ID: 'TBL05', Name: 'Bàn 5 (Gác lửng)', Status: 'FREE', Capacity: 4 }
       ],
-      categories: ['Trà Trái Cây', 'Trà Sữa', 'Cà Phê'],
       activeOrders: [],
       orderHistoryList: [],
       tasks: [],
@@ -778,9 +1033,9 @@
         const res = await callGAS('getInitialData');
         if (res && res.success && res.data) {
           const d = res.data;
-          if (d.menu && d.menu.products) state.products = d.menu.products;
-          if (d.menu && d.menu.toppings) state.toppings = d.menu.toppings;
-          if (d.tables) state.tables = d.tables;
+          if (d.menu && d.menu.products && d.menu.products.length > 0) state.products = d.menu.products;
+          if (d.menu && d.menu.toppings && d.menu.toppings.length > 0) state.toppings = d.menu.toppings;
+          if (d.tables && d.tables.length > 0) state.tables = d.tables;
           if (d.activeOrders) state.activeOrders = d.activeOrders;
           if (d.tasks) state.tasks = d.tasks;
           if (d.expenses) state.expenses = d.expenses;
@@ -854,6 +1109,23 @@
       renderApp();
     }
 
+    function setSettingsSubTab(sub) {
+      state.settingsSubTab = sub;
+      ['store', 'menu', 'topping', 'tables'].forEach(function(s) {
+        var btn = document.getElementById('set-subtab-' + s);
+        var panel = document.getElementById('settings-panel-' + s);
+        if (s === sub) {
+          if (btn) btn.className = 'px-4 py-2 rounded-xl bg-primary text-on-primary shadow-xs';
+          if (panel) panel.classList.remove('hidden');
+        } else {
+          if (btn) btn.className = 'px-4 py-2 rounded-xl bg-surface-container text-on-surface hover:bg-surface-container-high';
+          if (panel) panel.classList.add('hidden');
+        }
+      });
+      if (sub === 'menu') renderSettingsProductsTable();
+      if (sub === 'topping') renderSettingsToppingsTable();
+    }
+
     function selectCategory(cat) {
       state.selectedCategory = cat;
       renderPOS();
@@ -878,7 +1150,61 @@
       renderKitchen();
     }
 
-    // POS Customization
+    // ── EXPENSE FILTER CONTROLS ────────────────────────────────────────────────
+    function setExpensePeriod(period) {
+      state.expensePeriod = period;
+      ['today', 'yesterday', 'week', 'month', 'custom'].forEach(function(p) {
+        var btn = document.getElementById('exp-filter-' + p);
+        if (btn) {
+          if (p === period) btn.className = 'px-3 py-1.5 rounded-xl font-bold bg-primary text-on-primary shadow-xs';
+          else btn.className = 'px-3 py-1.5 rounded-xl font-medium bg-surface-container text-on-surface hover:bg-surface-container-high';
+        }
+      });
+
+      var customCont = document.getElementById('exp-custom-date-container');
+      if (customCont) {
+        if (period === 'custom') customCont.classList.remove('hidden');
+        else customCont.classList.add('hidden');
+      }
+      applyExpenseFilter();
+    }
+
+    function applyExpenseFilter() {
+      state.expenseCategoryFilter = document.getElementById('exp-filter-category')?.value || 'ALL';
+      state.expenseFundingFilter = document.getElementById('exp-filter-funding')?.value || 'ALL';
+      renderExpenses();
+    }
+
+    // ── REPORT FILTER CONTROLS ─────────────────────────────────────────────────
+    async function setReportPeriod(period) {
+      state.reportPeriod = period;
+      ['today', 'yesterday', 'week', 'month', 'custom'].forEach(function(p) {
+        var btn = document.getElementById('rep-filter-' + p);
+        if (btn) {
+          if (p === period) btn.className = 'px-3 py-1.5 rounded-xl font-bold bg-primary text-on-primary shadow-xs';
+          else btn.className = 'px-3 py-1.5 rounded-xl font-medium bg-surface-container text-on-surface hover:bg-surface-container-high';
+        }
+      });
+
+      var customCont = document.getElementById('rep-custom-date-container');
+      if (customCont) {
+        if (period === 'custom') customCont.classList.remove('hidden');
+        else customCont.classList.add('hidden');
+      }
+      await fetchReportForPeriod();
+    }
+
+    async function fetchReportForPeriod() {
+      var customFrom = document.getElementById('rep-custom-from')?.value;
+      var customTo = document.getElementById('rep-custom-to')?.value;
+      var res = await callGAS('getReport', state.reportPeriod, customFrom, customTo);
+      if (res && res.success && res.data) {
+        state.reportData = res.data;
+        renderReports();
+      }
+    }
+
+    // ── POS CUSTOMIZATION & CART ───────────────────────────────────────────────
     function openCustomization(productId) {
       var prod = state.products.find(function(p) { return p.ID === productId; });
       if (!prod) return;
@@ -1163,6 +1489,17 @@
       }
     }
 
+    async function deleteExpenseItem(expenseId) {
+      if (!confirm('Bạn có chắc muốn xóa khoản chi này?')) return;
+      var res = await callGAS('deleteExpense', expenseId);
+      if (res && res.success) {
+        showToast('Đã xóa khoản chi thành công!', 'check_circle');
+        refreshData();
+      } else {
+        showToast('Lỗi xóa chi phí: ' + (res ? res.error : ''), 'error');
+      }
+    }
+
     async function saveNewTask() {
       var title = document.getElementById('task-title')?.value;
       var priority = document.getElementById('task-priority')?.value || 'medium';
@@ -1191,11 +1528,172 @@
       }
     }
 
+    // ── MENU & TOPPING CRUD CONTROLLERS ─────────────────────────────────────────
+    function openProductEditModal(productId) {
+      var titleEl = document.getElementById('modal-prod-title');
+      var idInput = document.getElementById('edit-prod-id');
+      var nameInput = document.getElementById('edit-prod-name');
+      var catInput = document.getElementById('edit-prod-category');
+      var priceInput = document.getElementById('edit-prod-price');
+      var imgInput = document.getElementById('edit-prod-image');
+      var hasSizeBox = document.getElementById('edit-prod-has-size');
+      var hasIceBox = document.getElementById('edit-prod-has-ice');
+      var hasSugarBox = document.getElementById('edit-prod-has-sugar');
+      var statusSelect = document.getElementById('edit-prod-status');
+      var btnDelete = document.getElementById('btn-delete-prod');
+
+      if (productId) {
+        var prod = state.products.find(function(p) { return p.ID === productId; });
+        if (!prod) return;
+        if (titleEl) titleEl.innerText = 'Chỉnh Sửa Món Nước';
+        if (idInput) idInput.value = prod.ID;
+        if (nameInput) nameInput.value = prod.Name || '';
+        if (catInput) catInput.value = prod.Category || '';
+        if (priceInput) priceInput.value = prod.Price || 0;
+        if (imgInput) imgInput.value = prod.Image || '';
+        if (hasSizeBox) hasSizeBox.checked = !!prod.HasSize;
+        if (hasIceBox) hasIceBox.checked = !!prod.HasIce;
+        if (hasSugarBox) hasSugarBox.checked = !!prod.HasSugar;
+        if (statusSelect) statusSelect.value = prod.Status || 'ACTIVE';
+        if (btnDelete) btnDelete.classList.remove('hidden');
+      } else {
+        if (titleEl) titleEl.innerText = 'Thêm Món Nước Mới';
+        if (idInput) idInput.value = '';
+        if (nameInput) nameInput.value = '';
+        if (catInput) catInput.value = 'Trà Trái Cây';
+        if (priceInput) priceInput.value = 28000;
+        if (imgInput) imgInput.value = '';
+        if (hasSizeBox) hasSizeBox.checked = true;
+        if (hasIceBox) hasIceBox.checked = true;
+        if (hasSugarBox) hasSugarBox.checked = true;
+        if (statusSelect) statusSelect.value = 'ACTIVE';
+        if (btnDelete) btnDelete.classList.add('hidden');
+      }
+      openModal('modal-edit-product');
+    }
+
+    async function saveProductCurrent() {
+      var id = document.getElementById('edit-prod-id')?.value;
+      var name = document.getElementById('edit-prod-name')?.value;
+      var cat = document.getElementById('edit-prod-category')?.value;
+      var price = parseFloat(document.getElementById('edit-prod-price')?.value) || 0;
+      var img = document.getElementById('edit-prod-image')?.value;
+      var hasSize = document.getElementById('edit-prod-has-size')?.checked;
+      var hasIce = document.getElementById('edit-prod-has-ice')?.checked;
+      var hasSugar = document.getElementById('edit-prod-has-sugar')?.checked;
+      var status = document.getElementById('edit-prod-status')?.value || 'ACTIVE';
+
+      if (!name || price <= 0) {
+        showToast('Vui lòng nhập tên món và giá hợp lệ', 'warning');
+        return;
+      }
+
+      var payload = {
+        name: name,
+        category: cat,
+        price: price,
+        image: img,
+        hasSize: hasSize,
+        hasIce: hasIce,
+        hasSugar: hasSugar,
+        status: status
+      };
+
+      var res;
+      if (id) res = await callGAS('updateProduct', id, payload);
+      else res = await callGAS('addProduct', payload);
+
+      if (res && res.success) {
+        closeModal('modal-edit-product');
+        showToast(id ? 'Đã cập nhật món nước!' : 'Đã thêm món nước mới!', 'verified');
+        refreshData();
+      } else {
+        showToast('Lỗi lưu món: ' + (res ? res.error : ''), 'error');
+      }
+    }
+
+    async function deleteProductCurrent() {
+      var id = document.getElementById('edit-prod-id')?.value;
+      if (!id) return;
+      if (!confirm('Bạn có chắc chắn muốn xóa món nước này khỏi thực đơn?')) return;
+      var res = await callGAS('deleteProduct', id);
+      if (res && res.success) {
+        closeModal('modal-edit-product');
+        showToast('Đã xóa món nước khỏi thực đơn!', 'check_circle');
+        refreshData();
+      } else {
+        showToast('Lỗi xóa món: ' + (res ? res.error : ''), 'error');
+      }
+    }
+
+    function openToppingEditModal(toppingId) {
+      var titleEl = document.getElementById('modal-top-title');
+      var idInput = document.getElementById('edit-top-id');
+      var nameInput = document.getElementById('edit-top-name');
+      var priceInput = document.getElementById('edit-top-price');
+      var btnDelete = document.getElementById('btn-delete-top');
+
+      if (toppingId) {
+        var top = state.toppings.find(function(t) { return t.ID === toppingId; });
+        if (!top) return;
+        if (titleEl) titleEl.innerText = 'Chỉnh Sửa Topping';
+        if (idInput) idInput.value = top.ID;
+        if (nameInput) nameInput.value = top.Name || '';
+        if (priceInput) priceInput.value = top.Price || 0;
+        if (btnDelete) btnDelete.classList.remove('hidden');
+      } else {
+        if (titleEl) titleEl.innerText = 'Thêm Topping Mới';
+        if (idInput) idInput.value = '';
+        if (nameInput) nameInput.value = '';
+        if (priceInput) priceInput.value = 5000;
+        if (btnDelete) btnDelete.classList.add('hidden');
+      }
+      openModal('modal-edit-topping');
+    }
+
+    async function saveToppingCurrent() {
+      var id = document.getElementById('edit-top-id')?.value;
+      var name = document.getElementById('edit-top-name')?.value;
+      var price = parseFloat(document.getElementById('edit-top-price')?.value) || 0;
+
+      if (!name || price <= 0) {
+        showToast('Vui lòng nhập tên topping và giá hợp lệ', 'warning');
+        return;
+      }
+      var payload = { name: name, price: price, status: 'ACTIVE' };
+      var res;
+      if (id) res = await callGAS('updateTopping', id, payload);
+      else res = await callGAS('addTopping', payload);
+
+      if (res && res.success) {
+        closeModal('modal-edit-topping');
+        showToast(id ? 'Đã cập nhật topping!' : 'Đã thêm topping mới!', 'verified');
+        refreshData();
+      } else {
+        showToast('Lỗi lưu topping: ' + (res ? res.error : ''), 'error');
+      }
+    }
+
+    async function deleteToppingCurrent() {
+      var id = document.getElementById('edit-top-id')?.value;
+      if (!id) return;
+      if (!confirm('Bạn có chắc chắn muốn xóa topping này?')) return;
+      var res = await callGAS('deleteTopping', id);
+      if (res && res.success) {
+        closeModal('modal-edit-topping');
+        showToast('Đã xóa topping!', 'check_circle');
+        refreshData();
+      } else {
+        showToast('Lỗi xóa topping: ' + (res ? res.error : ''), 'error');
+      }
+    }
+
     async function saveSettingsForm() {
       var payload = {
         shopName: document.getElementById('settings-shop-name')?.value || '',
         slogan: document.getElementById('settings-slogan')?.value || '',
         phone: document.getElementById('settings-phone')?.value || '',
+        bankId: document.getElementById('settings-bank-id')?.value || '970436',
         accountNo: document.getElementById('settings-account-no')?.value || '',
         accountName: document.getElementById('settings-account-name')?.value || ''
       };
@@ -1390,24 +1888,58 @@
     function renderExpenses() {
       var listEl = document.getElementById('expenses-list');
       var totalEl = document.getElementById('expenses-total-amount');
+      var countEl = document.getElementById('expenses-count-summary');
       if (!listEl) return;
 
-      var total = state.expenses.reduce(function(sum, e) { return sum + (e.Amount || 0); }, 0);
-      if (totalEl) totalEl.innerText = formatVND(total);
+      var todayStr = new Date().toISOString().substring(0, 10);
+      var filtered = state.expenses.filter(function(e) {
+        if (!e) return false;
+        var d = String(e.Date || '').substring(0, 10);
+        var matchDate = true;
 
-      if (state.expenses.length === 0) {
-        listEl.innerHTML = '<div class="py-12 text-center text-on-surface-variant text-xs">Chưa có khoản chi nào hôm nay</div>';
+        if (state.expensePeriod === 'today') {
+          matchDate = d === todayStr;
+        } else if (state.expensePeriod === 'yesterday') {
+          var yest = new Date(); yest.setDate(yest.getDate() - 1);
+          matchDate = d === yest.toISOString().substring(0, 10);
+        } else if (state.expensePeriod === 'week') {
+          var w = new Date(); w.setDate(w.getDate() - 7);
+          matchDate = d >= w.toISOString().substring(0, 10);
+        } else if (state.expensePeriod === 'month') {
+          matchDate = d.substring(0, 7) === todayStr.substring(0, 7);
+        } else if (state.expensePeriod === 'custom') {
+          var from = document.getElementById('exp-custom-from')?.value;
+          var to = document.getElementById('exp-custom-to')?.value;
+          if (from && d < from) matchDate = false;
+          if (to && d > to) matchDate = false;
+        }
+
+        var matchCat = state.expenseCategoryFilter === 'ALL' || e.Category === state.expenseCategoryFilter;
+        var matchFund = state.expenseFundingFilter === 'ALL' || e.FundingSource === state.expenseFundingFilter;
+
+        return matchDate && matchCat && matchFund;
+      });
+
+      var total = filtered.reduce(function(sum, e) { return sum + (e.Amount || 0); }, 0);
+      if (totalEl) totalEl.innerText = formatVND(total);
+      if (countEl) countEl.innerText = filtered.length + ' khoản chi • Cao nhất: ' + formatVND(filtered.reduce(function(m, e) { return Math.max(m, e.Amount || 0); }, 0));
+
+      if (filtered.length === 0) {
+        listEl.innerHTML = '<div class="py-12 text-center text-on-surface-variant text-xs">Không có khoản chi nào trong khoảng thời gian này</div>';
         return;
       }
 
       var html = '';
-      state.expenses.forEach(function(e) {
-        html += '<div class="bg-surface-container-lowest p-3 rounded-xl border border-outline-variant/30 flex items-center justify-between text-xs shadow-card">';
+      filtered.forEach(function(e) {
+        html += '<div class="bg-surface-container-lowest p-3 rounded-xl border border-outline-variant/30 flex items-center justify-between text-xs shadow-card hover:border-primary/30 transition">';
         html += '  <div>';
         html += '    <div class="font-bold text-sm text-on-surface">' + e.Description + '</div>';
-        html += '    <div class="text-[11px] text-outline mt-0.5"><span class="font-semibold">' + (e.Category || 'Chi tiêu') + '</span> • ' + (e.Date || '') + ' • ' + (e.FundingSource || 'Tiền quán') + '</div>';
+        html += '    <div class="text-[11px] text-outline mt-0.5"><span class="font-semibold text-primary">' + (e.Category || 'Chi tiêu') + '</span> • ' + (e.Date || '') + ' • <span class="text-on-surface font-medium">' + (e.FundingSource || 'Tiền quán') + '</span></div>';
         html += '  </div>';
-        html += '  <div class="font-display font-bold text-sm text-error">' + formatVND(e.Amount) + '</div>';
+        html += '  <div class="flex items-center gap-3">';
+        html += '    <div class="font-display font-bold text-sm text-error">' + formatVND(e.Amount) + '</div>';
+        html += '    <button onclick="deleteExpenseItem(\'' + e.ID + '\')" title="Xóa khoản chi" class="w-7 h-7 rounded-lg text-outline hover:text-error hover:bg-error-container/20 flex items-center justify-center transition"><span class="material-symbols-outlined text-sm">delete</span></button>';
+        html += '  </div>';
         html += '</div>';
       });
       listEl.innerHTML = html;
@@ -1441,30 +1973,73 @@
     function renderReports() {
       var r = state.reportData;
       var revEl = document.getElementById('report-revenue');
-      var ordEl = document.getElementById('report-orders');
+      var ordEl = document.getElementById('report-orders-badge');
       var expEl = document.getElementById('report-expenses');
+      var expCountEl = document.getElementById('report-expenses-count');
       var profitEl = document.getElementById('report-profit');
+      var marginEl = document.getElementById('report-profit-margin');
+      var avgEl = document.getElementById('report-avg-order');
 
-      if (revEl) revEl.innerText = formatVND(r.totalRevenue);
-      if (ordEl) ordEl.innerText = r.totalOrders + ' Đơn';
-      if (expEl) expEl.innerText = formatVND(r.totalExpenses);
-      if (profitEl) profitEl.innerText = formatVND(r.netProfit);
+      var totalRev = r.totalRevenue || 0;
+      var totalExp = r.totalExpenses || 0;
+      var totalOrd = r.totalOrders || 0;
+      var netProf = r.netProfit !== undefined ? r.netProfit : (totalRev - totalExp);
+      var marginPct = totalRev > 0 ? Math.round((netProf / totalRev) * 100) : 0;
+      var aov = totalOrd > 0 ? Math.round(totalRev / totalOrd) : 0;
 
+      if (revEl) revEl.innerText = formatVND(totalRev);
+      if (ordEl) ordEl.innerText = totalOrd + ' đơn hoàn tất';
+      if (expEl) expEl.innerText = formatVND(totalExp);
+      if (expCountEl) expCountEl.innerText = (state.expenses.length || 0) + ' khoản chi';
+      if (profitEl) profitEl.innerText = formatVND(netProf);
+      if (marginEl) marginEl.innerText = 'Tỷ suất: ' + marginPct + '%';
+      if (avgEl) avgEl.innerText = formatVND(aov);
+
+      // Payment Breakdown
       var payContainer = document.getElementById('report-payment-breakdown');
       if (payContainer && r.paymentBreakdown) {
         var pb = r.paymentBreakdown;
-        var totalRev = (pb.cashRevenue || 0) + (pb.transferRevenue || 0);
-        var cashPct = totalRev > 0 ? Math.round((pb.cashRevenue / totalRev) * 100) : 0;
-        var transferPct = totalRev > 0 ? 100 - cashPct : 0;
+        var sumRev = (pb.cashRevenue || 0) + (pb.transferRevenue || 0);
+        var cashPct = sumRev > 0 ? Math.round((pb.cashRevenue / sumRev) * 100) : 0;
+        var transferPct = sumRev > 0 ? 100 - cashPct : 0;
 
         payContainer.innerHTML = '<div>' +
-          '<div class="flex justify-between font-bold mb-1"><span>Chuyển Khoản VietQR (' + transferPct + '%)</span><span>' + formatVND(pb.transferRevenue) + '</span></div>' +
+          '<div class="flex justify-between font-bold mb-1"><span>Chuyển Khoản VietQR (' + transferPct + '% - ' + (pb.transferOrders || 0) + ' đơn)</span><span class="text-primary">' + formatVND(pb.transferRevenue) + '</span></div>' +
           '<div class="w-full h-2 bg-surface-container rounded-full overflow-hidden mb-3"><div class="h-full bg-primary" style="width:' + transferPct + '%"></div></div>' +
-          '<div class="flex justify-between font-bold mb-1"><span>Tiền Mặt (' + cashPct + '%)</span><span>' + formatVND(pb.cashRevenue) + '</span></div>' +
+          '<div class="flex justify-between font-bold mb-1"><span>Tiền Mặt (' + cashPct + '% - ' + (pb.cashOrders || 0) + ' đơn)</span><span class="text-status-occupied">' + formatVND(pb.cashRevenue) + '</span></div>' +
           '<div class="w-full h-2 bg-surface-container rounded-full overflow-hidden"><div class="h-full bg-status-occupied" style="width:' + cashPct + '%"></div></div>' +
           '</div>';
       }
 
+      // Top Best Sellers
+      var topContainer = document.getElementById('report-top-products');
+      if (topContainer) {
+        var prodSales = {};
+        state.activeOrders.forEach(function(o) {
+          (o.items || []).forEach(function(it) {
+            var name = it.ProductName || 'Món nước';
+            if (!prodSales[name]) prodSales[name] = { qty: 0, revenue: 0 };
+            prodSales[name].qty += it.Quantity || 1;
+            prodSales[name].revenue += it.Subtotal || 0;
+          });
+        });
+
+        var sortedProds = Object.entries(prodSales).sort(function(a, b) { return b[1].qty - a[1].qty; }).slice(0, 5);
+        if (sortedProds.length === 0) {
+          topContainer.innerHTML = '<div class="py-6 text-center text-outline text-xs">Chưa có dữ liệu bán hàng</div>';
+        } else {
+          var tHtml = '';
+          sortedProds.forEach(function(pair, idx) {
+            tHtml += '<div class="flex items-center justify-between py-1.5 border-b border-outline-variant/20">';
+            tHtml += '  <div class="flex items-center gap-2"><span class="w-5 h-5 rounded-full bg-primary/10 text-primary font-bold text-xs flex items-center justify-center">' + (idx + 1) + '</span><span class="font-bold text-on-surface">' + pair[0] + '</span></div>';
+            tHtml += '  <div class="font-mono text-outline font-semibold">' + pair[1].qty + ' ly • ' + formatVND(pair[1].revenue) + '</div>';
+            tHtml += '</div>';
+          });
+          topContainer.innerHTML = tHtml;
+        }
+      }
+
+      // Hourly Stats
       var hourlyContainer = document.getElementById('report-hourly-bars');
       if (hourlyContainer) {
         var stats = r.hourlyStats || [];
@@ -1477,18 +2052,39 @@
         hHtml += '</div>';
         hourlyContainer.innerHTML = hHtml;
       }
+
+      // Detailed Orders Table
+      var ordersTableContainer = document.getElementById('report-orders-table');
+      if (ordersTableContainer) {
+        if (state.activeOrders.length === 0) {
+          ordersTableContainer.innerHTML = '<div class="py-8 text-center text-outline text-xs">Chưa có đơn hàng nào trong kỳ</div>';
+        } else {
+          var otHtml = '<div class="space-y-2">';
+          state.activeOrders.forEach(function(o) {
+            otHtml += '<div class="bg-surface-container p-3 rounded-xl flex items-center justify-between text-xs">';
+            otHtml += '  <div><div class="flex items-center gap-2"><span class="font-bold text-primary">#' + o.ID.slice(-4) + '</span><span class="font-mono text-outline">' + (o.CreatedAt ? o.CreatedAt.substring(11, 16) : '') + '</span><span class="font-bold text-on-surface">' + (o.TableID ? getTableName(o.TableID) : 'Mang Về') + '</span></div>';
+            otHtml += '  <div class="text-outline text-[11px] mt-0.5">' + (o.items ? o.items.map(function(i){ return i.Quantity + 'x ' + i.ProductName; }).join(', ') : '') + '</div></div>';
+            otHtml += '  <div class="text-right"><div class="font-bold text-sm text-primary">' + formatVND(o.TotalAmount) + '</div><span class="text-[10px] font-bold text-status-free uppercase">' + (o.Status === 'COMPLETED' ? 'Đã Thanh Toán' : o.Status) + '</span></div>';
+            otHtml += '</div>';
+          });
+          otHtml += '</div>';
+          ordersTableContainer.innerHTML = otHtml;
+        }
+      }
     }
 
     function renderSettings() {
       var shopNameInput = document.getElementById('settings-shop-name');
       var sloganInput = document.getElementById('settings-slogan');
       var phoneInput = document.getElementById('settings-phone');
+      var bankIdInput = document.getElementById('settings-bank-id');
       var bankAccInput = document.getElementById('settings-account-no');
       var bankNameInput = document.getElementById('settings-account-name');
 
       if (shopNameInput) shopNameInput.value = state.settings.shopName || '';
       if (sloganInput) sloganInput.value = state.settings.slogan || '';
       if (phoneInput) phoneInput.value = state.settings.phone || '';
+      if (bankIdInput) bankIdInput.value = state.settings.bankId || '970436';
       if (bankAccInput) bankAccInput.value = state.settings.accountNo || '';
       if (bankNameInput) bankNameInput.value = state.settings.accountName || '';
 
@@ -1504,6 +2100,48 @@
         });
         tablesContainer.innerHTML = html;
       }
+    }
+
+    function renderSettingsProductsTable() {
+      var container = document.getElementById('settings-products-table');
+      if (!container) return;
+
+      var html = '';
+      state.products.forEach(function(p) {
+        var isOut = p.Status === 'OUT_OF_STOCK';
+        var fallbackImg = 'data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Crect width=%27100%27 height=%27100%27 fill=%27%23edeeea%27/%3E%3Ctext x=%2750%27 y=%2755%27 font-size=%2730%27 text-anchor=%27middle%27 fill=%27%2372796e%27%3E🍵%3C/text%3E%3C/svg%3E';
+        html += '<div class="bg-surface-container-lowest p-3 rounded-xl border border-outline-variant/30 flex items-center justify-between gap-3 text-xs shadow-card">';
+        html += '  <div class="flex items-center gap-3 flex-1">';
+        html += '    <img src="' + (p.Image || fallbackImg) + '" class="w-12 h-12 rounded-xl object-cover bg-surface-container" onerror="onImgError(this)" />';
+        html += '    <div>';
+        html += '      <div class="font-bold text-sm text-on-surface">' + p.Name + '</div>';
+        html += '      <div class="text-[11px] text-outline"><span class="text-primary font-semibold">' + (p.Category || 'F&B') + '</span> • ' + (p.HasSize ? 'Có Size • ' : '') + (isOut ? '<span class="text-error font-bold">Hết hàng</span>' : '<span class="text-status-free font-bold">Đang bán</span>') + '</div>';
+        html += '    </div>';
+        html += '  </div>';
+        html += '  <div class="flex items-center gap-3">';
+        html += '    <span class="font-display font-bold text-sm text-primary">' + formatVND(p.Price) + '</span>';
+        html += '    <button onclick="openProductEditModal(\'' + p.ID + '\')" class="px-3 py-1.5 rounded-lg bg-surface-container text-on-surface font-bold text-xs hover:bg-surface-container-high transition flex items-center gap-1"><span class="material-symbols-outlined text-sm">edit</span> Sửa</button>';
+        html += '  </div>';
+        html += '</div>';
+      });
+      container.innerHTML = html;
+    }
+
+    function renderSettingsToppingsTable() {
+      var container = document.getElementById('settings-toppings-table');
+      if (!container) return;
+
+      var html = '';
+      state.toppings.forEach(function(t) {
+        html += '<div class="bg-surface-container-lowest p-3 rounded-xl border border-outline-variant/30 flex items-center justify-between gap-3 text-xs shadow-card">';
+        html += '  <div><div class="font-bold text-sm text-on-surface">' + t.Name + '</div><span class="text-[10px] text-status-free font-semibold">Hoạt động</span></div>';
+        html += '  <div class="flex items-center gap-3">';
+        html += '    <span class="font-display font-bold text-sm text-primary">+' + formatVND(t.Price) + '</span>';
+        html += '    <button onclick="openToppingEditModal(\'' + t.ID + '\')" class="px-3 py-1.5 rounded-lg bg-surface-container text-on-surface font-bold text-xs hover:bg-surface-container-high transition flex items-center gap-1"><span class="material-symbols-outlined text-sm">edit</span> Sửa</button>';
+        html += '  </div>';
+        html += '</div>';
+      });
+      container.innerHTML = html;
     }
 
     function renderCustomModal() {
@@ -1656,6 +2294,7 @@
       renderApp();
       refreshData();
     });
+  
   </script>
 </body>
 </html>
