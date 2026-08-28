@@ -49,6 +49,13 @@ function withLock(fn, timeoutMs) {
  */
 function getInitialData() {
   return withErrorHandling(function() {
+    try {
+      var checkProds = getSheetData(SHEETS.PRODUCTS, false);
+      var hasCoffee = checkProds.some(function(p) { return p.ID === 'P-CF01'; });
+      if (!hasCoffee) {
+        standardizeMenu();
+      }
+    } catch(e) {}
     var menuRes = getMenu();
     var tablesRes = getTables();
     var activeOrdersRes = getActiveOrders();
@@ -1528,5 +1535,84 @@ function getCustomerBootstrap(tableId) {
         menu: (menuRes && menuRes.data) ? menuRes.data : { products: [], toppings: [], categories: [] }
       }
     };
+  });
+}
+
+
+/**
+ * Chuẩn hóa Menu và bổ sung nhóm Cà Phê đặc trưng Tiệm Của Lá.
+ */
+function standardizeMenu() {
+  return withLock(function() {
+    var ss = getSpreadsheet();
+    var prodSheet = ss.getSheetByName('Products');
+    var topSheet = ss.getSheetByName('Toppings');
+    if (!prodSheet || !topSheet) return { success: false, error: 'Sheet not found' };
+
+    var prodData = prodSheet.getDataRange().getValues();
+    var prodHeaders = prodData[0];
+    var idCol = prodHeaders.indexOf('ID');
+    var nameCol = prodHeaders.indexOf('Name');
+    var catCol = prodHeaders.indexOf('Category');
+    var priceCol = prodHeaders.indexOf('Price');
+    var sizeCol = prodHeaders.indexOf('HasSize');
+    var iceCol = prodHeaders.indexOf('HasIce');
+    var sugarCol = prodHeaders.indexOf('HasSugar');
+    var statusCol = prodHeaders.indexOf('Status');
+
+    var existingIds = new Set();
+    for (var r = 1; r < prodData.length; r++) {
+      var row = prodData[r];
+      var pid = String(row[idCol]);
+      existingIds.add(pid);
+
+      if (pid === 'P01') {
+        prodSheet.getRange(r + 1, nameCol + 1).setValue('Trà Thơm Nhiệt Đới (Summer Pineapple)');
+        prodSheet.getRange(r + 1, statusCol + 1).setValue('ACTIVE');
+      } else if (pid === 'P02') {
+        prodSheet.getRange(r + 1, nameCol + 1).setValue('Trà Xoài Nhiệt Đới (Summer Mango)');
+        prodSheet.getRange(r + 1, statusCol + 1).setValue('ACTIVE');
+      } else if (pid === 'P08') {
+        prodSheet.getRange(r + 1, sizeCol + 1).setValue(true);
+        prodSheet.getRange(r + 1, iceCol + 1).setValue(true);
+        prodSheet.getRange(r + 1, sugarCol + 1).setValue(true);
+      } else if (pid.indexOf('1783946880512') !== -1) {
+        prodSheet.getRange(r + 1, sizeCol + 1).setValue(false);
+        prodSheet.getRange(r + 1, iceCol + 1).setValue(false);
+        prodSheet.getRange(r + 1, sugarCol + 1).setValue(false);
+      }
+    }
+
+    var newCoffees = [
+      { ID: 'P-CF01', Name: 'Cà Phê Muối', Category: 'Cà Phê', Price: 28000, Image: '', HasSize: true, HasIce: true, HasSugar: true, Status: 'ACTIVE' },
+      { ID: 'P-CF02', Name: 'Cà Phê Sữa Pha Phin', Category: 'Cà Phê', Price: 22000, Image: '', HasSize: true, HasIce: true, HasSugar: true, Status: 'ACTIVE' },
+      { ID: 'P-CF03', Name: 'Bạc Xỉu Lá', Category: 'Cà Phê', Price: 25000, Image: '', HasSize: true, HasIce: true, HasSugar: true, Status: 'ACTIVE' },
+      { ID: 'P-CF04', Name: 'Cà Phê Đen Đá', Category: 'Cà Phê', Price: 18000, Image: '', HasSize: true, HasIce: true, HasSugar: true, Status: 'ACTIVE' }
+    ];
+
+    newCoffees.forEach(function(cf) {
+      if (!existingIds.has(cf.ID)) {
+        appendRowToSheet(SHEETS.PRODUCTS, cf);
+      }
+    });
+
+    var topData = topSheet.getDataRange().getValues();
+    var topHeaders = topData[0];
+    var topIdCol = topHeaders.indexOf('ID');
+    var existingTopIds = new Set();
+    for (var t = 1; t < topData.length; t++) {
+      existingTopIds.add(String(topData[t][topIdCol]));
+    }
+
+    if (!existingTopIds.has('T08')) {
+      appendRowToSheet(SHEETS.TOPPINGS, { ID: 'T08', Name: 'Hạt Đác Rim Thơm', Price: 5000, Status: 'ACTIVE' });
+    }
+
+    invalidateCache(SHEETS.PRODUCTS);
+    invalidateCache(SHEETS.TOPPINGS);
+    CacheService.getScriptCache().remove('menu_pub');
+    CacheService.getScriptCache().remove('menu_admin');
+
+    return { success: true, message: 'Đã chuẩn hóa Menu thành công!' };
   });
 }
