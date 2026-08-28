@@ -399,21 +399,102 @@
       </div>
     </section>
 
-    <!-- ── VIEW 3: CHI (QUẢN LÝ CHI PHÍ & SỔ QUỸ) ────────────────────────────── -->
-    <section id="view-expenses" class="hidden space-y-4 animate-fade-in">
-      <div class="bg-surface-cream rounded-2xl p-4 sm:p-5 border border-outline-variant/30 shadow-card space-y-3">
+    <!-- ── VIEW 3: CHI NÂNG CAO (QUẢN LÝ CHI PHÍ & SỔ QUỸ KÉT TIỀN) ────────── -->
+    <section id="view-expenses" class="hidden space-y-3.5 animate-fade-in">
+      
+      <!-- 🌟 TOP BENTO OVERVIEW: PHÂN TÁCH 2 NGUỒN TIỀN (KÉT QUÁN vs ỨNG CÁ NHÂN) -->
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-3">
+        
+        <!-- Bento 1 (6 cols): Chi Từ Két Quán -->
+        <div class="md:col-span-6 bg-surface-cream rounded-2xl p-4 border border-outline-variant/30 shadow-card flex flex-col justify-between">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <span class="w-7 h-7 rounded-xl bg-primary/10 flex items-center justify-center text-primary text-sm font-bold">🏛️</span>
+              <span class="text-xs font-bold text-outline uppercase tracking-wider">Chi Từ Két Quán</span>
+            </div>
+            <span id="exp-vault-count" class="text-[11px] font-bold px-2 py-0.5 rounded-full bg-primary/10 text-primary">0 khoản</span>
+          </div>
+          <div class="mt-2">
+            <div id="exp-vault-amount" class="font-display font-extrabold text-xl sm:text-2xl text-on-surface">0 ₫</div>
+            <p class="text-[11px] text-outline mt-0.5">Trừ thẳng vào tiền mặt két lúc chốt ca</p>
+          </div>
+        </div>
+
+        <!-- Bento 2 (6 cols): Cá Nhân Ứng Trước (Cần hoàn ứng) -->
+        <div class="md:col-span-6 bg-surface-cream rounded-2xl p-4 border border-outline-variant/30 shadow-card flex flex-col justify-between">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <span class="w-7 h-7 rounded-xl bg-status-occupied/15 flex items-center justify-center text-status-occupied text-sm font-bold">👤</span>
+              <span class="text-xs font-bold text-outline uppercase tracking-wider">Tiền Cá Nhân Ứng Trước</span>
+            </div>
+            <span id="exp-reimburse-count" class="text-[11px] font-bold px-2 py-0.5 rounded-full bg-status-occupied/15 text-status-occupied">0 khoản</span>
+          </div>
+          <div class="mt-2">
+            <div id="exp-reimburse-amount" class="font-display font-extrabold text-xl sm:text-2xl text-status-occupied">0 ₫</div>
+            <p class="text-[11px] text-outline mt-0.5">Khoản quán nợ cần hoàn trả lại cho nhân viên</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 🌟 CONTROL PANEL: BỘ LỌC, PHÍM CHI NHANH & ĐỐI SOÁT HOÀN ỨNG ──────── -->
+      <div class="bg-surface-cream rounded-2xl p-4 border border-outline-variant/30 shadow-card space-y-3">
+        
         <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-3">
           <div>
             <div class="flex items-center gap-2">
-              <span class="text-xs font-bold text-outline uppercase tracking-wider">Tổng Khoản Chi</span>
+              <span class="text-xs font-bold text-outline uppercase tracking-wider">Tổng Chi Trong Kỳ:</span>
               <span id="expenses-header-badge" class="text-[11px] font-bold text-primary px-2.5 py-0.5 rounded-full bg-primary/10">Tất Cả Dữ Liệu</span>
             </div>
             <div id="expenses-total-amount" class="font-display font-extrabold text-2xl sm:text-3xl text-error mt-0.5">0 ₫</div>
-            <span id="expenses-count-summary" class="text-xs text-outline font-medium">0 khoản chi từ Google Sheet</span>
           </div>
-          <button onclick="openExpenseEditModal(null)" class="px-4 py-2.5 bg-primary text-on-primary rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 shadow-sm hover:bg-primary-container transition">
-            <span class="material-symbols-outlined text-sm">add_circle</span> + Ghi Khoản Chi Mới
-          </button>
+
+          <div class="flex items-center gap-2 flex-wrap">
+            <!-- View Switch: Sổ Chi Tiết vs Đối Soát Hoàn Ứng -->
+            <div class="flex items-center p-1 bg-surface-container rounded-full text-xs font-bold shadow-inner">
+              <button id="exp-subtab-list" onclick="setExpenseSubTab('list')" class="px-3.5 py-1 rounded-full bg-primary text-on-primary transition-all shadow-xs">Sổ Chi Tiết</button>
+              <button id="exp-subtab-reimburse" onclick="setExpenseSubTab('reimburse')" class="px-3.5 py-1 rounded-full text-on-surface-variant hover:bg-surface-container-high transition-all">Đối Soát Hoàn Ứng</button>
+            </div>
+
+            <button onclick="openExpenseEditModal(null)" class="px-4 py-2 bg-primary text-on-primary rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 shadow-sm hover:bg-primary-container transition">
+              <span class="material-symbols-outlined text-sm">add_circle</span> + Ghi Khoản Chi
+            </button>
+          </div>
+        </div>
+
+        <!-- 🌟 QUICK EXPENSE PRESETS (BỘ PHÍM GHI CHI NHANH 1 CHẠM 3 GIÂY) ────── -->
+        <div class="pt-2 border-t border-outline-variant/20">
+          <span class="text-[11px] font-extrabold uppercase tracking-wider text-outline block mb-1.5">⚡ Ghi Nhanh Các Khoản Thường Gặp:</span>
+          <div class="flex gap-2 overflow-x-auto hide-scrollbar pb-1 text-xs">
+            <button onclick="applyQuickExpensePreset('Mua đá viên pha chế', 20000, 'Nguyên liệu', 'Tiền quán')" class="px-3 py-1.5 rounded-xl bg-surface-container hover:bg-surface-container-high font-bold text-on-surface border border-outline-variant/40 flex items-center gap-1 flex-shrink-0 transition">
+              <span>🧊 Đá Viên</span> <span class="text-primary font-mono font-extrabold">20k</span>
+            </button>
+            <button onclick="applyQuickExpensePreset('Mua sữa đặc Ngôi Sao', 120000, 'Nguyên liệu', 'Tiền quán')" class="px-3 py-1.5 rounded-xl bg-surface-container hover:bg-surface-container-high font-bold text-on-surface border border-outline-variant/40 flex items-center gap-1 flex-shrink-0 transition">
+              <span>🥛 Sữa Đặc</span> <span class="text-primary font-mono font-extrabold">120k</span>
+            </button>
+            <button onclick="applyQuickExpensePreset('Mua chanh tươi & tắc chợ', 50000, 'Nguyên liệu', 'Tiền cá nhân')" class="px-3 py-1.5 rounded-xl bg-surface-container hover:bg-surface-container-high font-bold text-on-surface border border-outline-variant/40 flex items-center gap-1 flex-shrink-0 transition">
+              <span>🍋 Chanh / Tắc (Ứng)</span> <span class="text-status-occupied font-mono font-extrabold">50k</span>
+            </button>
+            <button onclick="applyQuickExpensePreset('Mua ly giấy & túi mang về', 100000, 'Bao bì', 'Tiền quán')" class="px-3 py-1.5 rounded-xl bg-surface-container hover:bg-surface-container-high font-bold text-on-surface border border-outline-variant/40 flex items-center gap-1 flex-shrink-0 transition">
+              <span>🛍️ Ly / Túi</span> <span class="text-primary font-mono font-extrabold">100k</span>
+            </button>
+            <button onclick="applyQuickExpensePreset('Mua trái cây tươi & syrup', 150000, 'Nguyên liệu', 'Tiền cá nhân')" class="px-3 py-1.5 rounded-xl bg-surface-container hover:bg-surface-container-high font-bold text-on-surface border border-outline-variant/40 flex items-center gap-1 flex-shrink-0 transition">
+              <span>🍓 Trái Cây (Ứng)</span> <span class="text-status-occupied font-mono font-extrabold">150k</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 🌟 CATEGORY BREAKDOWN PROGRESS BAR ──────────────────────────────── -->
+        <div id="exp-category-breakdown-section" class="pt-2 border-t border-outline-variant/20 space-y-1.5">
+          <div class="flex justify-between items-center text-[11px] font-bold text-outline">
+            <span>Phân Bổ Danh Mục Chi:</span>
+            <span id="exp-breakdown-summary">0% Nguyên liệu</span>
+          </div>
+          <div id="exp-category-breakdown-bar" class="w-full h-3 bg-surface-container rounded-full overflow-hidden flex">
+            <!-- Rendered via JS -->
+          </div>
+          <div id="exp-category-legend" class="flex flex-wrap gap-3 text-[10px] text-outline font-semibold pt-0.5">
+            <!-- Rendered via JS -->
+          </div>
         </div>
 
         <!-- Filter Period Chips (1-Touch) -->
@@ -476,8 +557,8 @@
         </div>
       </div>
 
-      <!-- Expenses List Card -->
-      <div class="bg-surface-cream rounded-2xl p-4 sm:p-5 border border-outline-variant/30 shadow-card">
+      <!-- 🌟 SUBTAB 1: EXPENSES LIST CARD (SỔ CHI TIẾT) ──────────────────────── -->
+      <div id="expenses-list-card" class="bg-surface-cream rounded-2xl p-4 sm:p-5 border border-outline-variant/30 shadow-card">
         <div class="flex justify-between items-center mb-3">
           <h3 class="font-display font-bold text-sm text-on-surface flex items-center gap-2">
             <span class="material-symbols-outlined text-base text-primary">receipt_long</span>
@@ -486,6 +567,23 @@
           <span id="expenses-count-pill" class="text-[11px] font-bold text-primary px-2 py-0.5 rounded-full bg-primary/10">0 mục</span>
         </div>
         <div id="expenses-list" class="space-y-2">
+          <!-- Rendered via JS -->
+        </div>
+      </div>
+
+      <!-- 🌟 SUBTAB 2: REIMBURSEMENT LEDGER (BẢNG ĐỐI SOÁT HOÀN ỨNG NHÂN SỰ) ─── -->
+      <div id="expenses-reimburse-card" class="hidden bg-surface-cream rounded-2xl p-4 sm:p-5 border border-outline-variant/30 shadow-card space-y-3">
+        <div class="flex justify-between items-center pb-2 border-b border-outline-variant/20">
+          <div>
+            <h3 class="font-display font-bold text-sm text-primary flex items-center gap-2">
+              <span class="material-symbols-outlined text-primary">assignment_ind</span>
+              Bảng Tổng Hợp Tiền Ứng Cần Trả Cho Từng Nhân Sự
+            </h3>
+            <p class="text-xs text-outline">Theo dõi chính xác số tiền nhân viên đã tự bỏ túi mua đồ cho quán</p>
+          </div>
+          <span id="exp-reimburse-total-badge" class="font-display font-extrabold text-sm text-status-occupied">0 ₫</span>
+        </div>
+        <div id="expenses-reimbursement-list" class="space-y-2.5">
           <!-- Rendered via JS -->
         </div>
       </div>
@@ -1261,8 +1359,34 @@
             </select>
           </div>
           <div>
-            <label class="font-bold text-outline block mb-1">Ghi Chú Thêm</label>
-            <input id="expense-note" type="text" placeholder="Ghi chú..." class="w-full px-3 py-2 bg-surface-container-lowest border border-outline-variant/40 rounded-xl font-medium" />
+            <label class="font-bold text-outline block mb-1">Trạng Thái Hoàn Ứng</label>
+            <select id="expense-reimbursed-status" class="w-full px-3 py-2 bg-surface-container-lowest border border-outline-variant/40 rounded-xl font-medium">
+              <option value="PENDING">Chưa hoàn ứng (Nợ quán)</option>
+              <option value="SETTLED">Đã hoàn trả đủ</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="font-bold text-outline block mb-1">Ghi Chú Thêm</label>
+          <input id="expense-note" type="text" placeholder="Ghi chú thêm..." class="w-full px-3 py-2 bg-surface-container-lowest border border-outline-variant/40 rounded-xl font-medium" />
+        </div>
+
+        <!-- Receipt Snapshot Attachment -->
+        <div>
+          <label class="font-bold text-outline block mb-1">Ảnh Hóa Đơn / Bill Mua Hàng (Chụp/Đính kèm)</label>
+          <div class="flex gap-2.5 items-center">
+            <div class="w-14 h-14 rounded-xl bg-surface-container border border-outline-variant/40 overflow-hidden flex-shrink-0 flex items-center justify-center">
+              <img id="expense-receipt-preview" src="" class="w-full h-full object-cover" onerror="onImgError(this)" alt="Receipt" />
+            </div>
+            <div class="flex-1 space-y-1">
+              <input id="expense-receipt-file" type="file" accept="image/*" class="hidden" onchange="handleExpenseReceiptSelect(event)" />
+              <button type="button" onclick="triggerExpenseReceiptUpload()" class="w-full px-3 py-1.5 rounded-xl bg-surface-container hover:bg-surface-container-high transition border border-outline-variant/40 font-bold text-xs flex items-center justify-center gap-1 text-primary">
+                <span class="material-symbols-outlined text-sm">photo_camera</span>
+                <span>Chụp / Tải Ảnh Hóa Đơn</span>
+              </button>
+              <input id="expense-receipt-url" oninput="updateExpenseReceiptPreview(this.value)" type="text" placeholder="Hoặc dán link ảnh..." class="w-full px-2.5 py-1 bg-surface-container-lowest border border-outline-variant/30 rounded-lg text-[10px] font-mono" />
+            </div>
           </div>
         </div>
       </div>
@@ -1556,6 +1680,8 @@
 
       // CHI (Expense) Filter States
       expensePeriod: 'all',
+      expenseSubTab: 'list',
+      settledReimbursements: {},
       expenseSpecificDate: '',
       expenseCategoryFilter: 'ALL',
       expenseFundingFilter: 'ALL',
@@ -3075,12 +3201,108 @@
       }
     }
 
+    
+    // ── ADVANCED EXPENSES & REIMBURSEMENT ENGINE ─────────────────────────────
+    function setExpenseSubTab(sub) {
+      state.expenseSubTab = sub;
+      var btnList = document.getElementById('exp-subtab-list');
+      var btnReimburse = document.getElementById('exp-subtab-reimburse');
+      var cardList = document.getElementById('expenses-list-card');
+      var cardReimburse = document.getElementById('expenses-reimburse-card');
+
+      if (sub === 'list') {
+        if (btnList) btnList.className = 'px-3.5 py-1 rounded-full bg-primary text-on-primary transition-all shadow-xs';
+        if (btnReimburse) btnReimburse.className = 'px-3.5 py-1 rounded-full text-on-surface-variant hover:bg-surface-container-high transition-all';
+        if (cardList) cardList.classList.remove('hidden');
+        if (cardReimburse) cardReimburse.classList.add('hidden');
+      } else {
+        if (btnReimburse) btnReimburse.className = 'px-3.5 py-1 rounded-full bg-primary text-on-primary transition-all shadow-xs';
+        if (btnList) btnList.className = 'px-3.5 py-1 rounded-full text-on-surface-variant hover:bg-surface-container-high transition-all';
+        if (cardList) cardList.classList.add('hidden');
+        if (cardReimburse) cardReimburse.classList.remove('hidden');
+      }
+      renderExpenses();
+    }
+
+    function applyQuickExpensePreset(desc, amount, category, funding) {
+      openExpenseEditModal(null);
+      var descInput = document.getElementById('expense-desc');
+      var amountInput = document.getElementById('expense-amount');
+      var catSelect = document.getElementById('expense-category');
+      var fundSelect = document.getElementById('expense-funding');
+
+      if (descInput) descInput.value = desc;
+      if (amountInput) amountInput.value = amount;
+      if (catSelect) catSelect.value = category;
+      if (fundSelect) fundSelect.value = funding;
+      showToast('Đã điền mẫu: ' + desc, 'bolt');
+    }
+
+    function triggerExpenseReceiptUpload() {
+      var input = document.getElementById('expense-receipt-file');
+      if (input) input.click();
+    }
+
+    function handleExpenseReceiptSelect(event) {
+      var file = event.target.files && event.target.files[0];
+      if (!file) return;
+      showToast('Đang nén ảnh hóa đơn...', 'image');
+      var reader = new FileReader();
+      reader.onload = function(e) {
+        var img = new Image();
+        img.onload = function() {
+          var canvas = document.createElement('canvas');
+          var maxDim = 500;
+          var width = img.width;
+          var height = img.height;
+          if (width > height) {
+            if (width > maxDim) { height *= maxDim / width; width = maxDim; }
+          } else {
+            if (height > maxDim) { width *= maxDim / height; height = maxDim; }
+          }
+          canvas.width = width;
+          canvas.height = height;
+          var ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, width, height);
+          var compressedBase64 = canvas.toDataURL('image/jpeg', 0.8);
+          var urlInput = document.getElementById('expense-receipt-url');
+          if (urlInput) urlInput.value = compressedBase64;
+          updateExpenseReceiptPreview(compressedBase64);
+          showToast('Đã đính kèm ảnh hóa đơn!', 'check_circle');
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function updateExpenseReceiptPreview(src) {
+      var img = document.getElementById('expense-receipt-preview');
+      if (img) {
+        img.src = src || 'data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Crect width=%27100%27 height=%27100%27 fill=%27%23edeeea%27/%3E%3Ctext x=%2750%27 y=%2755%27 font-size=%2725%27 text-anchor=%27middle%27 fill=%27%2372796e%27%3E🧾%3C/text%3E%3C/svg%3E';
+      }
+    }
+
+    async function markReimbursementSettled(staffName) {
+      if (!confirm('Xác nhận quán đã hoàn trả đầy đủ tiền ứng cho ' + staffName + '?')) return;
+      state.settledReimbursements[staffName] = true;
+      showToast('Đã đánh dấu hoàn ứng cho ' + staffName + ' thành công!', 'verified');
+      renderExpenses();
+    }
+
     function renderExpenses() {
       var listEl = document.getElementById('expenses-list');
       var totalEl = document.getElementById('expenses-total-amount');
-      var countEl = document.getElementById('expenses-count-summary');
-      var badgeEl = document.getElementById('expenses-header-badge');
       var countPill = document.getElementById('expenses-count-pill');
+      var badgeEl = document.getElementById('expenses-header-badge');
+      var vaultAmountEl = document.getElementById('exp-vault-amount');
+      var vaultCountEl = document.getElementById('exp-vault-count');
+      var reimburseAmountEl = document.getElementById('exp-reimburse-amount');
+      var reimburseCountEl = document.getElementById('exp-reimburse-count');
+      var breakdownBar = document.getElementById('exp-category-breakdown-bar');
+      var legendContainer = document.getElementById('exp-category-legend');
+      var reimburseList = document.getElementById('expenses-reimbursement-list');
+      var reimburseTotalBadge = document.getElementById('exp-reimburse-total-badge');
+
       if (!listEl) return;
 
       var now = new Date();
@@ -3120,14 +3342,42 @@
         return matchDate && matchCat && matchFund && matchStaff;
       });
 
-      var total = filtered.reduce(function(sum, e) {
+      var total = 0;
+      var vaultTotal = 0;
+      var vaultCount = 0;
+      var reimburseTotal = 0;
+      var reimburseCount = 0;
+      var catTotals = {};
+      var staffReimburse = {};
+
+      filtered.forEach(function(e) {
         var num = typeof e.Amount === 'number' ? e.Amount : parseFloat(String(e.Amount).replace(/\./g, '').replace(/,/g, '')) || 0;
-        return sum + num;
-      }, 0);
+        total += num;
+
+        var cat = e.Category || 'Khác';
+        catTotals[cat] = (catTotals[cat] || 0) + num;
+
+        if (e.FundingSource === 'Tiền quán') {
+          vaultTotal += num;
+          vaultCount++;
+        } else if (e.FundingSource === 'Tiền cá nhân') {
+          reimburseTotal += num;
+          reimburseCount++;
+          var staff = e.PerformedByName || e.PerformedBy || 'Nhân viên';
+          if (!staffReimburse[staff]) staffReimburse[staff] = { total: 0, count: 0, items: [] };
+          staffReimburse[staff].total += num;
+          staffReimburse[staff].count += 1;
+          staffReimburse[staff].items.push(e);
+        }
+      });
 
       if (totalEl) totalEl.innerText = formatVND(total);
-      if (countEl) countEl.innerText = filtered.length + ' khoản chi từ Google Sheet • Tổng: ' + formatVND(total);
       if (countPill) countPill.innerText = filtered.length + ' mục';
+      if (vaultAmountEl) vaultAmountEl.innerText = formatVND(vaultTotal);
+      if (vaultCountEl) vaultCountEl.innerText = vaultCount + ' khoản';
+      if (reimburseAmountEl) reimburseAmountEl.innerText = formatVND(reimburseTotal);
+      if (reimburseCountEl) reimburseCountEl.innerText = reimburseCount + ' khoản';
+      if (reimburseTotalBadge) reimburseTotalBadge.innerText = 'Tổng Nợ Ứng: ' + formatVND(reimburseTotal);
 
       var periodLabels = {
         all: 'Tất Cả Dữ Liệu (' + state.expenses.length + ' khoản chi)',
@@ -3140,6 +3390,63 @@
       };
       if (badgeEl) badgeEl.innerText = periodLabels[state.expensePeriod] || 'Tất Cả Dữ Liệu';
 
+      // Render Category Breakdown Bar
+      if (breakdownBar && legendContainer) {
+        var catColors = {
+          'Nguyên liệu': '#154212',
+          'Bao bì': '#805533',
+          'Thiết bị': '#2196F3',
+          'Điện nước / Internet': '#FF9800',
+          'Khác': '#72796e'
+        };
+        var barHtml = '';
+        var legHtml = '';
+        var cats = Object.keys(catTotals);
+        if (total > 0 && cats.length > 0) {
+          cats.forEach(function(c) {
+            var pct = Math.round((catTotals[c] / total) * 100);
+            var color = catColors[c] || '#72796e';
+            barHtml += '<div style="width:' + pct + '%; background-color:' + color + ';" title="' + c + ': ' + pct + '%" class="h-full"></div>';
+            legHtml += '<div class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full" style="background-color:' + color + '"></span><span>' + c + ': <strong class="text-on-surface">' + pct + '%</strong> (' + formatVND(catTotals[c]) + ')</span></div>';
+          });
+        } else {
+          barHtml = '<div class="w-full h-full bg-surface-container"></div>';
+        }
+        breakdownBar.innerHTML = barHtml;
+        legendContainer.innerHTML = legHtml;
+      }
+
+      // Render Reimbursement Ledger
+      if (reimburseList) {
+        var staffKeys = Object.keys(staffReimburse);
+        if (staffKeys.length === 0) {
+          reimburseList.innerHTML = '<div class="py-8 text-center text-outline text-xs"><span class="material-symbols-outlined text-3xl mb-1 opacity-50">verified_user</span><p>Không có khoản tiền cá nhân nào cần hoàn ứng trong kỳ này!</p></div>';
+        } else {
+          var rHtml = '';
+          staffKeys.forEach(function(st) {
+            var sData = staffReimburse[st];
+            var isSettled = !!state.settledReimbursements[st];
+            rHtml += '<div class="p-3.5 bg-surface-container-lowest rounded-xl border border-outline-variant/30 flex items-center justify-between gap-3 text-xs shadow-card ' + (isSettled ? 'opacity-50' : '') + '">';
+            rHtml += '  <div class="flex-1">';
+            rHtml += '    <div class="flex items-center gap-2">';
+            rHtml += '      <span class="font-bold text-sm text-on-surface">👤 ' + st + '</span>';
+            rHtml += '      <span class="px-2 py-0.5 rounded-full text-[10px] font-bold ' + (isSettled ? 'bg-status-free/15 text-status-free' : 'bg-status-occupied/15 text-status-occupied') + '">' + (isSettled ? 'ĐÃ HOÀN TRẢ' : 'CẦN HOÀN ỨNG') + '</span>';
+            rHtml += '    </div>';
+            rHtml += '    <div class="text-[11px] text-outline mt-1 font-mono">' + sData.count + ' khoản ứng • ' + sData.items.map(function(it){ return it.Description; }).slice(0, 2).join(', ') + '</div>';
+            rHtml += '  </div>';
+            rHtml += '  <div class="flex items-center gap-3">';
+            rHtml += '    <span class="font-display font-extrabold text-sm text-status-occupied">' + formatVND(sData.total) + '</span>';
+            if (!isSettled) {
+              rHtml += '    <button onclick="markReimbursementSettled(\'' + st + '\')" class="px-3 py-1.5 rounded-xl bg-primary text-on-primary font-bold text-xs shadow-xs hover:bg-primary-container transition flex items-center gap-1"><span class="material-symbols-outlined text-xs">done_all</span> Đã Trả</button>';
+            }
+            rHtml += '  </div>';
+            rHtml += '</div>';
+          });
+          reimburseList.innerHTML = rHtml;
+        }
+      }
+
+      // Render Expenses List
       if (filtered.length === 0) {
         listEl.innerHTML = '<div class="py-12 text-center text-on-surface-variant text-xs space-y-2 bg-surface-container-lowest rounded-xl border border-outline-variant/20">' +
           '<span class="material-symbols-outlined text-4xl opacity-40">receipt_long</span>' +
@@ -3151,16 +3458,22 @@
       var html = '';
       filtered.forEach(function(e) {
         var num = typeof e.Amount === 'number' ? e.Amount : parseFloat(String(e.Amount).replace(/\./g, '').replace(/,/g, '')) || 0;
+        var hasReceipt = !!e.ReceiptImage;
+        var isPersonal = e.FundingSource === 'Tiền cá nhân';
+
         html += '<div class="bg-surface-container-lowest p-3.5 rounded-xl border border-outline-variant/30 flex items-center justify-between text-xs shadow-card hover:border-primary/40 transition">';
         html += '  <div class="flex-1 pr-2">';
         html += '    <div class="flex items-center gap-2">';
         html += '      <span class="font-bold text-sm text-on-surface">' + (e.Description || 'Khoản chi') + '</span>';
         html += '      <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-primary/10 text-primary">' + (e.Category || 'Chi tiêu') + '</span>';
+        if (hasReceipt) {
+          html += '      <span title="Có đính kèm ảnh hóa đơn" class="text-primary text-[10px] font-bold flex items-center gap-0.5"><span class="material-symbols-outlined text-xs">receipt</span> HĐ</span>';
+        }
         html += '    </div>';
         html += '    <div class="text-[11px] text-outline mt-1 flex flex-wrap items-center gap-2">';
         html += '      <span>📅 ' + (e.Date || todayStr) + '</span>';
         html += '      <span>•</span>';
-        html += '      <span class="text-on-surface font-semibold">💳 ' + (e.FundingSource || 'Tiền quán') + '</span>';
+        html += '      <span class="font-bold ' + (isPersonal ? 'text-status-occupied' : 'text-primary') + '">' + (isPersonal ? '👤 Ứng cá nhân' : '🏛️ Két quán') + '</span>';
         html += '      <span>•</span>';
         html += '      <span>👤 ' + (e.PerformedByName || e.PerformedBy || 'Nhân viên') + '</span>';
         if (e.Note) html += '      <span class="italic text-gray-500">("' + e.Note + '")</span>';
@@ -3437,7 +3750,11 @@
       var categorySelect = document.getElementById('expense-category');
       var fundingSelect = document.getElementById('expense-funding');
       var noteInput = document.getElementById('expense-note');
+      var receiptUrlInput = document.getElementById('expense-receipt-url');
       var btnDelete = document.getElementById('btn-delete-expense');
+
+      if (receiptUrlInput) receiptUrlInput.value = (expenseId && exp) ? (exp.ReceiptImage || '') : '';
+      updateExpenseReceiptPreview((expenseId && exp) ? (exp.ReceiptImage || '') : '');
 
       if (expenseId) {
         var exp = state.expenses.find(function(e) { return e.ID === expenseId; });
@@ -3479,13 +3796,14 @@
       var category = document.getElementById('expense-category')?.value || 'Nguyên liệu';
       var funding = document.getElementById('expense-funding')?.value || 'Tiền quán';
       var note = document.getElementById('expense-note')?.value || '';
+      var receiptImage = document.getElementById('expense-receipt-url')?.value || '';
 
       if (!desc || amount <= 0) {
         showToast('Vui lòng điền nội dung và số tiền hợp lệ!', 'warning');
         return;
       }
 
-      var payload = { date: date, description: desc, amount: amount, performedByName: performedBy, paymentMethod: method, category: category, fundingSource: funding, note: note };
+      var payload = { date: date, description: desc, amount: amount, performedByName: performedBy, paymentMethod: method, category: category, fundingSource: funding, note: note, receiptImage: receiptImage };
       var res = id ? await callGAS('updateExpense', id, payload) : await callGAS('addExpense', payload);
 
       if (res && res.success) {
@@ -3618,7 +3936,7 @@
         showToast('Vui lòng nhập họ tên và số điện thoại', 'warning');
         return;
       }
-      var payload = { id: id, name: name, phone: phone, type: type, company: company, note: note };
+      var payload = { id: id, name: name, phone: phone, type: type, company: company, note: note, receiptImage: receiptImage };
       var res = await callGAS('saveCustomer', payload);
       if (res && res.success) {
         closeModal('modal-edit-customer');

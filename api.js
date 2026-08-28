@@ -811,7 +811,8 @@ function getExpenses(date) {
         Note: e.Note || '',
         FundingSource: e.FundingSource || 'Ti\u1ec1n qu\u00e1n',
         PerformedBy: e.PerformedBy || '',
-        PerformedByName: e.PerformedByName || ''
+        PerformedByName: e.PerformedByName || '',
+        ReceiptImage: e.ReceiptImage || ''
       };
     });
     var filtered = date ? mapped.filter(function(e) { return String(e.Date).startsWith(date); }) : mapped;
@@ -839,6 +840,7 @@ function updateExpense(id, data) {
     if (data.fundingSource   !== undefined) updates.FundingSource   = data.fundingSource;
     if (data.performedBy     !== undefined) updates.PerformedBy     = data.performedBy;
     if (data.performedByName !== undefined) updates.PerformedByName = data.performedByName;
+    if (data.receiptImage    !== undefined) updates.ReceiptImage    = data.receiptImage;
     var ok = updateRowInSheet(SHEETS.EXPENSES, 'ID', id, updates);
     return { success: ok, id: id, data: updates };
   });

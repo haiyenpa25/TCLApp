@@ -31,7 +31,7 @@ function setupDatabase() {
     'Orders':          ['ID','TableID','TotalAmount','Status','Source','OrderType','CustomerID','CustomerName','CustomerPhone','DeliveryAddress','CreatedAt','Note'],
     'Order_Details':   ['ID','OrderID','ProductID','ProductName','Size','Ice','Sugar','Toppings','Quantity','Price','Subtotal'],
     'Customers':       ['ID','Name','Phone','Type','Company','Address','Email','Points','TotalSpent','CreatedAt','Note'],
-    'Expenses':        ['ID','Date','Category','Description','Amount','Note','FundingSource','PerformedBy','PerformedByName'],
+    'Expenses':        ['ID','Date','Category','Description','Amount','Note','FundingSource','PerformedBy','PerformedByName','ReceiptImage'],
     // Task Management
     'Staff':           ['ID','Name','Status'],
     'TaskTemplates':   ['ID','Title','Description','AssignedTo','AssignedName','RepeatType','RepeatEvery','Priority','StartDate','Status'],
