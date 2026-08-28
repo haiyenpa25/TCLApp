@@ -195,12 +195,18 @@ function deleteRowFromSheet(sheetName, idColumnName, idValue) {
   const idCol = data[0].indexOf(idColumnName);
   if (idCol === -1) throw new Error('Cột ID không tìm thấy: ' + idColumnName);
 
+  const targetId = String(idValue).trim();
+  let found = false;
+
   for (let i = data.length - 1; i >= 1; i--) {
-    if (String(data[i][idCol]) === String(idValue)) {
+    if (String(data[i][idCol]).trim() === targetId) {
       sheet.deleteRow(i + 1);
-      invalidateCache(sheetName);
-      return true;
+      found = true;
     }
+  }
+  if (found) {
+    invalidateCache(sheetName);
+    return true;
   }
   return false;
 }

@@ -4103,11 +4103,18 @@
       var id = document.getElementById('edit-prod-id')?.value;
       if (!id) return;
       if (!confirm('Bạn có chắc chắn muốn xóa món nước này khỏi thực đơn?')) return;
+      showToast('Đang xóa món...', 'delete');
       var res = await callGAS('deleteProduct', id);
       if (res && res.success) {
+        state.products = state.products.filter(function(p) { return p.ID !== id; });
+        saveLocalCache();
         closeModal('modal-edit-product');
-        showToast('Đã xóa món nước khỏi thực đơn!', 'check_circle');
+        showToast('Đã xóa món nước khỏi thực đơn thành công!', 'check_circle');
+        renderSettingsProductsTable();
+        renderPOS();
         refreshData();
+      } else {
+        showToast('Lỗi: ' + (res && res.error ? res.error : 'Không thể xóa món này'), 'error');
       }
     }
 
@@ -4158,11 +4165,18 @@
       var id = document.getElementById('edit-top-id')?.value;
       if (!id) return;
       if (!confirm('Bạn có chắc chắn muốn xóa topping này?')) return;
+      showToast('Đang xóa topping...', 'delete');
       var res = await callGAS('deleteTopping', id);
       if (res && res.success) {
+        state.toppings = state.toppings.filter(function(t) { return t.ID !== id; });
+        saveLocalCache();
         closeModal('modal-edit-topping');
-        showToast('Đã xóa topping!', 'check_circle');
+        showToast('Đã xóa topping thành công!', 'check_circle');
+        renderSettingsToppingsTable();
+        renderPOS();
         refreshData();
+      } else {
+        showToast('Lỗi: ' + (res && res.error ? res.error : 'Không thể xóa topping này'), 'error');
       }
     }
 

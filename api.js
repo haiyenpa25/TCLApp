@@ -278,9 +278,12 @@ function updateProduct(id, data) {
 
 function deleteProduct(id) {
   return withLock(function() {
-    deleteRowFromSheet(SHEETS.PRODUCTS, 'ID', id);
-    CacheService.getScriptCache().removeAll(['menu_pub', 'menu_admin']);
-    return { success: true, id: id };
+    var ok = deleteRowFromSheet(SHEETS.PRODUCTS, 'ID', id);
+    invalidateCache(SHEETS.PRODUCTS);
+    try {
+      CacheService.getScriptCache().removeAll(['menu_pub', 'menu_admin', 'TCL_DB_Products']);
+    } catch(e) {}
+    return { success: ok, id: id };
   });
 }
 
@@ -310,9 +313,12 @@ function updateTopping(id, data) {
 
 function deleteTopping(id) {
   return withLock(function() {
-    deleteRowFromSheet(SHEETS.TOPPINGS, 'ID', id);
-    CacheService.getScriptCache().removeAll(['menu_pub', 'menu_admin']);
-    return { success: true, id: id };
+    var ok = deleteRowFromSheet(SHEETS.TOPPINGS, 'ID', id);
+    invalidateCache(SHEETS.TOPPINGS);
+    try {
+      CacheService.getScriptCache().removeAll(['menu_pub', 'menu_admin', 'TCL_DB_Toppings']);
+    } catch(e) {}
+    return { success: ok, id: id };
   });
 }
 
