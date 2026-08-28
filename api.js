@@ -57,7 +57,7 @@ function getInitialData() {
     var staffRes = getStaff();
     var customersRes = getCustomers();
     var settingsRes = getSettings();
-    var reportRes = getReport('today');
+    var reportRes = getReport('all');
 
     var expList = [];
     if (expensesRes && expensesRes.data) {
@@ -873,21 +873,22 @@ function getExpenseSummary(params) {
   });
 }
 
-//  REPORT 
+// ── REPORT ──────────────────────────────────────────────────────────────────
 
-/** T\u1ed0I \u01afU P0: getReportByRange() d\u00f9ng Map v\u00e0 Set \u0111\u1ec3 t\u1ed5ng h\u1ee3p d\u1eef li\u1ec7u O(N) */
+/**
+ * TỐI ƯU P0: getReportByRange() tổng hợp dữ liệu Doanh thu, Chi phí, Lợi nhuận và Top món.
+ */
 function getReportByRange(params) {
   return withErrorHandling(function() {
-    var today = new Date().toISOString().split('T')[0];
-    var from  = (params && params.dateFrom) ? params.dateFrom : today;
-    var to    = (params && params.dateTo)   ? params.dateTo   : today;
+    var today = _extractDateStr(new Date());
+    var from  = (params && params.dateFrom) ? params.dateFrom : '2000-01-01';
+    var to    = (params && params.dateTo)   ? params.dateTo   : '2099-12-31';
 
     var allOrders   = getSheetData(SHEETS.ORDERS, false);
     var allDetails  = getSheetData(SHEETS.ORDER_DETAILS, false);
     var allExp      = getSheetData(SHEETS.EXPENSES, false);
-    var allProducts = getSheetData(SHEETS.PRODUCTS, false);
 
-    // Lc n trong khong ngy
+    // Lọc đơn hàng COMPLETED trong khoảng ngày
     var orders = allOrders.filter(function(o) {
       if (!o.CreatedAt) return false;
       var d = _extractDateStr(o.CreatedAt);
@@ -901,6 +902,13 @@ function getReportByRange(params) {
     var transferRevenue = 0, transferOrders = 0;
     var orderList = [];
 
+    // Khởi tạo bảng giờ hoạt động
+    var hourlyMap = {};
+    for (var h = 7; h <= 22; h++) {
+      var hStr = String(h).padStart(2, '0') + ':00';
+      hourlyMap[hStr] = 0;
+    }
+
     for (var i = 0; i < orders.length; i++) {
       var o = orders[i];
       var amt = _parseCurrency(o.TotalAmount);
@@ -910,6 +918,12 @@ function getReportByRange(params) {
       if (!byDay[d]) byDay[d] = { date: d, revenue: 0, orders: 0 };
       byDay[d].revenue += amt;
       byDay[d].orders  += 1;
+
+      // Phân bổ giờ
+      if (o.CreatedAt) {
+        var hourStr = o.CreatedAt.length >= 13 ? (o.CreatedAt.substring(11, 13) + ':00') : '08:00';
+        if (hourlyMap[hourStr] !== undefined) hourlyMap[hourStr] += amt;
+      }
 
       var noteStr = String(o.Note || '').toUpperCase();
       var pMethod = String(o.PaymentMethod || o.Source || '').toUpperCase();
@@ -928,11 +942,15 @@ function getReportByRange(params) {
         CreatedAt: o.CreatedAt,
         OrderType: o.OrderType || 'DINE_IN',
         CustomerName: o.CustomerName || '',
+        PaymentMethod: pMethod || 'CASH'
       });
     }
 
     var totalOrders = orders.length;
     var dailyData = Object.values(byDay).sort(function(a, b) { return a.date > b.date ? 1 : -1; });
+    var hourlyStats = Object.keys(hourlyMap).map(function(k) {
+      return { hour: k, revenue: hourlyMap[k] };
+    });
 
     var totalExpenses = allExp
       .filter(function(e) { 
@@ -941,7 +959,7 @@ function getReportByRange(params) {
       })
       .reduce(function(s, e) { return s + _parseCurrency(e.Amount); }, 0);
 
-    // Top sn phm O(M)
+    // Top sản phẩm bán chạy
     var prodCount = {}, prodRevenue = {};
     for (var j = 0; j < allDetails.length; j++) {
       var dt = allDetails[j];
@@ -957,33 +975,20 @@ function getReportByRange(params) {
       .slice(0, 10)
       .map(function(e) { return { name: e[0], count: e[1], revenue: prodRevenue[e[0]] || 0 }; });
 
-    // So snh k trc
-    var dFrom = new Date(from), dTo = new Date(to);
-    var diff  = Math.round((dTo - dFrom) / 86400000) + 1;
-    var prevTo   = new Date(dFrom); prevTo.setDate(prevTo.getDate() - 1);
-    var prevFrom = new Date(prevTo); prevFrom.setDate(prevFrom.getDate() - diff + 1);
-    var pFrom = prevFrom.toISOString().split('T')[0];
-    var pTo   = prevTo.toISOString().split('T')[0];
+    orderList.sort(function(a, b) { return (b.CreatedAt > a.CreatedAt) ? 1 : -1; });
 
-    var prevRevenue = allOrders
-      .filter(function(o) {
-        if (!o.CreatedAt) return false;
-        var d = _extractDateStr(o.CreatedAt);
-        return d >= pFrom && d <= pTo && o.Status === 'COMPLETED';
-      })
-      .reduce(function(s, o) { return s + _parseCurrency(o.TotalAmount); }, 0);
-
-    var revenueGrowth = prevRevenue > 0
-      ? Math.round(((totalRevenue - prevRevenue) / prevRevenue) * 100)
-      : null;
+    var netProfit = totalRevenue - totalExpenses;
 
     return { success: true, data: {
       dateFrom: from, dateTo: to,
-      totalRevenue: totalRevenue, totalOrders: totalOrders,
+      totalRevenue: totalRevenue,
+      totalOrders: totalOrders,
       avgOrder: totalOrders > 0 ? Math.round(totalRevenue / totalOrders) : 0,
       totalExpenses: totalExpenses,
-      profit: totalRevenue - totalExpenses,
+      netProfit: netProfit,
+      profit: netProfit,
       dailyData: dailyData,
+      hourlyStats: hourlyStats,
       topProducts: topProducts,
       orderList: orderList.slice(0, 50),
       paymentBreakdown: {
@@ -991,14 +996,46 @@ function getReportByRange(params) {
         cashOrders: cashOrders,
         transferRevenue: transferRevenue,
         transferOrders: transferOrders,
-      },
-      comparison: { prevRevenue: prevRevenue, revenueGrowth: revenueGrowth, dateFrom: pFrom, dateTo: pTo },
+      }
     }};
   });
 }
 
-function getReport() {
-  return getReportByRange({ dateFrom: new Date().toISOString().split('T')[0] });
+function getReport(period, dateFrom, dateTo) {
+  return withErrorHandling(function() {
+    var p = (typeof period === 'object' && period !== null) ? (period.period || 'month') : (period || 'month');
+    var from = '2000-01-01', to = '2099-12-31';
+    var now = new Date();
+    var tz = Session.getScriptTimeZone() || 'Asia/Ho_Chi_Minh';
+    var todayStr = Utilities.formatDate(now, tz, 'yyyy-MM-dd');
+
+    if (p === 'today') {
+      from = todayStr;
+      to = todayStr;
+    } else if (p === 'yesterday') {
+      var yest = new Date(now.getTime() - 86400000);
+      var yestStr = Utilities.formatDate(yest, tz, 'yyyy-MM-dd');
+      from = yestStr;
+      to = yestStr;
+    } else if (p === 'week') {
+      var w = new Date(now.getTime() - 6 * 86400000);
+      from = Utilities.formatDate(w, tz, 'yyyy-MM-dd');
+      to = todayStr;
+    } else if (p === 'month') {
+      var y = now.getFullYear();
+      var m = String(now.getMonth() + 1).padStart(2, '0');
+      from = y + '-' + m + '-01';
+      to = y + '-' + m + '-31';
+    } else if (p === 'all' || p === 'all_time') {
+      from = '2000-01-01';
+      to = '2099-12-31';
+    } else if (p === 'custom') {
+      from = (typeof period === 'object' && period.dateFrom) ? period.dateFrom : (dateFrom || '2000-01-01');
+      to   = (typeof period === 'object' && period.dateTo)   ? period.dateTo   : (dateTo || from);
+    }
+
+    return getReportByRange({ dateFrom: from, dateTo: to });
+  });
 }
 
 //  CUSTOMERS 
