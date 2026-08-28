@@ -1020,8 +1020,21 @@
           </div>
         </div>
         <div>
-          <label class="font-bold text-outline block mb-1">Link Ảnh Sản Phẩm (URL)</label>
-          <input id="edit-prod-image" type="url" placeholder="https://..." class="w-full px-3 py-2 bg-surface-container border border-outline-variant/40 rounded-xl font-mono text-[11px]" />
+          <label class="font-bold text-outline block mb-1">Hình Ảnh Sản Phẩm</label>
+          <div class="flex gap-3 items-center mb-2">
+            <div class="w-16 h-16 rounded-xl bg-surface-container border border-outline-variant/40 overflow-hidden flex-shrink-0 flex items-center justify-center">
+              <img id="edit-prod-preview" src="" class="w-full h-full object-cover" onerror="onImgError(this)" alt="Preview" />
+            </div>
+            <div class="flex-1 space-y-1.5">
+              <input id="edit-prod-file" type="file" accept="image/*" class="hidden" onchange="handleProductFileSelect(event)" />
+              <button type="button" onclick="triggerProductImageUpload()" class="w-full px-3 py-2 rounded-xl bg-surface-container hover:bg-surface-container-high transition border border-outline-variant/40 font-bold text-xs flex items-center justify-center gap-1.5 text-primary">
+                <span class="material-symbols-outlined text-sm">add_photo_alternate</span>
+                <span>Chọn Ảnh Từ Máy / Chụp Ảnh</span>
+              </button>
+              <div class="text-[10px] text-outline">Hệ thống tự động nén & mã hóa Base64 siêu nhẹ</div>
+            </div>
+          </div>
+          <input id="edit-prod-image" oninput="updateImagePreview(this.value)" type="text" placeholder="Hoặc dán Link ảnh URL (https://...)" class="w-full px-3 py-1.5 bg-surface-container border border-outline-variant/40 rounded-xl font-mono text-[10px]" />
         </div>
         <div class="p-3 bg-surface-container rounded-xl space-y-2">
           <span class="font-bold text-outline block mb-1">Tùy Chọn Khi Khách Gọi:</span>
@@ -1878,6 +1891,60 @@
     }
 
     // ── MENU & TOPPING CRUD CONTROLLERS ─────────────────────────────────────────
+    function triggerProductImageUpload() {
+      var input = document.getElementById('edit-prod-file');
+      if (input) input.click();
+    }
+
+    function handleProductFileSelect(event) {
+      var file = event.target.files && event.target.files[0];
+      if (!file) return;
+
+      showToast('Đang nén & mã hóa hình ảnh...', 'image');
+      var reader = new FileReader();
+      reader.onload = function(e) {
+        var img = new Image();
+        img.onload = function() {
+          var canvas = document.createElement('canvas');
+          var maxDim = 400;
+          var width = img.width;
+          var height = img.height;
+
+          if (width > height) {
+            if (width > maxDim) {
+              height *= maxDim / width;
+              width = maxDim;
+            }
+          } else {
+            if (height > maxDim) {
+              width *= maxDim / height;
+              height = maxDim;
+            }
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+          var ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, width, height);
+
+          var compressedBase64 = canvas.toDataURL('image/jpeg', 0.85);
+          var imgInput = document.getElementById('edit-prod-image');
+          if (imgInput) imgInput.value = compressedBase64;
+          updateImagePreview(compressedBase64);
+          showToast('Đã tải ảnh lên & mã hóa thành công!', 'check_circle');
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function updateImagePreview(src) {
+      var previewImg = document.getElementById('edit-prod-preview');
+      if (previewImg) {
+        previewImg.src = src || 'data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Crect width=%27100%27 height=%27100%27 fill=%27%23edeeea%27/%3E%3Ctext x=%2750%27 y=%2755%27 font-size=%2730%27 text-anchor=%27middle%27 fill=%27%2372796e%27%3E🍵%3C/text%3E%3C/svg%3E';
+      }
+    }
+
     function openProductEditModal(productId) {
       var titleEl = document.getElementById('modal-prod-title');
       var idInput = document.getElementById('edit-prod-id');
@@ -1900,6 +1967,7 @@
         if (catInput) catInput.value = prod.Category || '';
         if (priceInput) priceInput.value = prod.Price || 0;
         if (imgInput) imgInput.value = prod.Image || '';
+        updateImagePreview(prod.Image || '');
         if (hasSizeBox) hasSizeBox.checked = !!prod.HasSize;
         if (hasIceBox) hasIceBox.checked = !!prod.HasIce;
         if (hasSugarBox) hasSugarBox.checked = !!prod.HasSugar;
@@ -1912,6 +1980,7 @@
         if (catInput) catInput.value = 'Trà Trái Cây';
         if (priceInput) priceInput.value = 28000;
         if (imgInput) imgInput.value = '';
+        updateImagePreview('');
         if (hasSizeBox) hasSizeBox.checked = true;
         if (hasIceBox) hasIceBox.checked = true;
         if (hasSugarBox) hasSugarBox.checked = true;
