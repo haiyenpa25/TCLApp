@@ -830,9 +830,10 @@ function deleteExpense(id) {
 function updateExpense(id, data) {
   return withLock(function() {
     var updates = {};
+    if (data.date            !== undefined) updates.Date            = _extractDateStr(data.date);
     if (data.category        !== undefined) updates.Category        = data.category;
     if (data.description     !== undefined) updates.Description     = data.description;
-    if (data.amount          !== undefined) updates.Amount          = Number(data.amount);
+    if (data.amount          !== undefined) updates.Amount          = _parseCurrency(data.amount);
     if (data.note            !== undefined) updates.Note            = data.note;
     if (data.fundingSource   !== undefined) updates.FundingSource   = data.fundingSource;
     if (data.performedBy     !== undefined) updates.PerformedBy     = data.performedBy;
