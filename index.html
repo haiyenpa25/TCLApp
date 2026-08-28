@@ -1705,6 +1705,48 @@
       });
     }
 
+    
+    // ── INSTANT BOOT & OFFLINE-FIRST CACHE ENGINE (STALE-WHILE-REVALIDATE) ────
+    function loadLocalCache() {
+      try {
+        var cachedStr = localStorage.getItem('TCL_APP_CACHE_V1');
+        if (cachedStr) {
+          var d = JSON.parse(cachedStr);
+          if (d.products && d.products.length > 0) state.products = d.products;
+          if (d.toppings && d.toppings.length > 0) state.toppings = d.toppings;
+          if (d.categories && d.categories.length > 0) state.categories = d.categories;
+          if (d.tables && d.tables.length > 0) state.tables = d.tables;
+          if (d.settings) state.settings = Object.assign({}, state.settings, d.settings);
+          if (d.expenses && d.expenses.length > 0) state.expenses = d.expenses;
+          if (d.customers && d.customers.length > 0) state.customerList = d.customers;
+          if (d.tasks && d.tasks.length > 0) state.tasks = d.tasks;
+          console.log('[CACHE] Loaded instant local cache (' + state.products.length + ' món, ' + state.tables.length + ' bàn). Render 0ms!');
+          return true;
+        }
+      } catch (e) {
+        console.warn('Cache load notice:', e);
+      }
+      return false;
+    }
+
+    function saveLocalCache() {
+      try {
+        var payload = {
+          products: state.products,
+          toppings: state.toppings,
+          categories: state.categories,
+          tables: state.tables,
+          settings: state.settings,
+          expenses: state.expenses.slice(0, 150),
+          customers: state.customerList.slice(0, 150),
+          tasks: state.tasks
+        };
+        localStorage.setItem('TCL_APP_CACHE_V1', JSON.stringify(payload));
+      } catch (e) {
+        console.warn('Cache save notice:', e);
+      }
+    }
+
     async function refreshData(toastFeedback) {
       state.loading = true;
       updateSyncIcon(true);
@@ -1733,6 +1775,7 @@
           state.products.forEach(function(p) { if (p.Category) catSet.add(p.Category); });
           if (catSet.size > 0) state.categories = Array.from(catSet);
 
+          saveLocalCache();
           if (toastFeedback) {
             showToast('Đã đồng bộ ' + state.products.length + ' món & ' + state.expenses.length + ' khoản chi từ Google Sheet!', 'verified');
           }
@@ -3854,9 +3897,10 @@
 
     // ── INITIALIZATION ────────────────────────────────────────────────────────
     document.addEventListener('DOMContentLoaded', function() {
-      console.log('[BOOT] TCLApp Advanced POS & KDS Loaded.');
+      console.log('[BOOT] TCLApp Instant Boot Engine Active.');
+      loadLocalCache(); // 1. T = 0ms: Render ngay lập tức từ Cache LocalStorage
       renderApp();
-      refreshData();
+      refreshData();   // 2. Chạy ngầm đồng bộ với Google Sheets và cập nhật Cache
       setInterval(function() {
         if (state.currentTab === 'kitchen') renderKitchen();
       }, 10000);

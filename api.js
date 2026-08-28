@@ -57,7 +57,8 @@ function getInitialData() {
     var staffRes = getStaff();
     var customersRes = getCustomers();
     var settingsRes = getSettings();
-    var reportRes = getReport('all');
+    // Tối ưu hóa Fast Boot: Báo cáo chi tiết sẽ tải Lazy khi vào tab Báo Cáo
+    var reportRes = { success: true, data: null };
 
     var expList = [];
     if (expensesRes && expensesRes.data) {
