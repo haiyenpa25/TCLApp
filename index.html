@@ -1923,22 +1923,43 @@
       if (state.soundEnabled) playChime();
     }
 
+    var GAS_BACKEND_URL = 'https://script.google.com/macros/s/AKfycbzFimdc1BIExHP6SD4WJA8ilvDhJ8oSvef4HgOZimZG0tjLpJvTz42_A_v4IIHZghwx/exec';
+
     function callGAS(funcName) {
       var args = Array.prototype.slice.call(arguments, 1);
       return new Promise(function(resolve) {
-        if (typeof google === 'undefined' || !google.script || !google.script.run) {
-          console.warn('[Dev / Offline RPC]', funcName, args);
-          resolve({ success: true });
+        if (typeof google !== 'undefined' && google.script && google.script.run) {
+          google.script.run
+            .withSuccessHandler(function(res) { resolve(res); })
+            .withFailureHandler(function(err) {
+              console.error('[GAS Error: ' + funcName + ']', err);
+              showToast('Lỗi: ' + (err.message || err), 'error');
+              resolve({ success: false, error: err.message || String(err) });
+            })
+            [funcName].apply(google.script.run, args);
           return;
         }
-        google.script.run
-          .withSuccessHandler(function(res) { resolve(res); })
-          .withFailureHandler(function(err) {
-            console.error('[GAS Error: ' + funcName + ']', err);
-            showToast('Lỗi: ' + (err.message || err), 'error');
-            resolve({ success: false, error: err.message || String(err) });
-          })
-          [funcName].apply(google.script.run, args);
+
+        // Tự động kết nối Cloud Backend khi chạy trên GitHub Pages (haiyenpa25.github.io/TCLApp) hoặc Localhost
+        fetch(GAS_BACKEND_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({ action: funcName, args: args })
+        })
+        .then(function(res) { return res.json(); })
+        .then(function(json) { resolve(json); })
+        .catch(function(err) {
+          console.warn('[Fetch Warning: ' + funcName + ', trying GET Fallback]', err);
+          var url = GAS_BACKEND_URL + '?action=' + encodeURIComponent(funcName) + '&args=' + encodeURIComponent(JSON.stringify(args));
+          fetch(url)
+            .then(function(r) { return r.json(); })
+            .then(function(j) { resolve(j); })
+            .catch(function(e) {
+              console.error('[Remote API Error: ' + funcName + ']', e);
+              showToast('Lỗi kết nối máy chủ', 'cloud_off');
+              resolve({ success: false, error: e.message || String(e) });
+            });
+        });
       });
     }
 
