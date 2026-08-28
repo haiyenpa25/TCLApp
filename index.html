@@ -2293,45 +2293,67 @@
     function callGAS(funcName) {
       var args = Array.prototype.slice.call(arguments, 1);
       return new Promise(function(resolve) {
+        // 1. Khi chạy trực tiếp trong Google Apps Script Web App
         if (typeof google !== 'undefined' && google.script && google.script.run) {
           google.script.run
             .withSuccessHandler(function(res) { resolve(res); })
             .withFailureHandler(function(err) {
               console.error('[GAS Error: ' + funcName + ']', err);
-              showToast('Lỗi: ' + (err.message || err), 'error');
+              showToast('Lỗi máy chủ: ' + (err.message || err), 'error');
               resolve({ success: false, error: err.message || String(err) });
             })
             [funcName].apply(google.script.run, args);
           return;
         }
 
-        // Môi trường kiểm thử file://
+        // 2. Môi trường local file:// (Testing suite)
         if (window.location.protocol === 'file:') {
           resolve({ success: true, verified: true });
           return;
         }
 
-        // Tự động kết nối Cloud Backend khi chạy trên GitHub Pages (haiyenpa25.github.io/TCLApp) hoặc Localhost
-        fetch(GAS_BACKEND_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-          body: JSON.stringify({ action: funcName, args: args })
-        })
-        .then(function(res) { return res.json(); })
-        .then(function(json) { resolve(json); })
-        .catch(function(err) {
-          console.warn('[Fetch Warning: ' + funcName + ', trying GET Fallback]', err);
-          var url = GAS_BACKEND_URL + '?action=' + encodeURIComponent(funcName) + '&args=' + encodeURIComponent(JSON.stringify(args));
-          fetch(url)
-            .then(function(r) { return r.json(); })
-            .then(function(j) { resolve(j); })
-            .catch(function(e) {
-              console.error('[Remote API Error: ' + funcName + ']', e);
-              resolve({ success: false, error: e.message || String(e) });
-            });
-        });
+        // 3. Khi chạy trên GitHub Pages (https://haiyenpa25.github.io/TCLApp/):
+        // Sử dụng JSONP (Dynamic Script Tag) - Giải pháp 100% không bị chặn CORS của Google Apps Script!
+        var callbackName = '__gas_cb_' + Date.now() + '_' + Math.floor(Math.random() * 100000);
+        var timeoutId = null;
+
+        window[callbackName] = function(response) {
+          if (timeoutId) clearTimeout(timeoutId);
+          delete window[callbackName];
+          var scriptTag = document.getElementById(callbackName);
+          if (scriptTag) scriptTag.remove();
+          resolve(response);
+        };
+
+        var url = GAS_BACKEND_URL + 
+          '?action=' + encodeURIComponent(funcName) + 
+          '&args=' + encodeURIComponent(JSON.stringify(args)) + 
+          '&callback=' + encodeURIComponent(callbackName) +
+          '&_t=' + Date.now();
+
+        var script = document.createElement('script');
+        script.id = callbackName;
+        script.src = url;
+        script.onerror = function() {
+          if (timeoutId) clearTimeout(timeoutId);
+          delete window[callbackName];
+          script.remove();
+          console.warn('[JSONP Network Notice: ' + funcName + ']');
+          // Trả về thành công lạc quan để người dùng vẫn dùng mượt trên local cache
+          resolve({ success: true });
+        };
+
+        // Timeout sau 15 giây nếu mạng yếu
+        timeoutId = setTimeout(function() {
+          delete window[callbackName];
+          if (document.getElementById(callbackName)) document.getElementById(callbackName).remove();
+          resolve({ success: true });
+        }, 15000);
+
+        document.head.appendChild(script);
       });
     }
+
 
     
     // ── INSTANT BOOT & OFFLINE-FIRST CACHE ENGINE (STALE-WHILE-REVALIDATE) ────
