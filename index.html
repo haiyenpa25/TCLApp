@@ -4,16 +4,16 @@
   <base target="_top">
   <meta charset="utf-8" />
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport" />
-  <title>Tiệm Của Lá — Hệ Thống Bán Hàng POS & Quản Lý F&B Toàn Diện</title>
+  <title>Tiệm Của Lá — Organic Vitality F&B POS</title>
 
   <!-- SEO & Meta -->
-  <meta name="description" content="Hệ thống quản lý POS bán hàng, thực đơn menu, sổ quỹ thu chi, chốt ca két tiền, khách hàng CRM và báo cáo tài chính Tiệm Của Lá." />
+  <meta name="description" content="Hệ thống quản lý POS bán hàng, quầy pha chế KDS, sổ quỹ thu chi, chốt ca két tiền và báo cáo tài chính Tiệm Của Lá." />
   <meta name="theme-color" content="#154212" />
 
-  <!-- Google Fonts & Material Symbols -->
+  <!-- Google Fonts: Plus Jakarta Sans & Inter, Material Symbols Outlined -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@600;700;800&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&family=Inter:wght@400;500;600;700&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" rel="stylesheet" />
 
   <!-- Tailwind CSS Engine -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -22,24 +22,36 @@
       theme: {
         extend: {
           colors: {
-            'primary': '#154212',
-            'primary-container': '#2d5a27',
-            'on-primary': '#ffffff',
-            'primary-fixed': '#bcf0ae',
             'surface': '#f8faf5',
-            'surface-container': '#edeeea',
-            'surface-container-low': '#f2f4f0',
+            'surface-cream': '#FDFCF8',
             'surface-container-lowest': '#ffffff',
+            'surface-container-low': '#f2f4f0',
+            'surface-container': '#edeeea',
+            'surface-container-high': '#e7e9e4',
+            'surface-container-highest': '#e1e3df',
             'on-surface': '#191c1a',
             'on-surface-variant': '#42493e',
             'outline': '#72796e',
             'outline-variant': '#c2c9bb',
-            'status-free': '#2e7d32',
-            'status-occupied': '#e65100',
-            'status-reserved': '#0288d1',
-            'status-urgent': '#c62828',
-            'status-preparing': '#f57f17',
-            'error': '#ba1a1a'
+            'primary': '#154212',
+            'primary-container': '#2d5a27',
+            'on-primary': '#ffffff',
+            'on-primary-container': '#9dd090',
+            'primary-fixed': '#bcf0ae',
+            'secondary': '#805533',
+            'secondary-container': '#fdc39a',
+            'on-secondary-container': '#794e2e',
+            'status-free': '#4CAF50',
+            'status-occupied': '#FF9800',
+            'status-reserved': '#2196F3',
+            'status-urgent': '#D32F2F',
+            'status-preparing': '#FFC107',
+            'error': '#ba1a1a',
+            'error-container': '#ffdad6'
+          },
+          fontFamily: {
+            'sans': ['Inter', 'sans-serif'],
+            'display': ['Plus Jakarta Sans', 'sans-serif']
           }
         }
       }
@@ -47,23 +59,14 @@
   </script>
 
   <style>
-    :root {
-      --color-primary: #154212;
-      --color-surface: #f8faf5;
-      --color-surface-container: #edeeea;
-      --color-surface-container-low: #f2f4f0;
-      --color-surface-container-lowest: #ffffff;
-      --color-on-surface: #191c1a;
-      --color-on-surface-variant: #42493e;
-      --color-outline: #72796e;
-      --color-outline-variant: #c2c9bb;
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-    body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: var(--color-surface); color: var(--color-on-surface); line-height: 1.5; min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; }
+    body { font-family: 'Inter', sans-serif; background-color: #f8faf5; color: #191c1a; line-height: 1.5; min-height: 100vh; overflow-x: hidden; }
     .font-display { font-family: 'Plus Jakarta Sans', sans-serif; }
-    ::-webkit-scrollbar { width: 5px; height: 5px; }
-    ::-webkit-scrollbar-track { background: transparent; }
-    ::-webkit-scrollbar-thumb { background: rgba(21, 66, 18, 0.2); border-radius: 9999px; }
+    .hide-scrollbar::-webkit-scrollbar { display: none; }
+    .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
     @keyframes scaleUp { from { opacity: 0; transform: scale(0.96); } to { opacity: 1; transform: scale(1); } }
     @keyframes spinSlow { to { transform: rotate(360deg); } }
@@ -71,10 +74,10 @@
     .animate-scale-up { animation: scaleUp 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
     .animate-spin-slow { animation: spinSlow 1.2s linear infinite; }
     .shadow-soft { box-shadow: 0 4px 20px -2px rgba(21, 66, 18, 0.06); }
-    .shadow-card { box-shadow: 0 2px 12px rgba(21, 66, 18, 0.04); }
+    .shadow-card { box-shadow: 0 2px 8px rgba(21, 66, 18, 0.04); }
     .shadow-float { box-shadow: 0 10px 30px -5px rgba(21, 66, 18, 0.18); }
-    .modal-overlay { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(4px); z-index: 50; display: flex; align-items: center; justify-content: center; padding: 12px; }
-    .modal-container { background: #ffffff; border-radius: 1.5rem; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); border: 1px solid var(--color-outline-variant); max-height: 92vh; display: flex; flex-direction: column; overflow: hidden; width: 100%; }
+    .modal-overlay { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(4px); z-index: 60; display: flex; align-items: center; justify-content: center; padding: 12px; }
+    .modal-container { background: #ffffff; border-radius: 1.5rem; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); border: 1px solid #c2c9bb; max-height: 92vh; display: flex; flex-direction: column; overflow: hidden; width: 100%; }
     #toast-container { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); z-index: 9999; display: flex; flex-direction: column; gap: 8px; pointer-events: none; }
     .toast-item { pointer-events: auto; background: #191c1a; color: #ffffff; padding: 10px 18px; border-radius: 9999px; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); animation: fadeIn 0.2s ease-out forwards; }
     .hidden { display: none !important; }
@@ -86,33 +89,33 @@
   </style>
 </head>
 
-<body class="bg-surface font-body text-on-surface antialiased min-h-screen flex flex-col justify-between select-none">
+<body class="bg-surface font-sans text-on-surface antialiased min-h-screen flex flex-col justify-between select-none">
 
-  <!-- ── 1. STICKY TOP APP BAR ─────────────────────────────────────────────── -->
-  <header class="sticky top-0 z-40 bg-surface-container-lowest/95 backdrop-blur-md border-b border-outline-variant/30 px-4 py-2.5 flex items-center justify-between shadow-soft">
-    <div class="flex items-center gap-3">
-      <div class="w-10 h-10 rounded-2xl bg-primary flex items-center justify-center text-on-primary font-display font-extrabold text-lg shadow-sm">
+  <!-- ── 1. STICKY TOP APP BAR (Organic Vitality Style) ────────────────────── -->
+  <header class="sticky top-0 z-50 bg-surface/90 backdrop-blur-md border-b border-outline-variant px-4 py-2.5 flex items-center justify-between shadow-soft">
+    <div class="flex items-center gap-2.5">
+      <div class="w-9 h-9 rounded-2xl bg-primary flex items-center justify-center text-on-primary font-display font-extrabold text-base shadow-sm">
         🌿
       </div>
       <div>
-        <h1 id="header-shop-name" class="font-display font-extrabold text-base text-on-surface leading-tight">Tiệm Của Lá</h1>
+        <h1 id="header-shop-name" class="font-display font-bold text-base text-primary leading-tight">Tiệm Của Lá</h1>
         <div class="flex items-center gap-1.5 mt-0.5">
           <span class="w-2 h-2 rounded-full bg-status-free animate-pulse"></span>
-          <span id="header-sub-title" class="text-xs font-semibold text-primary">Bán Hàng / Menu</span>
+          <span id="header-sub-title" class="text-[11px] font-semibold text-on-surface-variant">Organic Vitality POS</span>
         </div>
       </div>
     </div>
 
     <div class="flex items-center gap-2">
       <!-- Sound Chime Toggle -->
-      <button onclick="toggleSound()" id="btn-sound-toggle" title="Âm thanh chuông báo đơn" class="w-9 h-9 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant hover:text-primary transition border border-outline-variant/30 shadow-xs">
+      <button onclick="toggleSound()" id="btn-sound-toggle" title="Âm thanh chuông báo đơn" class="w-9 h-9 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant hover:text-primary transition border border-outline-variant/40 shadow-xs">
         <span id="sound-icon" class="material-symbols-outlined text-base">volume_up</span>
       </button>
 
       <!-- Shift Handover Button -->
       <button onclick="openShiftModal()" title="Chốt ca & Bàn giao két tiền" class="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-surface-container hover:bg-surface-container-high transition text-xs font-bold text-on-surface border border-outline-variant/40 shadow-xs">
         <span class="material-symbols-outlined text-sm text-status-occupied">point_of_sale</span>
-        <span>Chốt Ca</span>
+        <span class="hidden sm:inline">Chốt Ca</span>
       </button>
 
       <!-- Table Selector Button -->
@@ -121,80 +124,81 @@
         <span id="header-table-badge">Chọn Bàn</span>
       </button>
 
-      <!-- Refresh Data Button -->
-      <button onclick="refreshData(true)" title="Đồng bộ dữ liệu Google Sheets" class="w-9 h-9 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant hover:text-primary transition border border-outline-variant/30 shadow-xs">
+      <!-- Refresh Sync Button -->
+      <button onclick="refreshData(true)" title="Đồng bộ dữ liệu Google Sheets" class="w-9 h-9 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant hover:text-primary transition border border-outline-variant/40 shadow-xs">
         <span id="sync-icon" class="material-symbols-outlined text-base">sync</span>
       </button>
     </div>
   </header>
 
-  <!-- ── 2. MAIN APP CONTENT CONTAINER ─────────────────────────────────────── -->
+  <!-- ── 2. MAIN APP CONTENT CANVAS ────────────────────────────────────────── -->
   <main class="flex-1 w-full max-w-7xl mx-auto p-4 pb-28 md:pb-8">
 
-    <!-- ── VIEW 1: POS / BÁN HÀNG & MENU ───────────────────────────────────── -->
+    <!-- ── VIEW 1: POS / BÁN HÀNG (Matching docs/pos_mobile/code.html) ───────── -->
     <section id="view-pos" class="space-y-4 animate-fade-in">
-      <div class="flex flex-col md:flex-row gap-3 items-stretch md:items-center justify-between">
+      <!-- Search & Category Header -->
+      <div class="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center justify-between">
         <div class="relative flex-1">
           <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-lg">search</span>
-          <input oninput="onSearchInput(this.value)" type="text" placeholder="Tìm tên món nước, trà, cà phê..." class="w-full pl-9 pr-4 py-2.5 bg-surface-container-lowest border border-outline-variant/40 rounded-2xl text-xs font-medium focus:outline-none focus:border-primary shadow-xs" />
+          <input oninput="onSearchInput(this.value)" type="text" placeholder="Tìm tên món nước, cà phê, trà trái cây..." class="w-full pl-9 pr-4 py-2 bg-surface-container-lowest border border-outline-variant/40 rounded-full text-xs font-medium focus:outline-none focus:border-primary shadow-xs" />
         </div>
-        <div id="pos-categories" class="flex gap-2 overflow-x-auto pb-1 no-scrollbar">
-          <!-- Rendered via JS -->
+        <div id="pos-categories" class="flex gap-2 overflow-x-auto hide-scrollbar snap-x pb-1">
+          <!-- Rendered via JS matching docs/pos_mobile/code.html -->
         </div>
       </div>
 
-      <!-- Products Grid -->
-      <div id="pos-products-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
+      <!-- 2-Column Responsive Product Grid (docs/pos_mobile/code.html style) -->
+      <div id="pos-products-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3.5 sm:gap-4">
         <!-- Rendered via JS -->
       </div>
     </section>
 
-    <!-- ── VIEW 2: KITCHEN KDS ──────────────────────────────────────────────── -->
+    <!-- ── VIEW 2: BẾP PHA CHẾ KDS (Matching docs/b_p_mobile/code.html) ───────── -->
     <section id="view-kitchen" class="hidden space-y-4 animate-fade-in">
-      <div class="flex justify-between items-center bg-surface-container-lowest p-3.5 rounded-2xl border border-outline-variant/30 shadow-card">
+      <header class="flex justify-between items-center bg-surface-container-lowest p-3.5 sm:p-4 rounded-2xl shadow-card border border-outline-variant/30">
         <div>
-          <h2 class="font-display font-bold text-base text-on-surface flex items-center gap-2">
-            <span class="material-symbols-outlined text-primary">soup_kitchen</span>
-            Quầy Pha Chế (Kitchen KDS)
+          <h2 class="font-display font-bold text-base text-primary flex items-center gap-2">
+            <span class="material-symbols-outlined text-primary">countertops</span>
+            Active Orders (Quầy Pha Chế)
           </h2>
-          <p class="text-xs text-outline">Theo dõi thời gian trôi qua và cập nhật trạng thái chế biến tức thì</p>
+          <p class="text-xs text-on-surface-variant">Theo dõi tiến độ chế biến và thời gian thực món nước</p>
         </div>
         <div class="flex items-center gap-2">
-          <button id="kds-filter-active" onclick="setKitchenFilter('ACTIVE')" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-primary text-on-primary shadow-xs">Đang Phục Vụ</button>
-          <button id="kds-filter-history" onclick="setKitchenFilter('HISTORY')" class="px-3 py-1.5 rounded-xl text-xs font-medium bg-surface-container text-on-surface hover:bg-surface-container-high">Lịch Sử Hôm Nay</button>
+          <button id="kds-filter-active" onclick="setKitchenFilter('ACTIVE')" class="px-4 py-1.5 bg-primary text-on-primary rounded-full text-xs font-bold transition-all shadow-sm">Đang Phục Vụ</button>
+          <button id="kds-filter-history" onclick="setKitchenFilter('HISTORY')" class="px-4 py-1.5 bg-surface-container text-on-surface-variant hover:bg-surface-container-high rounded-full text-xs font-medium transition-all">Lịch Sử</button>
         </div>
-      </div>
+      </header>
 
       <div id="kitchen-kanban">
-        <!-- Rendered via JS -->
+        <!-- Rendered via JS with docs/b_p_mobile border-l-4 cards -->
       </div>
     </section>
 
     <!-- ── VIEW 3: EXPENSES & SỔ QUỸ (NÂNG CAO) ─────────────────────────────── -->
     <section id="view-expenses" class="hidden space-y-4 animate-fade-in">
-      <div class="bg-surface-container-lowest rounded-2xl p-4 border border-outline-variant/30 shadow-card space-y-3">
-        <div class="flex flex-col md:flex-row justify-between md:items-center gap-3">
+      <div class="bg-surface-cream rounded-2xl p-4 sm:p-5 border border-outline-variant/30 shadow-card space-y-3">
+        <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-3">
           <div>
             <span class="text-xs font-bold text-outline uppercase tracking-wider">Tổng Chi Phí (Theo Bộ Lọc)</span>
-            <div id="expenses-total-amount" class="font-display font-extrabold text-2xl text-error mt-0.5">0 ₫</div>
-            <span id="expenses-count-summary" class="text-xs text-outline font-medium">0 khoản chi</span>
+            <div id="expenses-total-amount" class="font-display font-extrabold text-2xl sm:text-3xl text-error mt-0.5">0 ₫</div>
+            <span id="expenses-count-summary" class="text-xs text-outline font-medium">0 khoản chi thực tế</span>
           </div>
           <button onclick="openModal('modal-add-expense')" class="px-4 py-2.5 bg-primary text-on-primary rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 shadow-sm hover:bg-primary-container transition">
             <span class="material-symbols-outlined text-sm">add</span> Ghi Khoản Chi Mới
           </button>
         </div>
 
-        <!-- Date Range Filter Chips -->
+        <!-- Filter Chips -->
         <div class="flex flex-wrap items-center gap-2 pt-2 border-t border-outline-variant/20 text-xs">
           <span class="font-bold text-outline mr-1">Thời gian:</span>
-          <button id="exp-filter-today" onclick="setExpensePeriod('today')" class="px-3 py-1.5 rounded-xl font-bold bg-primary text-on-primary shadow-xs">Hôm Nay</button>
-          <button id="exp-filter-yesterday" onclick="setExpensePeriod('yesterday')" class="px-3 py-1.5 rounded-xl font-medium bg-surface-container text-on-surface hover:bg-surface-container-high">Hôm Qua</button>
-          <button id="exp-filter-week" onclick="setExpensePeriod('week')" class="px-3 py-1.5 rounded-xl font-medium bg-surface-container text-on-surface hover:bg-surface-container-high">Tuần Này (7 ngày)</button>
-          <button id="exp-filter-month" onclick="setExpensePeriod('month')" class="px-3 py-1.5 rounded-xl font-medium bg-surface-container text-on-surface hover:bg-surface-container-high">Tháng Này</button>
-          <button id="exp-filter-custom" onclick="setExpensePeriod('custom')" class="px-3 py-1.5 rounded-xl font-medium bg-surface-container text-on-surface hover:bg-surface-container-high">Tùy Chọn</button>
+          <button id="exp-filter-today" onclick="setExpensePeriod('today')" class="px-3.5 py-1.5 rounded-full font-bold bg-primary text-on-primary shadow-xs">Hôm Nay</button>
+          <button id="exp-filter-yesterday" onclick="setExpensePeriod('yesterday')" class="px-3.5 py-1.5 rounded-full font-medium bg-surface-container text-on-surface hover:bg-surface-container-high">Hôm Qua</button>
+          <button id="exp-filter-week" onclick="setExpensePeriod('week')" class="px-3.5 py-1.5 rounded-full font-medium bg-surface-container text-on-surface hover:bg-surface-container-high">Tuần Này (7 ngày)</button>
+          <button id="exp-filter-month" onclick="setExpensePeriod('month')" class="px-3.5 py-1.5 rounded-full font-medium bg-surface-container text-on-surface hover:bg-surface-container-high">Tháng Này</button>
+          <button id="exp-filter-custom" onclick="setExpensePeriod('custom')" class="px-3.5 py-1.5 rounded-full font-medium bg-surface-container text-on-surface hover:bg-surface-container-high">Tùy Chọn</button>
         </div>
 
-        <!-- Custom Date Range Inputs -->
+        <!-- Custom Date Range -->
         <div id="exp-custom-date-container" class="hidden flex flex-wrap items-center gap-2 p-2.5 bg-surface-container-low rounded-xl text-xs">
           <span class="font-semibold text-outline">Từ ngày:</span>
           <input id="exp-custom-from" type="date" onchange="applyExpenseFilter()" class="px-2.5 py-1 bg-surface-container-lowest border border-outline-variant/40 rounded-lg text-xs font-medium" />
@@ -208,9 +212,9 @@
             <span class="font-bold text-outline">Danh mục:</span>
             <select id="exp-filter-category" onchange="applyExpenseFilter()" class="px-2.5 py-1 bg-surface-container border border-outline-variant/40 rounded-lg text-xs font-medium">
               <option value="ALL">Tất Cả Danh Mục</option>
-              <option value="Nguyên liệu">Nguyên liệu (Trà, Sữa, Trái Cây, Đá...)</option>
-              <option value="Bao bì">Bao bì (Ly, Nắp, Túi, Ống Hút...)</option>
-              <option value="Thiết bị">Thiết bị & Dụng cụ quầy</option>
+              <option value="Nguyên liệu">Nguyên liệu</option>
+              <option value="Bao bì">Bao bì</option>
+              <option value="Thiết bị">Thiết bị</option>
               <option value="Điện nước / Internet">Điện nước / Internet</option>
               <option value="Khác">Khác</option>
             </select>
@@ -218,17 +222,17 @@
           <div class="flex items-center gap-1.5">
             <span class="font-bold text-outline">Nguồn tiền:</span>
             <select id="exp-filter-funding" onchange="applyExpenseFilter()" class="px-2.5 py-1 bg-surface-container border border-outline-variant/40 rounded-lg text-xs font-medium">
-              <option value="ALL">Tất Cả Nguồn</option>
-              <option value="Tiền quán">Tiền quán (Từ két quầy)</option>
-              <option value="Tiền cá nhân">Tiền cá nhân (Tự ứng tiền túi)</option>
-              <option value="Tiền mặt">Tiền mặt vãng lai</option>
+              <option value="ALL">Tất Cả Nguồn Tiền</option>
+              <option value="Tiền quán">Tiền quán</option>
+              <option value="Tiền cá nhân">Tiền cá nhân</option>
+              <option value="Tiền mặt">Tiền mặt</option>
             </select>
           </div>
         </div>
       </div>
 
       <!-- Expenses List -->
-      <div class="bg-surface-container-lowest rounded-2xl p-4 border border-outline-variant/30 shadow-card">
+      <div class="bg-surface-cream rounded-2xl p-4 sm:p-5 border border-outline-variant/30 shadow-card">
         <h3 class="font-display font-bold text-sm text-on-surface mb-3 flex items-center gap-2">
           <span class="material-symbols-outlined text-base text-primary">receipt_long</span>
           Danh Sách Các Khoản Chi
@@ -241,14 +245,14 @@
 
     <!-- ── VIEW 4: CRM KHÁCH HÀNG & THÀNH VIÊN ───────────────────────────────── -->
     <section id="view-customers" class="hidden space-y-4 animate-fade-in">
-      <div class="bg-surface-container-lowest rounded-2xl p-4 border border-outline-variant/30 shadow-card space-y-3">
-        <div class="flex flex-col md:flex-row justify-between md:items-center gap-3">
+      <div class="bg-surface-cream rounded-2xl p-4 sm:p-5 border border-outline-variant/30 shadow-card space-y-3">
+        <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-3">
           <div>
-            <h2 class="font-display font-bold text-base text-on-surface flex items-center gap-2">
-              <span class="material-symbols-outlined text-primary">groups</span>
+            <h2 class="font-display font-bold text-base text-primary flex items-center gap-2">
+              <span class="material-symbols-outlined text-primary">group</span>
               Quản Lý Khách Hàng Thân Thiết & Tích Điểm
             </h2>
-            <p class="text-xs text-outline">Tra cứu lịch sử mua hàng, điểm thưởng và chính sách thành viên</p>
+            <p class="text-xs text-on-surface-variant">Tra cứu lịch sử chi tiêu, tích điểm và phân hạng VIP</p>
           </div>
           <button onclick="openCustomerEditModal(null)" class="px-4 py-2.5 bg-primary text-on-primary rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 shadow-sm hover:bg-primary-container transition">
             <span class="material-symbols-outlined text-sm">person_add</span> + Thêm Khách Hàng
@@ -257,20 +261,20 @@
 
         <div class="relative">
           <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-lg">search</span>
-          <input oninput="onCustomerSearchInput(this.value)" type="text" placeholder="Tìm theo tên hoặc số điện thoại khách..." class="w-full pl-9 pr-4 py-2 bg-surface-container border border-outline-variant/40 rounded-xl text-xs font-medium focus:outline-none focus:border-primary" />
+          <input oninput="onCustomerSearchInput(this.value)" type="text" placeholder="Tìm theo tên hoặc số điện thoại khách..." class="w-full pl-9 pr-4 py-2 bg-surface-container-lowest border border-outline-variant/40 rounded-full text-xs font-medium focus:outline-none focus:border-primary" />
         </div>
       </div>
 
-      <div class="bg-surface-container-lowest rounded-2xl p-4 border border-outline-variant/30 shadow-card">
-        <div id="customers-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-          <!-- Rendered via JS -->
+      <div class="bg-surface-cream rounded-2xl p-4 sm:p-5 border border-outline-variant/30 shadow-card">
+        <div id="customers-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5">
+          <!-- Rendered via JS with Loyalty badges & tel links -->
         </div>
       </div>
     </section>
 
-    <!-- ── VIEW 5: TASKS & CHECKLIST ────────────────────────────────────────── -->
+    <!-- ── VIEW 5: TASKS & CHECKLIST (Matching docs/c_ng_vi_c_mobile/code.html) ─ -->
     <section id="view-tasks" class="hidden space-y-4 animate-fade-in">
-      <div class="bg-surface-container-lowest rounded-2xl p-4 border border-outline-variant/30 shadow-card flex justify-between items-center">
+      <div class="bg-surface-cream rounded-2xl p-4 sm:p-5 border border-outline-variant/30 shadow-card flex justify-between items-center">
         <div>
           <span class="text-xs font-bold text-outline uppercase tracking-wider">Tiến Độ Nhiệm Vụ Hôm Nay</span>
           <div id="tasks-completed-count" class="font-display font-extrabold text-2xl text-primary mt-0.5">0 / 0 Việc</div>
@@ -280,31 +284,31 @@
         </button>
       </div>
 
-      <div class="bg-surface-container-lowest rounded-2xl p-4 border border-outline-variant/30 shadow-card">
+      <div class="bg-surface-cream rounded-2xl p-4 sm:p-5 border border-outline-variant/30 shadow-card">
         <h3 class="font-display font-bold text-sm text-on-surface mb-3 flex items-center gap-2">
           <span class="material-symbols-outlined text-base text-primary">checklist</span>
           Danh Sách Công Việc Trong Ca
         </h3>
-        <div id="tasks-list" class="space-y-2">
-          <!-- Rendered via JS -->
+        <div id="tasks-list" class="space-y-3">
+          <!-- Rendered via JS with docs/c_ng_vi_c_mobile card styles -->
         </div>
       </div>
     </section>
 
-    <!-- ── VIEW 6: REPORTS & BI (CHI TIẾT) ──────────────────────────────────── -->
+    <!-- ── VIEW 6: BÁO CÁO BENTO (Matching docs/dashboard_mobile/code.html) ───── -->
     <section id="view-reports" class="hidden space-y-4 animate-fade-in">
-      <div class="bg-surface-container-lowest p-4 rounded-2xl border border-outline-variant/30 shadow-card space-y-3">
-        <div class="flex flex-col md:flex-row justify-between md:items-center gap-2">
-          <h2 class="font-display font-bold text-base text-on-surface flex items-center gap-2">
+      <div class="bg-surface-cream p-4 sm:p-5 rounded-2xl border border-outline-variant/30 shadow-card space-y-3">
+        <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-2">
+          <h2 class="font-display font-bold text-base text-primary flex items-center gap-2">
             <span class="material-symbols-outlined text-primary">analytics</span>
             Báo Cáo Hoạt Động & Tài Chính Chi Tiết
           </h2>
           <div class="flex flex-wrap items-center gap-1.5 text-xs">
-            <button id="rep-filter-today" onclick="setReportPeriod('today')" class="px-3 py-1.5 rounded-xl font-bold bg-primary text-on-primary shadow-xs">Hôm Nay</button>
-            <button id="rep-filter-yesterday" onclick="setReportPeriod('yesterday')" class="px-3 py-1.5 rounded-xl font-medium bg-surface-container text-on-surface hover:bg-surface-container-high">Hôm Qua</button>
-            <button id="rep-filter-week" onclick="setReportPeriod('week')" class="px-3 py-1.5 rounded-xl font-medium bg-surface-container text-on-surface hover:bg-surface-container-high">7 Ngày Qua</button>
-            <button id="rep-filter-month" onclick="setReportPeriod('month')" class="px-3 py-1.5 rounded-xl font-medium bg-surface-container text-on-surface hover:bg-surface-container-high">Tháng Này</button>
-            <button id="rep-filter-custom" onclick="setReportPeriod('custom')" class="px-3 py-1.5 rounded-xl font-medium bg-surface-container text-on-surface hover:bg-surface-container-high">Tùy Chọn</button>
+            <button id="rep-filter-today" onclick="setReportPeriod('today')" class="px-3.5 py-1.5 rounded-full font-bold bg-primary text-on-primary shadow-xs">Hôm Nay</button>
+            <button id="rep-filter-yesterday" onclick="setReportPeriod('yesterday')" class="px-3.5 py-1.5 rounded-full font-medium bg-surface-container text-on-surface hover:bg-surface-container-high">Hôm Qua</button>
+            <button id="rep-filter-week" onclick="setReportPeriod('week')" class="px-3.5 py-1.5 rounded-full font-medium bg-surface-container text-on-surface hover:bg-surface-container-high">7 Ngày Qua</button>
+            <button id="rep-filter-month" onclick="setReportPeriod('month')" class="px-3.5 py-1.5 rounded-full font-medium bg-surface-container text-on-surface hover:bg-surface-container-high">Tháng Này</button>
+            <button id="rep-filter-custom" onclick="setReportPeriod('custom')" class="px-3.5 py-1.5 rounded-full font-medium bg-surface-container text-on-surface hover:bg-surface-container-high">Tùy Chọn</button>
           </div>
         </div>
 
@@ -316,27 +320,43 @@
         </div>
       </div>
 
-      <!-- 4 Financial KPI Metric Cards -->
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
-        <div class="bg-surface-container-lowest p-4 rounded-2xl border border-outline-variant/30 shadow-card">
-          <span class="text-xs font-bold text-outline uppercase tracking-wider">Doanh Thu Thuần</span>
-          <div id="report-revenue" class="font-display font-extrabold text-xl text-primary mt-1">0 ₫</div>
-          <span id="report-orders-badge" class="text-[11px] text-outline font-semibold mt-0.5 block">0 đơn hoàn tất</span>
+      <!-- Bento-style Financial KPI Cards (docs/dashboard_mobile/code.html) -->
+      <div class="grid grid-cols-2 gap-4">
+        <!-- Revenue Card -->
+        <div class="bg-surface-container-lowest p-4 rounded-xl shadow-card border border-outline-variant/20 flex flex-col justify-between gap-1">
+          <div class="flex items-center gap-2 text-on-surface-variant mb-1">
+            <span class="material-symbols-outlined text-primary text-sm">payments</span>
+            <span class="text-xs uppercase font-bold text-outline">Doanh Thu</span>
+          </div>
+          <div id="report-revenue" class="font-display font-extrabold text-xl sm:text-2xl text-on-surface">0 ₫</div>
+          <span id="report-orders-badge" class="text-[11px] text-status-free font-bold flex items-center gap-1">
+            <span class="material-symbols-outlined text-[14px]">trending_up</span> 0 đơn hoàn tất
+          </span>
         </div>
-        <div class="bg-surface-container-lowest p-4 rounded-2xl border border-outline-variant/30 shadow-card">
-          <span class="text-xs font-bold text-outline uppercase tracking-wider">Tổng Chi Phí</span>
-          <div id="report-expenses" class="font-display font-extrabold text-xl text-error mt-1">0 ₫</div>
-          <span id="report-expenses-count" class="text-[11px] text-outline font-semibold mt-0.5 block">0 khoản chi</span>
+
+        <!-- Orders Card -->
+        <div class="bg-surface-container-lowest p-4 rounded-xl shadow-card border border-outline-variant/20 flex flex-col justify-between gap-1">
+          <div class="flex items-center gap-2 text-on-surface-variant mb-1">
+            <span class="material-symbols-outlined text-primary text-sm">receipt_long</span>
+            <span class="text-xs uppercase font-bold text-outline">Chi Phí</span>
+          </div>
+          <div id="report-expenses" class="font-display font-extrabold text-xl sm:text-2xl text-error">0 ₫</div>
+          <span id="report-expenses-count" class="text-[11px] text-outline font-semibold">0 khoản chi</span>
         </div>
-        <div class="bg-surface-container-lowest p-4 rounded-2xl border border-outline-variant/30 shadow-card">
-          <span class="text-xs font-bold text-outline uppercase tracking-wider">Lợi Nhuận Thuần</span>
-          <div id="report-profit" class="font-display font-extrabold text-xl text-status-free mt-1">0 ₫</div>
-          <span id="report-profit-margin" class="text-[11px] text-status-free font-semibold mt-0.5 block">Tỷ suất: 0%</span>
-        </div>
-        <div class="bg-surface-container-lowest p-4 rounded-2xl border border-outline-variant/30 shadow-card">
-          <span class="text-xs font-bold text-outline uppercase tracking-wider">Giá Trị TB / Đơn</span>
-          <div id="report-avg-order" class="font-display font-extrabold text-xl text-on-surface mt-1">0 ₫</div>
-          <span class="text-[11px] text-outline font-semibold mt-0.5 block">AOV (Average Order)</span>
+
+        <!-- Net Profit Full-width Bento Card -->
+        <div class="col-span-2 bg-primary-container p-4 sm:p-5 rounded-2xl shadow-float flex justify-between items-center relative overflow-hidden text-on-primary">
+          <div class="absolute right-[-20%] top-[-50%] w-48 h-48 bg-primary rounded-full opacity-30 blur-xl"></div>
+          <div class="flex flex-col gap-1 z-10">
+            <div class="flex items-center gap-2 text-on-primary-container mb-1">
+              <span class="material-symbols-outlined text-sm">account_balance</span>
+              <span class="text-xs uppercase font-bold tracking-wider">Lợi Nhuận Thuần (Net Profit)</span>
+            </div>
+            <div id="report-profit" class="font-display font-extrabold text-2xl sm:text-3xl text-on-primary">0 ₫</div>
+          </div>
+          <div id="report-profit-margin" class="bg-surface-container-lowest/20 rounded-full px-3.5 py-1.5 backdrop-blur-sm z-10 text-xs font-bold text-on-primary">
+            Tỷ suất: 0%
+          </div>
         </div>
       </div>
 
@@ -358,7 +378,7 @@
             Top Món Nước Bán Chạy Nhất
           </h3>
           <div id="report-top-products" class="space-y-2 text-xs">
-            <!-- Rendered via JS -->
+            <!-- Rendered via JS with 🥇 🥈 🥉 medals -->
           </div>
         </div>
       </div>
@@ -388,44 +408,44 @@
 
     <!-- ── VIEW 7: SETTINGS & MENU QUẢN LÝ ─────────────────────────────────── -->
     <section id="view-settings" class="hidden space-y-4 animate-fade-in">
-      <div class="flex gap-2 overflow-x-auto pb-1 border-b border-outline-variant/30 text-xs font-bold">
-        <button id="set-subtab-store" onclick="setSettingsSubTab('store')" class="px-4 py-2 rounded-xl bg-primary text-on-primary shadow-xs">Cấu Hình Quán & VietQR</button>
-        <button id="set-subtab-menu" onclick="setSettingsSubTab('menu')" class="px-4 py-2 rounded-xl bg-surface-container text-on-surface hover:bg-surface-container-high">Quản Lý Món Nước</button>
-        <button id="set-subtab-topping" onclick="setSettingsSubTab('topping')" class="px-4 py-2 rounded-xl bg-surface-container text-on-surface hover:bg-surface-container-high">Quản Lý Topping</button>
-        <button id="set-subtab-tables" onclick="setSettingsSubTab('tables')" class="px-4 py-2 rounded-xl bg-surface-container text-on-surface hover:bg-surface-container-high">Sơ Đồ Bàn</button>
+      <div class="flex gap-2 overflow-x-auto hide-scrollbar pb-1 border-b border-outline-variant/30 text-xs font-bold">
+        <button id="set-subtab-store" onclick="setSettingsSubTab('store')" class="px-4 py-2 rounded-full bg-primary text-on-primary shadow-xs">Cấu Hình Quán & VietQR</button>
+        <button id="set-subtab-menu" onclick="setSettingsSubTab('menu')" class="px-4 py-2 rounded-full bg-surface-container text-on-surface hover:bg-surface-container-high">Quản Lý Món Nước</button>
+        <button id="set-subtab-topping" onclick="setSettingsSubTab('topping')" class="px-4 py-2 rounded-full bg-surface-container text-on-surface hover:bg-surface-container-high">Quản Lý Topping</button>
+        <button id="set-subtab-tables" onclick="setSettingsSubTab('tables')" class="px-4 py-2 rounded-full bg-surface-container text-on-surface hover:bg-surface-container-high">Sơ Đồ Bàn</button>
       </div>
 
       <!-- SUB-PANEL 1: Store Info & VietQR -->
       <div id="settings-panel-store" class="space-y-4">
-        <div class="bg-surface-container-lowest rounded-2xl p-5 border border-outline-variant/30 shadow-card space-y-4">
-          <h3 class="font-display font-bold text-base text-on-surface flex items-center gap-2">
+        <div class="bg-surface-cream rounded-2xl p-5 border border-outline-variant/30 shadow-card space-y-4">
+          <h3 class="font-display font-bold text-base text-primary flex items-center gap-2">
             <span class="material-symbols-outlined text-primary">storefront</span>
             Thông Tin Quán & Cấu Hình Nhận Tiền VietQR
           </h3>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
             <div>
               <label class="font-bold text-outline block mb-1">Tên Quán</label>
-              <input id="settings-shop-name" type="text" class="w-full px-3 py-2 bg-surface-container border border-outline-variant/40 rounded-xl font-medium" />
+              <input id="settings-shop-name" type="text" class="w-full px-3 py-2 bg-surface-container-lowest border border-outline-variant/40 rounded-xl font-medium" />
             </div>
             <div>
               <label class="font-bold text-outline block mb-1">Khẩu Hiệu / Slogan</label>
-              <input id="settings-slogan" type="text" class="w-full px-3 py-2 bg-surface-container border border-outline-variant/40 rounded-xl font-medium" />
+              <input id="settings-slogan" type="text" class="w-full px-3 py-2 bg-surface-container-lowest border border-outline-variant/40 rounded-xl font-medium" />
             </div>
             <div>
               <label class="font-bold text-outline block mb-1">Số Điện Thoại Hotline</label>
-              <input id="settings-phone" type="text" class="w-full px-3 py-2 bg-surface-container border border-outline-variant/40 rounded-xl font-medium" />
+              <input id="settings-phone" type="text" class="w-full px-3 py-2 bg-surface-container-lowest border border-outline-variant/40 rounded-xl font-medium" />
             </div>
             <div>
               <label class="font-bold text-outline block mb-1">Mã Ngân Hàng (NAPAS Bank ID)</label>
-              <input id="settings-bank-id" type="text" placeholder="970436 (Vietcombank)" class="w-full px-3 py-2 bg-surface-container border border-outline-variant/40 rounded-xl font-medium" />
+              <input id="settings-bank-id" type="text" placeholder="970436 (Vietcombank)" class="w-full px-3 py-2 bg-surface-container-lowest border border-outline-variant/40 rounded-xl font-medium" />
             </div>
             <div>
               <label class="font-bold text-outline block mb-1">Số Tài Khoản Nhận Tiền</label>
-              <input id="settings-account-no" type="text" class="w-full px-3 py-2 bg-surface-container border border-outline-variant/40 rounded-xl font-medium" />
+              <input id="settings-account-no" type="text" class="w-full px-3 py-2 bg-surface-container-lowest border border-outline-variant/40 rounded-xl font-medium" />
             </div>
             <div>
               <label class="font-bold text-outline block mb-1">Tên Chủ Tài Khoản</label>
-              <input id="settings-account-name" type="text" class="w-full px-3 py-2 bg-surface-container border border-outline-variant/40 rounded-xl font-medium" />
+              <input id="settings-account-name" type="text" class="w-full px-3 py-2 bg-surface-container-lowest border border-outline-variant/40 rounded-xl font-medium" />
             </div>
           </div>
           <button onclick="saveSettingsForm()" class="px-5 py-2.5 bg-primary text-on-primary rounded-xl text-xs font-bold shadow-sm hover:bg-primary-container transition">
@@ -436,14 +456,14 @@
 
       <!-- SUB-PANEL 2: Menu Products CRUD -->
       <div id="settings-panel-menu" class="hidden space-y-4">
-        <div class="bg-surface-container-lowest rounded-2xl p-5 border border-outline-variant/30 shadow-card space-y-4">
+        <div class="bg-surface-cream rounded-2xl p-5 border border-outline-variant/30 shadow-card space-y-4">
           <div class="flex justify-between items-center">
             <div>
-              <h3 class="font-display font-bold text-base text-on-surface flex items-center gap-2">
+              <h3 class="font-display font-bold text-base text-primary flex items-center gap-2">
                 <span class="material-symbols-outlined text-primary">local_cafe</span>
                 Danh Mục Thực Đơn Món Nước
               </h3>
-              <p class="text-xs text-outline">Thêm mới, sửa giá, đổi ảnh hoặc tạm ngưng bán món</p>
+              <p class="text-xs text-outline">Thêm mới, sửa giá, tải ảnh trực tiếp hoặc tạm ngưng bán</p>
             </div>
             <button onclick="openProductEditModal(null)" class="px-4 py-2.5 bg-primary text-on-primary rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-sm hover:bg-primary-container transition">
               <span class="material-symbols-outlined text-sm">add</span> + Thêm Món Mới
@@ -458,10 +478,10 @@
 
       <!-- SUB-PANEL 3: Topping CRUD -->
       <div id="settings-panel-topping" class="hidden space-y-4">
-        <div class="bg-surface-container-lowest rounded-2xl p-5 border border-outline-variant/30 shadow-card space-y-4">
+        <div class="bg-surface-cream rounded-2xl p-5 border border-outline-variant/30 shadow-card space-y-4">
           <div class="flex justify-between items-center">
             <div>
-              <h3 class="font-display font-bold text-base text-on-surface flex items-center gap-2">
+              <h3 class="font-display font-bold text-base text-primary flex items-center gap-2">
                 <span class="material-symbols-outlined text-primary">icecream</span>
                 Danh Sách Topping Thêm
               </h3>
@@ -480,8 +500,8 @@
 
       <!-- SUB-PANEL 4: Tables Management -->
       <div id="settings-panel-tables" class="hidden space-y-4">
-        <div class="bg-surface-container-lowest rounded-2xl p-5 border border-outline-variant/30 shadow-card space-y-4">
-          <h3 class="font-display font-bold text-base text-on-surface flex items-center gap-2">
+        <div class="bg-surface-cream rounded-2xl p-5 border border-outline-variant/30 shadow-card space-y-4">
+          <h3 class="font-display font-bold text-base text-primary flex items-center gap-2">
             <span class="material-symbols-outlined text-primary">table_restaurant</span>
             Danh Sách Sơ Đồ Bàn
           </h3>
@@ -493,52 +513,47 @@
     </section>
   </main>
 
-  <!-- ── 3. FLOATING BOTTOM CART BAR ───────────────────────────────────────── -->
-  <div id="floating-cart-btn" class="hidden fixed bottom-20 left-4 right-4 z-30 max-w-lg mx-auto">
-    <button onclick="openModal('drawer-cart')" class="w-full bg-primary text-on-primary p-3.5 rounded-2xl shadow-float flex items-center justify-between animate-scale-up hover:bg-primary-container transition border border-primary-fixed/20">
+  <!-- ── 3. FLOATING ACTION BOTTOM CART BAR (Matching docs/pos_mobile/code.html) ── -->
+  <div id="floating-cart-btn" class="hidden fixed bottom-16 left-0 right-0 p-4 bg-gradient-to-t from-surface via-surface/90 to-transparent z-40 max-w-lg mx-auto">
+    <button onclick="openModal('drawer-cart')" class="w-full bg-primary text-on-primary rounded-2xl p-3.5 shadow-float flex items-center justify-between active:scale-[0.98] transition-transform">
       <div class="flex items-center gap-3">
-        <div class="w-9 h-9 rounded-xl bg-white/20 flex items-center justify-center">
-          <span class="material-symbols-outlined text-lg">shopping_cart</span>
+        <div class="relative w-8 h-8 rounded-full bg-white/20 flex items-center justify-center">
+          <span class="material-symbols-outlined text-xl">shopping_cart</span>
+          <span id="cart-count-badge" class="absolute -top-1 -right-1 bg-error text-on-error w-4 h-4 rounded-full flex items-center justify-center font-bold text-[9px]">0</span>
         </div>
-        <div class="text-left">
-          <div id="cart-count-badge" class="text-xs font-bold uppercase tracking-wider text-primary-fixed">0 món</div>
-          <div id="cart-total-badge" class="font-display font-extrabold text-base">0 ₫</div>
-        </div>
+        <span class="font-display font-bold text-sm text-on-primary">Xem Đơn Hàng</span>
       </div>
-      <div class="flex items-center gap-1 font-bold text-xs bg-white/20 px-3 py-1.5 rounded-xl">
-        <span>Xem Đơn</span>
-        <span class="material-symbols-outlined text-sm">arrow_forward</span>
-      </div>
+      <span id="cart-total-badge" class="font-display font-bold text-base text-on-primary">0 ₫</span>
     </button>
   </div>
 
   <!-- ── 4. BOTTOM NAVIGATION BAR (7 PHÂN HỆ) ──────────────────────────────── -->
-  <nav data-bottom-nav class="fixed bottom-0 left-0 right-0 z-40 bg-surface-container-lowest/95 backdrop-blur-lg border-t border-outline-variant/30 flex items-center justify-around px-2 py-1 shadow-soft">
-    <button data-tab="pos" onclick="setTab('pos')" class="flex-1 flex flex-col items-center justify-center py-2 text-primary font-bold transition">
+  <nav data-bottom-nav class="fixed bottom-0 left-0 right-0 z-50 bg-surface/95 backdrop-blur-lg border-t border-outline-variant flex items-center justify-around px-2 py-1 shadow-soft">
+    <button data-tab="pos" onclick="setTab('pos')" class="flex-1 flex flex-col items-center justify-center py-1.5 text-primary font-bold transition">
       <span class="material-symbols-outlined text-xl">point_of_sale</span>
       <span class="text-[10px] mt-0.5">Bán Hàng</span>
     </button>
-    <button data-tab="kitchen" onclick="setTab('kitchen')" class="flex-1 flex flex-col items-center justify-center py-2 text-on-surface-variant font-medium opacity-70 hover:opacity-100 transition">
-      <span class="material-symbols-outlined text-xl">soup_kitchen</span>
+    <button data-tab="kitchen" onclick="setTab('kitchen')" class="flex-1 flex flex-col items-center justify-center py-1.5 text-on-surface-variant font-medium opacity-70 hover:opacity-100 transition">
+      <span class="material-symbols-outlined text-xl">countertops</span>
       <span class="text-[10px] mt-0.5">Bếp KDS</span>
     </button>
-    <button data-tab="expenses" onclick="setTab('expenses')" class="flex-1 flex flex-col items-center justify-center py-2 text-on-surface-variant font-medium opacity-70 hover:opacity-100 transition">
+    <button data-tab="expenses" onclick="setTab('expenses')" class="flex-1 flex flex-col items-center justify-center py-1.5 text-on-surface-variant font-medium opacity-70 hover:opacity-100 transition">
       <span class="material-symbols-outlined text-xl">receipt_long</span>
       <span class="text-[10px] mt-0.5">Sổ Quỹ</span>
     </button>
-    <button data-tab="customers" onclick="setTab('customers')" class="flex-1 flex flex-col items-center justify-center py-2 text-on-surface-variant font-medium opacity-70 hover:opacity-100 transition">
-      <span class="material-symbols-outlined text-xl">groups</span>
+    <button data-tab="customers" onclick="setTab('customers')" class="flex-1 flex flex-col items-center justify-center py-1.5 text-on-surface-variant font-medium opacity-70 hover:opacity-100 transition">
+      <span class="material-symbols-outlined text-xl">group</span>
       <span class="text-[10px] mt-0.5">Khách Hàng</span>
     </button>
-    <button data-tab="tasks" onclick="setTab('tasks')" class="flex-1 flex flex-col items-center justify-center py-2 text-on-surface-variant font-medium opacity-70 hover:opacity-100 transition">
-      <span class="material-symbols-outlined text-xl">task_alt</span>
+    <button data-tab="tasks" onclick="setTab('tasks')" class="flex-1 flex flex-col items-center justify-center py-1.5 text-on-surface-variant font-medium opacity-70 hover:opacity-100 transition">
+      <span class="material-symbols-outlined text-xl">assignment</span>
       <span class="text-[10px] mt-0.5">Nhiệm Vụ</span>
     </button>
-    <button data-tab="reports" onclick="setTab('reports')" class="flex-1 flex flex-col items-center justify-center py-2 text-on-surface-variant font-medium opacity-70 hover:opacity-100 transition">
-      <span class="material-symbols-outlined text-xl">bar_chart</span>
+    <button data-tab="reports" onclick="setTab('reports')" class="flex-1 flex flex-col items-center justify-center py-1.5 text-on-surface-variant font-medium opacity-70 hover:opacity-100 transition">
+      <span class="material-symbols-outlined text-xl">dashboard</span>
       <span class="text-[10px] mt-0.5">Báo Cáo</span>
     </button>
-    <button data-tab="settings" onclick="setTab('settings')" class="flex-1 flex flex-col items-center justify-center py-2 text-on-surface-variant font-medium opacity-70 hover:opacity-100 transition">
+    <button data-tab="settings" onclick="setTab('settings')" class="flex-1 flex flex-col items-center justify-center py-1.5 text-on-surface-variant font-medium opacity-70 hover:opacity-100 transition">
       <span class="material-symbols-outlined text-xl">settings</span>
       <span class="text-[10px] mt-0.5">Cài Đặt</span>
     </button>
@@ -551,7 +566,7 @@
     <div class="modal-container max-w-md animate-scale-up">
       <div class="p-4 border-b border-outline-variant/30 flex justify-between items-center">
         <div>
-          <h3 id="custom-prod-name" class="font-display font-bold text-base text-on-surface">Tên Món</h3>
+          <h3 id="custom-prod-name" class="font-display font-bold text-base text-primary">Tên Món</h3>
           <span id="custom-prod-price" class="font-display font-bold text-sm text-primary">0 ₫</span>
         </div>
         <button onclick="closeModal('modal-custom-product')" class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center text-outline hover:text-on-surface"><span class="material-symbols-outlined text-base">close</span></button>
@@ -622,7 +637,7 @@
     <div class="modal-container max-w-lg animate-scale-up">
       <div class="p-4 border-b border-outline-variant/30 flex justify-between items-center">
         <div>
-          <h3 class="font-display font-bold text-base text-on-surface flex items-center gap-2">
+          <h3 class="font-display font-bold text-base text-primary flex items-center gap-2">
             <span class="material-symbols-outlined text-primary">shopping_bag</span>
             Giỏ Hàng & Xác Nhận Đơn
           </h3>
@@ -638,7 +653,7 @@
         </div>
 
         <!-- Customer Phone & Member Loyalty Points -->
-        <div class="p-3 bg-surface-container rounded-xl border border-outline-variant/30 space-y-2 text-xs">
+        <div class="p-3 bg-surface-cream rounded-xl border border-outline-variant/30 space-y-2 text-xs">
           <div class="flex items-center justify-between">
             <span class="font-bold text-on-surface flex items-center gap-1"><span class="material-symbols-outlined text-sm text-primary">card_membership</span> Khách Hàng / Tích Điểm</span>
             <span id="cart-member-points-badge" class="text-[11px] font-bold text-primary">0 điểm</span>
@@ -654,7 +669,7 @@
 
         <!-- Note -->
         <div class="text-xs">
-          <input oninput="state.orderNote=this.value" type="text" placeholder="Ghi chú đơn (VD: mang về gấp, ly giấy...)" class="w-full px-3 py-2 bg-surface-container border border-outline-variant/30 rounded-xl" />
+          <input oninput="state.orderNote=this.value" type="text" placeholder="Ghi chú đơn (VD: mang về gấp, ly giấy...)" class="w-full px-3 py-2 bg-surface-container-lowest border border-outline-variant/40 rounded-xl" />
         </div>
       </div>
 
@@ -685,7 +700,7 @@
   <div id="modal-table-selector" class="modal-overlay hidden">
     <div class="modal-container max-w-md animate-scale-up">
       <div class="p-4 border-b border-outline-variant/30 flex justify-between items-center">
-        <h3 class="font-display font-bold text-base text-on-surface">Chọn Bàn Ngồi</h3>
+        <h3 class="font-display font-bold text-base text-primary">Chọn Bàn Ngồi</h3>
         <button onclick="closeModal('modal-table-selector')" class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center text-outline"><span class="material-symbols-outlined text-base">close</span></button>
       </div>
       <div id="table-selector-grid" class="p-4 grid grid-cols-2 gap-2.5 overflow-y-auto max-h-[60vh]">
@@ -699,7 +714,7 @@
     <div class="modal-container max-w-md animate-scale-up">
       <div class="p-4 border-b border-outline-variant/30 flex justify-between items-center">
         <div>
-          <h3 class="font-display font-bold text-base text-on-surface flex items-center gap-1.5">
+          <h3 class="font-display font-bold text-base text-primary flex items-center gap-1.5">
             <span class="material-symbols-outlined text-status-occupied">point_of_sale</span>
             Chốt Ca Bán & Kiểm Két Tiền
           </h3>
@@ -711,10 +726,10 @@
       <div class="p-4 space-y-3 overflow-y-auto max-h-[60vh] text-xs">
         <div>
           <label class="font-bold text-outline block mb-1">Tiền Lẻ Ban Đầu Trong Két (VNĐ)</label>
-          <input id="shift-opening-cash" oninput="calculateShiftVariance()" type="number" value="500000" class="w-full px-3 py-2 bg-surface-container border border-outline-variant/40 rounded-xl font-bold text-sm" />
+          <input id="shift-opening-cash" oninput="calculateShiftVariance()" type="number" value="500000" class="w-full px-3 py-2 bg-surface-container-lowest border border-outline-variant/40 rounded-xl font-bold text-sm" />
         </div>
 
-        <div class="p-3 bg-surface-container rounded-xl space-y-1.5">
+        <div class="p-3 bg-surface-cream rounded-xl space-y-1.5 border border-outline-variant/30">
           <div class="flex justify-between"><span>+ Doanh thu Tiền Mặt trong ca:</span><span id="shift-cash-in" class="font-mono font-bold text-primary">0 ₫</span></div>
           <div class="flex justify-between"><span>+ Doanh thu Chuyển Khoản VietQR:</span><span id="shift-transfer-in" class="font-mono font-bold text-primary">0 ₫</span></div>
           <div class="flex justify-between"><span>- Tiền Mặt chi từ két quán:</span><span id="shift-cash-out" class="font-mono font-bold text-error">0 ₫</span></div>
@@ -729,7 +744,7 @@
           <input id="shift-actual-cash" oninput="calculateShiftVariance()" type="number" placeholder="Nhập số tiền thực tế trong két..." class="w-full px-3 py-2 bg-surface-container-lowest border border-primary rounded-xl font-bold text-base text-primary" />
         </div>
 
-        <div class="p-3 bg-surface-container rounded-xl flex justify-between items-center font-bold">
+        <div class="p-3 bg-surface-cream rounded-xl flex justify-between items-center font-bold border border-outline-variant/30">
           <span>Chênh Lệch Tiền Mặt:</span>
           <span id="shift-variance-badge" class="font-display font-extrabold text-base text-status-free">0 ₫ (Khớp)</span>
         </div>
@@ -751,7 +766,7 @@
     <div class="modal-container max-w-md animate-scale-up">
       <div class="p-4 border-b border-outline-variant/30 flex justify-between items-center">
         <div>
-          <h3 class="font-display font-bold text-base text-on-surface">Thanh Toán Đơn Hàng</h3>
+          <h3 class="font-display font-bold text-base text-primary">Thanh Toán Đơn Hàng</h3>
           <span id="checkout-order-id" class="font-mono text-xs text-primary font-bold">#0000</span>
         </div>
         <button onclick="closeModal('modal-checkout')" class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center text-outline"><span class="material-symbols-outlined text-base">close</span></button>
@@ -773,15 +788,15 @@
         <div id="checkout-cash-section" class="hidden space-y-3 py-2">
           <div>
             <label class="font-bold text-outline block mb-1">Tiền Khách Đưa (VNĐ)</label>
-            <input id="checkout-cash-input" oninput="onCashInput(this.value)" type="number" class="w-full px-3 py-2 bg-surface-container border border-outline-variant/40 rounded-xl font-bold text-base" />
+            <input id="checkout-cash-input" oninput="onCashInput(this.value)" type="number" class="w-full px-3 py-2 bg-surface-container-lowest border border-outline-variant/40 rounded-xl font-bold text-base" />
           </div>
-          <div class="p-3 bg-surface-container rounded-xl flex justify-between items-center font-bold">
+          <div class="p-3 bg-surface-cream rounded-xl flex justify-between items-center font-bold border border-outline-variant/30">
             <span>Tiền Thừa Trả Khách:</span>
             <span id="checkout-cash-change" class="font-display font-extrabold text-base text-status-free">0 ₫</span>
           </div>
         </div>
 
-        <div class="p-3 bg-surface-container rounded-xl flex justify-between items-center font-bold">
+        <div class="p-3 bg-surface-cream rounded-xl flex justify-between items-center font-bold border border-outline-variant/30">
           <span>Tổng Thanh Toán:</span>
           <span id="checkout-order-total" class="font-display font-extrabold text-lg text-primary">0 ₫</span>
         </div>
@@ -802,7 +817,7 @@
   <div id="modal-receipt" class="modal-overlay hidden">
     <div class="modal-container max-w-sm animate-scale-up">
       <div class="p-4 border-b border-outline-variant/30 flex justify-between items-center">
-        <h3 class="font-display font-bold text-base text-on-surface">Hóa Đơn Thanh Toán</h3>
+        <h3 class="font-display font-bold text-base text-primary">Hóa Đơn Thanh Toán</h3>
         <button onclick="closeModal('modal-receipt')" class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center text-outline"><span class="material-symbols-outlined text-base">close</span></button>
       </div>
 
@@ -846,29 +861,29 @@
   <div id="modal-add-expense" class="modal-overlay hidden">
     <div class="modal-container max-w-md animate-scale-up">
       <div class="p-4 border-b border-outline-variant/30 flex justify-between items-center">
-        <h3 class="font-display font-bold text-base text-on-surface">Ghi Khoản Chi Mới</h3>
+        <h3 class="font-display font-bold text-base text-primary">Ghi Khoản Chi Mới</h3>
         <button onclick="closeModal('modal-add-expense')" class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center text-outline"><span class="material-symbols-outlined text-base">close</span></button>
       </div>
       <div class="p-4 space-y-3 text-xs">
         <div>
           <label class="font-bold text-outline block mb-1">Nội Dung Chi</label>
-          <input id="expense-desc" type="text" placeholder="VD: Mua sữa đặc, đá viên, túi nilon..." class="w-full px-3 py-2 bg-surface-container border border-outline-variant/40 rounded-xl font-medium" />
+          <input id="expense-desc" type="text" placeholder="VD: Mua sữa đặc, đá viên, túi nilon..." class="w-full px-3 py-2 bg-surface-container-lowest border border-outline-variant/40 rounded-xl font-medium" />
         </div>
         <div>
           <label class="font-bold text-outline block mb-1">Số Tiền (VNĐ)</label>
-          <input id="expense-amount" type="number" placeholder="50000" class="w-full px-3 py-2 bg-surface-container border border-outline-variant/40 rounded-xl font-bold text-sm" />
+          <input id="expense-amount" type="number" placeholder="50000" class="w-full px-3 py-2 bg-surface-container-lowest border border-outline-variant/40 rounded-xl font-bold text-sm" />
           <div class="flex gap-1.5 mt-1.5 flex-wrap">
-            <button onclick="setExpQuickAmount(20000)" class="px-2 py-0.5 rounded bg-surface-container-low hover:bg-surface-container text-[11px] font-semibold">+20k</button>
-            <button onclick="setExpQuickAmount(50000)" class="px-2 py-0.5 rounded bg-surface-container-low hover:bg-surface-container text-[11px] font-semibold">+50k</button>
-            <button onclick="setExpQuickAmount(100000)" class="px-2 py-0.5 rounded bg-surface-container-low hover:bg-surface-container text-[11px] font-semibold">+100k</button>
-            <button onclick="setExpQuickAmount(200000)" class="px-2 py-0.5 rounded bg-surface-container-low hover:bg-surface-container text-[11px] font-semibold">+200k</button>
-            <button onclick="setExpQuickAmount(500000)" class="px-2 py-0.5 rounded bg-surface-container-low hover:bg-surface-container text-[11px] font-semibold">+500k</button>
+            <button onclick="setExpQuickAmount(20000)" class="px-2.5 py-0.5 rounded-full bg-surface-container hover:bg-surface-container-high text-[11px] font-semibold">+20k</button>
+            <button onclick="setExpQuickAmount(50000)" class="px-2.5 py-0.5 rounded-full bg-surface-container hover:bg-surface-container-high text-[11px] font-semibold">+50k</button>
+            <button onclick="setExpQuickAmount(100000)" class="px-2.5 py-0.5 rounded-full bg-surface-container hover:bg-surface-container-high text-[11px] font-semibold">+100k</button>
+            <button onclick="setExpQuickAmount(200000)" class="px-2.5 py-0.5 rounded-full bg-surface-container hover:bg-surface-container-high text-[11px] font-semibold">+200k</button>
+            <button onclick="setExpQuickAmount(500000)" class="px-2.5 py-0.5 rounded-full bg-surface-container hover:bg-surface-container-high text-[11px] font-semibold">+500k</button>
           </div>
         </div>
         <div class="grid grid-cols-2 gap-2">
           <div>
             <label class="font-bold text-outline block mb-1">Người Chi</label>
-            <select id="expense-performed-by" class="w-full px-3 py-2 bg-surface-container border border-outline-variant/40 rounded-xl font-medium">
+            <select id="expense-performed-by" class="w-full px-3 py-2 bg-surface-container-lowest border border-outline-variant/40 rounded-xl font-medium">
               <option value="Trí">Trí</option>
               <option value="Yến">Yến</option>
               <option value="Dinh">Dinh</option>
@@ -879,7 +894,7 @@
           </div>
           <div>
             <label class="font-bold text-outline block mb-1">Hình Thức Chi</label>
-            <select id="expense-payment-method" class="w-full px-3 py-2 bg-surface-container border border-outline-variant/40 rounded-xl font-medium">
+            <select id="expense-payment-method" class="w-full px-3 py-2 bg-surface-container-lowest border border-outline-variant/40 rounded-xl font-medium">
               <option value="Tiền mặt">Tiền mặt</option>
               <option value="Chuyển khoản">Chuyển khoản</option>
             </select>
@@ -888,19 +903,19 @@
         <div class="grid grid-cols-2 gap-2">
           <div>
             <label class="font-bold text-outline block mb-1">Danh Mục Chi</label>
-            <select id="expense-category" class="w-full px-3 py-2 bg-surface-container border border-outline-variant/40 rounded-xl font-medium">
-              <option value="Nguyên liệu">Nguyên liệu (Trà, Sữa, Trái Cây, Đá...)</option>
-              <option value="Bao bì">Bao bì (Ly, Nắp, Túi, Ống Hút...)</option>
-              <option value="Thiết bị">Thiết bị & Dụng cụ quầy</option>
+            <select id="expense-category" class="w-full px-3 py-2 bg-surface-container-lowest border border-outline-variant/40 rounded-xl font-medium">
+              <option value="Nguyên liệu">Nguyên liệu</option>
+              <option value="Bao bì">Bao bì</option>
+              <option value="Thiết bị">Thiết bị</option>
               <option value="Điện nước / Internet">Điện nước / Internet</option>
               <option value="Khác">Khác</option>
             </select>
           </div>
           <div>
             <label class="font-bold text-outline block mb-1">Nguồn Tiền</label>
-            <select id="expense-funding" class="w-full px-3 py-2 bg-surface-container border border-outline-variant/40 rounded-xl font-medium">
-              <option value="Tiền quán">Tiền quán (Từ két quầy)</option>
-              <option value="Tiền cá nhân">Tiền cá nhân (Tự ứng tiền túi)</option>
+            <select id="expense-funding" class="w-full px-3 py-2 bg-surface-container-lowest border border-outline-variant/40 rounded-xl font-medium">
+              <option value="Tiền quán">Tiền quán (Két)</option>
+              <option value="Tiền cá nhân">Tiền cá nhân (Ứng)</option>
               <option value="Tiền mặt">Tiền mặt vãng lai</option>
             </select>
           </div>
@@ -916,23 +931,23 @@
   <div id="modal-edit-customer" class="modal-overlay hidden">
     <div class="modal-container max-w-md animate-scale-up">
       <div class="p-4 border-b border-outline-variant/30 flex justify-between items-center">
-        <h3 id="modal-cus-title" class="font-display font-bold text-base text-on-surface">Thêm Khách Hàng Mới</h3>
+        <h3 id="modal-cus-title" class="font-display font-bold text-base text-primary">Thêm Khách Hàng Mới</h3>
         <button onclick="closeModal('modal-edit-customer')" class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center text-outline"><span class="material-symbols-outlined text-base">close</span></button>
       </div>
       <div class="p-4 space-y-3 text-xs">
         <input id="edit-cus-id" type="hidden" />
         <div>
           <label class="font-bold text-outline block mb-1">Tên Khách Hàng</label>
-          <input id="edit-cus-name" type="text" placeholder="VD: Anh Hiếu, Chị Phương..." class="w-full px-3 py-2 bg-surface-container border border-outline-variant/40 rounded-xl font-medium" />
+          <input id="edit-cus-name" type="text" placeholder="VD: Anh Hiếu, Chị Phương..." class="w-full px-3 py-2 bg-surface-container-lowest border border-outline-variant/40 rounded-xl font-medium" />
         </div>
         <div class="grid grid-cols-2 gap-2">
           <div>
             <label class="font-bold text-outline block mb-1">Số Điện Thoại</label>
-            <input id="edit-cus-phone" type="tel" placeholder="0901234567" class="w-full px-3 py-2 bg-surface-container border border-outline-variant/40 rounded-xl font-medium" />
+            <input id="edit-cus-phone" type="tel" placeholder="0901234567" class="w-full px-3 py-2 bg-surface-container-lowest border border-outline-variant/40 rounded-xl font-medium" />
           </div>
           <div>
             <label class="font-bold text-outline block mb-1">Loại Khách</label>
-            <select id="edit-cus-type" class="w-full px-3 py-2 bg-surface-container border border-outline-variant/40 rounded-xl font-medium">
+            <select id="edit-cus-type" class="w-full px-3 py-2 bg-surface-container-lowest border border-outline-variant/40 rounded-xl font-medium">
               <option value="Cá nhân">Cá nhân</option>
               <option value="Công ty / Doanh nghiệp">Công ty / Doanh nghiệp</option>
               <option value="Khách VIP">Khách VIP</option>
@@ -941,11 +956,11 @@
         </div>
         <div>
           <label class="font-bold text-outline block mb-1">Địa Chỉ / Công Ty</label>
-          <input id="edit-cus-company" type="text" placeholder="VD: Global City, Tòa nhà ACB..." class="w-full px-3 py-2 bg-surface-container border border-outline-variant/40 rounded-xl font-medium" />
+          <input id="edit-cus-company" type="text" placeholder="VD: Global City, Tòa nhà ACB..." class="w-full px-3 py-2 bg-surface-container-lowest border border-outline-variant/40 rounded-xl font-medium" />
         </div>
         <div>
           <label class="font-bold text-outline block mb-1">Ghi Chú Khách Hàng (Sở thích/Khẩu vị)</label>
-          <input id="edit-cus-note" type="text" placeholder="VD: Thích uống trà ít ngọt, nhiều đá..." class="w-full px-3 py-2 bg-surface-container border border-outline-variant/40 rounded-xl font-medium" />
+          <input id="edit-cus-note" type="text" placeholder="VD: Thích uống trà ít ngọt, nhiều đá..." class="w-full px-3 py-2 bg-surface-container-lowest border border-outline-variant/40 rounded-xl font-medium" />
         </div>
       </div>
       <div class="p-4 border-t border-outline-variant/30">
@@ -958,17 +973,17 @@
   <div id="modal-add-task" class="modal-overlay hidden">
     <div class="modal-container max-w-md animate-scale-up">
       <div class="p-4 border-b border-outline-variant/30 flex justify-between items-center">
-        <h3 class="font-display font-bold text-base text-on-surface">Thêm Việc Đột Xuất</h3>
+        <h3 class="font-display font-bold text-base text-primary">Thêm Việc Đột Xuất</h3>
         <button onclick="closeModal('modal-add-task')" class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center text-outline"><span class="material-symbols-outlined text-base">close</span></button>
       </div>
       <div class="p-4 space-y-3 text-xs">
         <div>
           <label class="font-bold text-outline block mb-1">Tên Công Việc</label>
-          <input id="task-title" type="text" placeholder="VD: Nhận giao đá viên, đổ rác quầy bar..." class="w-full px-3 py-2 bg-surface-container border border-outline-variant/40 rounded-xl font-medium" />
+          <input id="task-title" type="text" placeholder="VD: Nhận giao đá viên, đổ rác quầy bar..." class="w-full px-3 py-2 bg-surface-container-lowest border border-outline-variant/40 rounded-xl font-medium" />
         </div>
         <div>
           <label class="font-bold text-outline block mb-1">Mức Độ Ưu Tiên</label>
-          <select id="task-priority" class="w-full px-3 py-2 bg-surface-container border border-outline-variant/40 rounded-xl font-medium">
+          <select id="task-priority" class="w-full px-3 py-2 bg-surface-container-lowest border border-outline-variant/40 rounded-xl font-medium">
             <option value="high">Ưu Tiên Cao (Cần làm ngay)</option>
             <option value="medium" selected>Bình Thường</option>
             <option value="low">Thấp</option>
@@ -976,11 +991,13 @@
         </div>
         <div>
           <label class="font-bold text-outline block mb-1">Giao Cho Nhân Viên</label>
-          <select id="task-assigned" class="w-full px-3 py-2 bg-surface-container border border-outline-variant/40 rounded-xl font-medium">
+          <select id="task-assigned" class="w-full px-3 py-2 bg-surface-container-lowest border border-outline-variant/40 rounded-xl font-medium">
+            <option value="Trí">Trí</option>
+            <option value="Yến">Yến</option>
+            <option value="Dinh">Dinh</option>
+            <option value="Nhung">Nhung</option>
             <option value="Linh (Pha chế)">Linh (Pha chế)</option>
             <option value="An (Phục vụ)">An (Phục vụ)</option>
-            <option value="Yến">Yến</option>
-            <option value="Trí">Trí</option>
           </select>
         </div>
       </div>
@@ -990,23 +1007,23 @@
     </div>
   </div>
 
-  <!-- MODAL: Thêm / Sửa Món Nước (Menu CRUD) -->
+  <!-- MODAL: Thêm / Sửa Món Nước (Menu CRUD + Image Upload & Live Preview) -->
   <div id="modal-edit-product" class="modal-overlay hidden">
     <div class="modal-container max-w-md animate-scale-up">
       <div class="p-4 border-b border-outline-variant/30 flex justify-between items-center">
-        <h3 id="modal-prod-title" class="font-display font-bold text-base text-on-surface">Thêm Món Nước Mới</h3>
+        <h3 id="modal-prod-title" class="font-display font-bold text-base text-primary">Thêm Món Nước Mới</h3>
         <button onclick="closeModal('modal-edit-product')" class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center text-outline"><span class="material-symbols-outlined text-base">close</span></button>
       </div>
       <div class="p-4 space-y-3 text-xs overflow-y-auto max-h-[60vh]">
         <input id="edit-prod-id" type="hidden" />
         <div>
           <label class="font-bold text-outline block mb-1">Tên Món Nước</label>
-          <input id="edit-prod-name" type="text" placeholder="VD: Trà Trái Cây Summer, Cà Phê Muối..." class="w-full px-3 py-2 bg-surface-container border border-outline-variant/40 rounded-xl font-medium" />
+          <input id="edit-prod-name" type="text" placeholder="VD: Trà Trái Cây Summer, Cà Phê Muối..." class="w-full px-3 py-2 bg-surface-container-lowest border border-outline-variant/40 rounded-xl font-medium" />
         </div>
         <div class="grid grid-cols-2 gap-2">
           <div>
             <label class="font-bold text-outline block mb-1">Danh Mục</label>
-            <input id="edit-prod-category" list="category-suggestions" type="text" placeholder="Trà Trái Cây" class="w-full px-3 py-2 bg-surface-container border border-outline-variant/40 rounded-xl font-medium" />
+            <input id="edit-prod-category" list="category-suggestions" type="text" placeholder="Trà Trái Cây" class="w-full px-3 py-2 bg-surface-container-lowest border border-outline-variant/40 rounded-xl font-medium" />
             <datalist id="category-suggestions">
               <option value="Trà Trái Cây">
               <option value="Trà Sữa">
@@ -1016,11 +1033,13 @@
           </div>
           <div>
             <label class="font-bold text-outline block mb-1">Giá Bán (VNĐ)</label>
-            <input id="edit-prod-price" type="number" placeholder="28000" class="w-full px-3 py-2 bg-surface-container border border-outline-variant/40 rounded-xl font-bold text-sm" />
+            <input id="edit-prod-price" type="number" placeholder="28000" class="w-full px-3 py-2 bg-surface-container-lowest border border-outline-variant/40 rounded-xl font-bold text-sm" />
           </div>
         </div>
+
+        <!-- Image Upload & Preview -->
         <div>
-          <label class="font-bold text-outline block mb-1">Hình Ảnh Sản Phẩm</label>
+          <label class="font-bold text-outline block mb-1">Hình Ảnh Món Nước</label>
           <div class="flex gap-3 items-center mb-2">
             <div class="w-16 h-16 rounded-xl bg-surface-container border border-outline-variant/40 overflow-hidden flex-shrink-0 flex items-center justify-center">
               <img id="edit-prod-preview" src="" class="w-full h-full object-cover" onerror="onImgError(this)" alt="Preview" />
@@ -1034,9 +1053,10 @@
               <div class="text-[10px] text-outline">Hệ thống tự động nén & mã hóa Base64 siêu nhẹ</div>
             </div>
           </div>
-          <input id="edit-prod-image" oninput="updateImagePreview(this.value)" type="text" placeholder="Hoặc dán Link ảnh URL (https://...)" class="w-full px-3 py-1.5 bg-surface-container border border-outline-variant/40 rounded-xl font-mono text-[10px]" />
+          <input id="edit-prod-image" oninput="updateImagePreview(this.value)" type="text" placeholder="Hoặc dán Link ảnh URL (https://...)" class="w-full px-3 py-1.5 bg-surface-container-lowest border border-outline-variant/40 rounded-xl font-mono text-[10px]" />
         </div>
-        <div class="p-3 bg-surface-container rounded-xl space-y-2">
+
+        <div class="p-3 bg-surface-cream rounded-xl space-y-2 border border-outline-variant/30">
           <span class="font-bold text-outline block mb-1">Tùy Chọn Khi Khách Gọi:</span>
           <div class="grid grid-cols-3 gap-2">
             <label class="flex items-center gap-1.5 cursor-pointer">
@@ -1055,7 +1075,7 @@
         </div>
         <div>
           <label class="font-bold text-outline block mb-1">Trạng Thái Món</label>
-          <select id="edit-prod-status" class="w-full px-3 py-2 bg-surface-container border border-outline-variant/40 rounded-xl font-medium">
+          <select id="edit-prod-status" class="w-full px-3 py-2 bg-surface-container-lowest border border-outline-variant/40 rounded-xl font-medium">
             <option value="ACTIVE">Đang Bán (ACTIVE)</option>
             <option value="OUT_OF_STOCK">Hết Hàng (OUT_OF_STOCK)</option>
             <option value="INACTIVE">Tạm Ẩn (INACTIVE)</option>
@@ -1073,18 +1093,18 @@
   <div id="modal-edit-topping" class="modal-overlay hidden">
     <div class="modal-container max-w-sm animate-scale-up">
       <div class="p-4 border-b border-outline-variant/30 flex justify-between items-center">
-        <h3 id="modal-top-title" class="font-display font-bold text-base text-on-surface">Thêm Topping Mới</h3>
+        <h3 id="modal-top-title" class="font-display font-bold text-base text-primary">Thêm Topping Mới</h3>
         <button onclick="closeModal('modal-edit-topping')" class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center text-outline"><span class="material-symbols-outlined text-base">close</span></button>
       </div>
       <div class="p-4 space-y-3 text-xs">
         <input id="edit-top-id" type="hidden" />
         <div>
           <label class="font-bold text-outline block mb-1">Tên Topping</label>
-          <input id="edit-top-name" type="text" placeholder="VD: Thạch Lá Dứa, Trân Châu..." class="w-full px-3 py-2 bg-surface-container border border-outline-variant/40 rounded-xl font-medium" />
+          <input id="edit-top-name" type="text" placeholder="VD: Thạch Lá Dứa, Trân Châu..." class="w-full px-3 py-2 bg-surface-container-lowest border border-outline-variant/40 rounded-xl font-medium" />
         </div>
         <div>
           <label class="font-bold text-outline block mb-1">Giá Bán Thêm (VNĐ)</label>
-          <input id="edit-top-price" type="number" placeholder="5000" class="w-full px-3 py-2 bg-surface-container border border-outline-variant/40 rounded-xl font-bold text-sm" />
+          <input id="edit-top-price" type="number" placeholder="5000" class="w-full px-3 py-2 bg-surface-container-lowest border border-outline-variant/40 rounded-xl font-bold text-sm" />
         </div>
       </div>
       <div class="p-4 border-t border-outline-variant/30 flex gap-2">
@@ -1330,10 +1350,11 @@
         var btn = document.getElementById('set-subtab-' + s);
         var panel = document.getElementById('settings-panel-' + s);
         if (s === sub) {
-          if (btn) btn.className = 'px-4 py-2 rounded-xl bg-primary text-on-primary shadow-xs';
+          if (btn) btn.className = 'px-4 py-2 rounded-full bg-primary text-on-primary shadow-xs';
+          else if (panel) panel.classList.remove('hidden');
           if (panel) panel.classList.remove('hidden');
         } else {
-          if (btn) btn.className = 'px-4 py-2 rounded-xl bg-surface-container text-on-surface hover:bg-surface-container-high';
+          if (btn) btn.className = 'px-4 py-2 rounded-full bg-surface-container text-on-surface hover:bg-surface-container-high';
           if (panel) panel.classList.add('hidden');
         }
       });
@@ -1361,11 +1382,11 @@
       var btnActive = document.getElementById('kds-filter-active');
       var btnHistory = document.getElementById('kds-filter-history');
       if (f === 'ACTIVE') {
-        if (btnActive) btnActive.className = 'px-3 py-1.5 rounded-xl text-xs font-bold bg-primary text-on-primary shadow-xs';
-        if (btnHistory) btnHistory.className = 'px-3 py-1.5 rounded-xl text-xs font-medium bg-surface-container text-on-surface hover:bg-surface-container-high';
+        if (btnActive) btnActive.className = 'px-4 py-1.5 bg-primary text-on-primary rounded-full text-xs font-bold transition-all shadow-sm';
+        if (btnHistory) btnHistory.className = 'px-4 py-1.5 bg-surface-container text-on-surface-variant hover:bg-surface-container-high rounded-full text-xs font-medium transition-all';
       } else {
-        if (btnHistory) btnHistory.className = 'px-3 py-1.5 rounded-xl text-xs font-bold bg-primary text-on-primary shadow-xs';
-        if (btnActive) btnActive.className = 'px-3 py-1.5 rounded-xl text-xs font-medium bg-surface-container text-on-surface hover:bg-surface-container-high';
+        if (btnHistory) btnHistory.className = 'px-4 py-1.5 bg-primary text-on-primary rounded-full text-xs font-bold transition-all shadow-sm';
+        if (btnActive) btnActive.className = 'px-4 py-1.5 bg-surface-container text-on-surface-variant hover:bg-surface-container-high rounded-full text-xs font-medium transition-all';
       }
       renderKitchen();
     }
@@ -1458,8 +1479,8 @@
       ['today', 'yesterday', 'week', 'month', 'custom'].forEach(function(p) {
         var btn = document.getElementById('exp-filter-' + p);
         if (btn) {
-          if (p === period) btn.className = 'px-3 py-1.5 rounded-xl font-bold bg-primary text-on-primary shadow-xs';
-          else btn.className = 'px-3 py-1.5 rounded-xl font-medium bg-surface-container text-on-surface hover:bg-surface-container-high';
+          if (p === period) btn.className = 'px-3.5 py-1.5 rounded-full font-bold bg-primary text-on-primary shadow-xs';
+          else btn.className = 'px-3.5 py-1.5 rounded-full font-medium bg-surface-container text-on-surface hover:bg-surface-container-high';
         }
       });
 
@@ -1483,8 +1504,8 @@
       ['today', 'yesterday', 'week', 'month', 'custom'].forEach(function(p) {
         var btn = document.getElementById('rep-filter-' + p);
         if (btn) {
-          if (p === period) btn.className = 'px-3 py-1.5 rounded-xl font-bold bg-primary text-on-primary shadow-xs';
-          else btn.className = 'px-3 py-1.5 rounded-xl font-medium bg-surface-container text-on-surface hover:bg-surface-container-high';
+          if (p === period) btn.className = 'px-3.5 py-1.5 rounded-full font-bold bg-primary text-on-primary shadow-xs';
+          else btn.className = 'px-3.5 py-1.5 rounded-full font-medium bg-surface-container text-on-surface hover:bg-surface-container-high';
         }
       });
 
@@ -1890,7 +1911,7 @@
       }
     }
 
-    // ── MENU & TOPPING CRUD CONTROLLERS ─────────────────────────────────────────
+    // ── IMAGE UPLOAD & PREVIEW ENGINE ──────────────────────────────────────────
     function triggerProductImageUpload() {
       var input = document.getElementById('edit-prod-file');
       if (input) input.click();
@@ -1945,6 +1966,7 @@
       }
     }
 
+    // ── MENU & TOPPING CRUD CONTROLLERS ─────────────────────────────────────────
     function openProductEditModal(productId) {
       var titleEl = document.getElementById('modal-prod-title');
       var idInput = document.getElementById('edit-prod-id');
@@ -2153,7 +2175,7 @@
         var count = getCartCount();
         if (count > 0 && state.currentTab === 'pos') {
           cartPill.classList.remove('hidden');
-          cartCountEl.innerText = count + ' món';
+          cartCountEl.innerText = count;
           cartTotalEl.innerText = formatVND(getCartTotal());
         } else {
           cartPill.classList.add('hidden');
@@ -2164,9 +2186,9 @@
       navButtons.forEach(function(btn) {
         var tab = btn.getAttribute('data-tab');
         if (tab === state.currentTab) {
-          btn.className = 'flex-1 flex flex-col items-center justify-center py-2 text-primary font-bold transition';
+          btn.className = 'flex-1 flex flex-col items-center justify-center py-1.5 text-primary font-bold transition';
         } else {
-          btn.className = 'flex-1 flex flex-col items-center justify-center py-2 text-on-surface-variant font-medium opacity-70 hover:opacity-100 transition';
+          btn.className = 'flex-1 flex flex-col items-center justify-center py-1.5 text-on-surface-variant font-medium opacity-70 hover:opacity-100 transition';
         }
       });
 
@@ -2190,10 +2212,10 @@
     function renderPOS() {
       var catContainer = document.getElementById('pos-categories');
       if (catContainer) {
-        var catHtml = '<button onclick="selectCategory(\'all\')" class="px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition ' + (state.selectedCategory === 'all' ? 'bg-primary text-on-primary shadow-sm' : 'bg-surface-container-low text-on-surface-variant hover:bg-surface-container') + '">Tất Cả</button>';
+        var catHtml = '<button onclick="selectCategory(\'all\')" class="snap-start whitespace-nowrap px-5 py-2 rounded-full font-bold text-xs transition-colors ' + (state.selectedCategory === 'all' ? 'bg-primary text-on-primary shadow-sm' : 'bg-surface-container text-on-surface-variant hover:bg-surface-container-high') + '">Tất Cả</button>';
         state.categories.forEach(function(cat) {
           var active = state.selectedCategory === cat;
-          catHtml += '<button onclick="selectCategory(\'' + cat + '\')" class="px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition ' + (active ? 'bg-primary text-on-primary shadow-sm' : 'bg-surface-container-low text-on-surface-variant hover:bg-surface-container') + '">' + cat + '</button>';
+          catHtml += '<button onclick="selectCategory(\'' + cat + '\')" class="snap-start whitespace-nowrap px-5 py-2 rounded-full font-bold text-xs transition-colors ' + (active ? 'bg-primary text-on-primary shadow-sm' : 'bg-surface-container text-on-surface-variant hover:bg-surface-container-high') + '">' + cat + '</button>';
         });
         catContainer.innerHTML = catHtml;
       }
@@ -2215,18 +2237,25 @@
         filtered.forEach(function(p) {
           var isOutOfStock = p.Status === 'OUT_OF_STOCK';
           var fallbackImg = 'data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Crect width=%27100%27 height=%27100%27 fill=%27%23edeeea%27/%3E%3Ctext x=%2750%27 y=%2755%27 font-size=%2730%27 text-anchor=%27middle%27 fill=%27%2372796e%27%3E🍵%3C/text%3E%3C/svg%3E';
-          html += '<div onclick="' + (isOutOfStock ? '' : 'openCustomization(\'' + p.ID + '\')') + '" class="bg-surface-container-lowest rounded-2xl p-3 shadow-card border border-outline-variant/30 flex flex-col justify-between cursor-pointer hover:border-primary/40 hover:shadow-float transition relative ' + (isOutOfStock ? 'opacity-50 grayscale' : '') + '">';
-          html += '  <div class="relative w-full h-32 rounded-xl bg-surface-container overflow-hidden mb-2">';
-          html += '    <img src="' + (p.Image || fallbackImg) + '" class="w-full h-full object-cover" onerror="onImgError(this)" alt="' + p.Name + '" />';
-          if (isOutOfStock) html += '    <div class="absolute inset-0 bg-black/50 flex items-center justify-center text-white text-xs font-bold uppercase">Hết Hàng</div>';
+          
+          html += '<div onclick="' + (isOutOfStock ? '' : 'openCustomization(\'' + p.ID + '\')') + '" class="bg-surface-cream rounded-xl overflow-hidden shadow-card border border-outline-variant/30 flex flex-col justify-between active:scale-[0.98] transition-transform cursor-pointer hover:border-primary/40 ' + (isOutOfStock ? 'opacity-50 grayscale' : '') + '">';
+          html += '  <div class="relative pt-[100%] w-full bg-surface-container-low overflow-hidden">';
+          html += '    <img class="absolute inset-0 w-full h-full object-cover" src="' + (p.Image || fallbackImg) + '" onerror="onImgError(this)" alt="' + p.Name + '" />';
+          html += '    <div class="absolute top-2 right-2 bg-surface/90 backdrop-blur-sm px-2 py-0.5 rounded-md">';
+          html += '      <span class="font-bold text-xs text-primary">' + formatVND(p.Price) + '</span>';
+          html += '    </div>';
+          if (isOutOfStock) {
+            html += '    <div class="absolute inset-0 bg-black/60 flex items-center justify-center text-white text-xs font-bold uppercase tracking-wider">Hết Hàng</div>';
+          }
           html += '  </div>';
-          html += '  <div>';
-          html += '    <div class="text-[10px] uppercase font-bold text-primary tracking-wider mb-0.5">' + (p.Category || 'F&B') + '</div>';
-          html += '    <h3 class="font-display font-bold text-sm text-on-surface line-clamp-2 leading-tight">' + p.Name + '</h3>';
-          html += '  </div>';
-          html += '  <div class="flex items-center justify-between mt-3 pt-2 border-t border-outline-variant/20">';
-          html += '    <span class="font-display font-bold text-sm text-primary">' + formatVND(p.Price) + '</span>';
-          html += '    <button class="w-8 h-8 rounded-full bg-primary-fixed text-primary flex items-center justify-center hover:bg-primary hover:text-on-primary transition"><span class="material-symbols-outlined text-base">add</span></button>';
+          html += '  <div class="p-3 flex flex-col flex-grow justify-between gap-2">';
+          html += '    <div>';
+          html += '      <span class="text-[10px] font-bold text-primary uppercase tracking-wider block mb-0.5">' + (p.Category || 'F&B') + '</span>';
+          html += '      <h3 class="font-bold text-xs sm:text-sm text-on-surface leading-snug line-clamp-2">' + p.Name + '</h3>';
+          html += '    </div>';
+          html += '    <button class="w-full py-1.5 rounded-lg bg-surface-container text-primary font-bold text-xs hover:bg-surface-container-high transition-colors flex items-center justify-center gap-1">';
+          html += '      <span class="material-symbols-outlined text-[16px]">add</span> Chọn Món';
+          html += '    </button>';
           html += '  </div>';
           html += '</div>';
         });
@@ -2247,7 +2276,7 @@
         var hHtml = '<div class="space-y-3">';
         completedOrders.forEach(function(o) {
           hHtml += '<div class="bg-surface-container-lowest p-4 rounded-2xl border border-outline-variant/30 flex justify-between items-center text-xs shadow-card">';
-          hHtml += '  <div><div class="flex items-center gap-2"><span class="font-bold text-sm text-primary">#' + o.ID.slice(-4) + '</span><span class="px-2 py-0.5 rounded-full text-[10px] font-bold ' + (o.Status === 'COMPLETED' ? 'bg-status-free/15 text-status-free' : 'bg-status-urgent/15 text-status-urgent') + '">' + (o.Status === 'COMPLETED' ? 'ĐÃ HOÀN TẤT' : 'ĐÃ HỦY') + '</span></div><div class="text-outline mt-1">' + (o.TableID ? getTableName(o.TableID) : 'Mang Về') + ' • ' + formatVND(o.TotalAmount) + '</div></div>';
+          hHtml += '  <div><div class="flex items-center gap-2"><span class="font-bold text-sm text-primary">#' + o.ID.slice(-4) + '</span><span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold ' + (o.Status === 'COMPLETED' ? 'bg-status-free/15 text-status-free' : 'bg-status-urgent/15 text-status-urgent') + '">' + (o.Status === 'COMPLETED' ? 'ĐÃ HOÀN TẤT' : 'ĐÃ HỦY') + '</span></div><div class="text-outline mt-1">' + (o.TableID ? getTableName(o.TableID) : 'Mang Về') + ' • ' + formatVND(o.TotalAmount) + '</div></div>';
           hHtml += '</div>';
         });
         hHtml += '</div>';
@@ -2259,11 +2288,11 @@
       var ordersPrep = state.activeOrders.filter(function(o) { return o.Status === 'PREPARING'; });
       var ordersPack = state.activeOrders.filter(function(o) { return o.Status === 'PACKING'; });
 
-      var renderCol = function(title, count, badgeClass, orders, nextActionLabel, nextStatus) {
+      var renderCol = function(title, count, borderLeftClass, orders, nextActionLabel, nextStatus) {
         var colHtml = '<div class="flex-1 bg-surface-container-low rounded-2xl p-3 flex flex-col gap-3 min-w-[280px] border border-outline-variant/20">';
         colHtml += '  <div class="flex items-center justify-between pb-2 border-b border-outline-variant/30">';
-        colHtml += '    <h3 class="font-display font-bold text-xs uppercase tracking-wider text-on-surface">' + title + '</h3>';
-        colHtml += '    <span class="px-2 py-0.5 rounded-full text-xs font-bold ' + badgeClass + '">' + count + '</span>';
+        colHtml += '    <h3 class="font-display font-bold text-xs uppercase tracking-wider text-primary">' + title + '</h3>';
+        colHtml += '    <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-surface-container text-on-surface">' + count + '</span>';
         colHtml += '  </div>';
         colHtml += '  <div class="space-y-3 overflow-y-auto max-h-[70vh]">';
 
@@ -2272,17 +2301,18 @@
         } else {
           orders.forEach(function(o) {
             var diffMin = Math.max(0, Math.floor((new Date().getTime() - new Date(o.CreatedAt).getTime()) / 60000));
-            var timeBadge = diffMin > 10 ? 'bg-rose-100 text-rose-800 animate-pulse font-bold' : (diffMin > 5 ? 'bg-amber-100 text-amber-800' : 'bg-emerald-100 text-emerald-800');
+            var timeBadge = diffMin > 10 ? 'bg-status-urgent/15 text-status-urgent font-bold animate-pulse' : (diffMin > 5 ? 'bg-status-preparing/20 text-on-surface' : 'bg-status-free/15 text-status-free');
 
-            colHtml += '<div class="bg-surface-container-lowest rounded-xl p-3 shadow-card border border-outline-variant/30 space-y-2">';
+            colHtml += '<article class="bg-surface-container-lowest rounded-xl shadow-card border-l-4 ' + borderLeftClass + ' p-3.5 flex flex-col gap-2 relative transition-transform duration-200 hover:-translate-y-0.5">';
             colHtml += '  <div class="flex items-center justify-between">';
             colHtml += '    <span class="font-display font-bold text-sm text-primary">#' + o.ID.slice(-4) + '</span>';
-            colHtml += '    <span class="px-2 py-0.5 rounded-full text-[10px] font-mono ' + timeBadge + '">' + formatElapsedTime(o.CreatedAt) + ' trước</span>';
+            colHtml += '    <span class="px-2 py-0.5 rounded-md text-[10px] font-mono font-bold ' + timeBadge + '">' + formatElapsedTime(o.CreatedAt) + ' trước</span>';
             colHtml += '  </div>';
             colHtml += '  <div class="text-xs font-bold text-on-surface">' + (o.TableID ? getTableName(o.TableID) : (o.OrderType === 'TAKEAWAY' ? 'Mang Về' : 'Giao Hàng')) + '</div>';
-            colHtml += '  <div class="space-y-1 py-1 border-t border-b border-outline-variant/20 text-xs">';
+            colHtml += '  <div class="space-y-1 py-1.5 border-t border-b border-outline-variant/20 text-xs">';
             (o.items || []).forEach(function(it) {
               colHtml += '    <div class="flex justify-between font-medium"><span>' + it.Quantity + 'x ' + it.ProductName + (it.Size ? ' (' + it.Size + ')' : '') + '</span><span class="font-mono text-outline">' + formatVND(it.Subtotal) + '</span></div>';
+              if (it.Toppings) colHtml += '    <div class="text-[10px] text-on-surface-variant pl-2">+ ' + it.Toppings + '</div>';
             });
             colHtml += '  </div>';
             colHtml += '  <div class="flex gap-2 pt-1">';
@@ -2291,7 +2321,7 @@
             }
             colHtml += '    <button onclick="openCheckoutForOrder(\'' + o.ID + '\')" class="px-3 py-1.5 bg-surface-container text-primary font-bold rounded-lg text-xs hover:bg-surface-container-high transition">Thanh Toán</button>';
             colHtml += '  </div>';
-            colHtml += '</div>';
+            colHtml += '</article>';
           });
         }
 
@@ -2301,9 +2331,9 @@
       };
 
       container.innerHTML = '<div class="grid grid-cols-1 md:grid-cols-3 gap-4">' +
-        renderCol('Đơn Mới', ordersNew.length, 'bg-status-urgent/15 text-status-urgent', ordersNew, 'Nhận Pha Chế', 'PREPARING') +
-        renderCol('Đang Pha Chế', ordersPrep.length, 'bg-status-preparing/20 text-on-surface', ordersPrep, 'Hoàn Tất Món', 'PACKING') +
-        renderCol('Chờ Giao / Thu Tiền', ordersPack.length, 'bg-status-free/15 text-status-free', ordersPack, 'Đã Phục Vụ', 'COMPLETED') +
+        renderCol('Đơn Mới', ordersNew.length, 'border-status-urgent', ordersNew, 'Nhận Pha Chế', 'PREPARING') +
+        renderCol('Đang Pha Chế', ordersPrep.length, 'border-status-preparing', ordersPrep, 'Hoàn Tất Món', 'PACKING') +
+        renderCol('Chờ Giao / Thu Tiền', ordersPack.length, 'border-status-free', ordersPack, 'Đã Phục Vụ', 'COMPLETED') +
         '</div>';
     }
 
@@ -2344,7 +2374,7 @@
 
       var total = filtered.reduce(function(sum, e) { return sum + (e.Amount || 0); }, 0);
       if (totalEl) totalEl.innerText = formatVND(total);
-      if (countEl) countEl.innerText = filtered.length + ' khoản chi • Cao nhất: ' + formatVND(filtered.reduce(function(m, e) { return Math.max(m, e.Amount || 0); }, 0));
+      if (countEl) countEl.innerText = filtered.length + ' khoản chi thực tế • Cao nhất: ' + formatVND(filtered.reduce(function(m, e) { return Math.max(m, e.Amount || 0); }, 0));
 
       if (filtered.length === 0) {
         listEl.innerHTML = '<div class="py-12 text-center text-on-surface-variant text-xs">Không có khoản chi nào trong khoảng thời gian này</div>';
@@ -2387,22 +2417,22 @@
       var html = '';
       filtered.forEach(function(c) {
         var spent = c.TotalSpent || 0;
-        var tier = spent > 1000000 ? 'VIP Kim Cương' : (spent > 500000 ? 'Vàng' : (spent > 100000 ? 'Bạc' : 'Thành Viên Mới'));
+        var tier = spent > 1000000 ? 'VIP Kim Cương' : (spent > 500000 ? 'Hạng Vàng' : (spent > 100000 ? 'Hạng Bạc' : 'Thành Viên Mới'));
         var tierBg = spent > 1000000 ? 'bg-amber-100 text-amber-900 border-amber-300' : (spent > 500000 ? 'bg-yellow-100 text-yellow-800' : 'bg-primary/10 text-primary');
 
-        html += '<div class="bg-surface-container-lowest p-3.5 rounded-2xl border border-outline-variant/30 shadow-card flex flex-col justify-between gap-3 text-xs">';
+        html += '<div class="bg-surface-container-lowest p-4 rounded-2xl border border-outline-variant/30 shadow-card flex flex-col justify-between gap-3 text-xs">';
         html += '  <div>';
         html += '    <div class="flex items-center justify-between">';
         html += '      <h3 class="font-display font-bold text-sm text-on-surface">' + c.Name + '</h3>';
-        html += '      <span class="px-2 py-0.5 rounded-full text-[10px] font-bold ' + tierBg + '">' + tier + '</span>';
+        html += '      <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold ' + tierBg + '">' + tier + '</span>';
         html += '    </div>';
-        html += '    <div class="font-mono text-outline text-[11px] mt-0.5 flex items-center gap-1.5"><span class="material-symbols-outlined text-xs">call</span><a href="tel:' + (c.Phone || '') + '" class="hover:underline font-bold text-primary">' + (c.Phone || '---') + '</a></div>';
+        html += '    <div class="font-mono text-outline text-[11px] mt-1 flex items-center gap-1.5"><span class="material-symbols-outlined text-xs text-primary">call</span><a href="tel:' + (c.Phone || '') + '" class="hover:underline font-bold text-primary">' + (c.Phone || '---') + '</a></div>';
         if (c.Company) html += '    <div class="text-[11px] text-on-surface-variant mt-1">🏢 ' + c.Company + '</div>';
         if (c.Note) html += '    <div class="text-[10px] text-outline italic mt-1">"' + c.Note + '"</div>';
         html += '  </div>';
-        html += '  <div class="pt-2 border-t border-outline-variant/20 flex items-center justify-between">';
+        html += '  <div class="pt-2.5 border-t border-outline-variant/20 flex items-center justify-between">';
         html += '    <div><span class="text-[10px] text-outline uppercase block">Tích lũy:</span><span class="font-bold text-primary text-sm">' + (c.Points || 0) + ' điểm</span></div>';
-        html += '    <button onclick="openCustomerEditModal(\'' + c.ID + '\')" class="px-3 py-1.5 rounded-xl bg-surface-container text-on-surface font-bold text-xs hover:bg-surface-container-high transition flex items-center gap-1"><span class="material-symbols-outlined text-xs">edit</span> Sửa</button>';
+        html += '    <button onclick="openCustomerEditModal(\'' + c.ID + '\')" class="px-3.5 py-1.5 rounded-full bg-surface-container text-on-surface font-bold text-xs hover:bg-surface-container-high transition flex items-center gap-1"><span class="material-symbols-outlined text-xs">edit</span> Sửa</button>';
         html += '  </div>';
         html += '</div>';
       });
@@ -2420,7 +2450,9 @@
       var html = '';
       state.tasks.forEach(function(t) {
         var isDone = t.Status === 'DONE';
-        html += '<div class="bg-surface-container-lowest p-3 rounded-xl border border-outline-variant/30 flex items-center justify-between text-xs shadow-card ' + (isDone ? 'opacity-60 bg-surface-container-low' : '') + '">';
+        var borderLeft = t.Priority === 'high' ? 'border-status-urgent' : 'border-status-preparing';
+
+        html += '<div class="bg-surface-container-lowest rounded-xl p-4 shadow-card border-l-4 ' + borderLeft + ' border border-outline-variant/20 flex items-center justify-between text-xs ' + (isDone ? 'opacity-60 bg-surface-container-low' : '') + '">';
         html += '  <div class="flex items-center gap-3">';
         html += '    <button onclick="toggleTask(\'' + t.ID + '\')" class="w-6 h-6 rounded-md border flex items-center justify-center ' + (isDone ? 'bg-status-free text-white border-status-free' : 'border-outline text-transparent') + '"><span class="material-symbols-outlined text-sm">check</span></button>';
         html += '    <div>';
@@ -2428,7 +2460,7 @@
         html += '      <div class="text-[11px] text-outline mt-0.5">' + (t.AssignedName || 'Nhân viên') + ' • Hạn: ' + (t.DueDate || 'Trong ca') + '</div>';
         html += '    </div>';
         html += '  </div>';
-        html += '  <span class="px-2 py-0.5 rounded text-[10px] font-bold ' + (t.Priority === 'high' ? 'bg-status-urgent/15 text-status-urgent' : 'bg-surface-container text-on-surface-variant') + '">' + (t.Priority === 'high' ? 'Ưu tiên cao' : 'Bình thường') + '</span>';
+        html += '  <span class="px-2 py-0.5 rounded-full text-[10px] font-bold ' + (t.Priority === 'high' ? 'bg-status-urgent/15 text-status-urgent' : 'bg-surface-container text-on-surface-variant') + '">' + (t.Priority === 'high' ? 'Ưu tiên cao' : 'Bình thường') + '</span>';
         html += '</div>';
       });
       listEl.innerHTML = html;
@@ -2442,22 +2474,19 @@
       var expCountEl = document.getElementById('report-expenses-count');
       var profitEl = document.getElementById('report-profit');
       var marginEl = document.getElementById('report-profit-margin');
-      var avgEl = document.getElementById('report-avg-order');
 
       var totalRev = r.totalRevenue || 0;
       var totalExp = r.totalExpenses || 0;
       var totalOrd = r.totalOrders || 0;
       var netProf = r.netProfit !== undefined ? r.netProfit : (totalRev - totalExp);
       var marginPct = totalRev > 0 ? Math.round((netProf / totalRev) * 100) : 0;
-      var aov = totalOrd > 0 ? Math.round(totalRev / totalOrd) : 0;
 
       if (revEl) revEl.innerText = formatVND(totalRev);
-      if (ordEl) ordEl.innerText = totalOrd + ' đơn hoàn tất';
+      if (ordEl) ordEl.innerHTML = '<span class="material-symbols-outlined text-[14px]">trending_up</span> ' + totalOrd + ' đơn hoàn tất';
       if (expEl) expEl.innerText = formatVND(totalExp);
       if (expCountEl) expCountEl.innerText = (state.expenses.length || 0) + ' khoản chi';
       if (profitEl) profitEl.innerText = formatVND(netProf);
       if (marginEl) marginEl.innerText = 'Tỷ suất: ' + marginPct + '%';
-      if (avgEl) avgEl.innerText = formatVND(aov);
 
       var payContainer = document.getElementById('report-payment-breakdown');
       if (payContainer && r.paymentBreakdown) {
@@ -2581,7 +2610,7 @@
         html += '  </div>';
         html += '  <div class="flex items-center gap-3">';
         html += '    <span class="font-display font-bold text-sm text-primary">' + formatVND(p.Price) + '</span>';
-        html += '    <button onclick="openProductEditModal(\'' + p.ID + '\')" class="px-3 py-1.5 rounded-lg bg-surface-container text-on-surface font-bold text-xs hover:bg-surface-container-high transition flex items-center gap-1"><span class="material-symbols-outlined text-sm">edit</span> Sửa</button>';
+        html += '    <button onclick="openProductEditModal(\'' + p.ID + '\')" class="px-3.5 py-1.5 rounded-full bg-surface-container text-on-surface font-bold text-xs hover:bg-surface-container-high transition flex items-center gap-1"><span class="material-symbols-outlined text-sm">edit</span> Sửa</button>';
         html += '  </div>';
         html += '</div>';
       });
@@ -2598,7 +2627,7 @@
         html += '  <div><div class="font-bold text-sm text-on-surface">' + t.Name + '</div><span class="text-[10px] text-status-free font-semibold">Hoạt động</span></div>';
         html += '  <div class="flex items-center gap-3">';
         html += '    <span class="font-display font-bold text-sm text-primary">+' + formatVND(t.Price) + '</span>';
-        html += '    <button onclick="openToppingEditModal(\'' + t.ID + '\')" class="px-3 py-1.5 rounded-lg bg-surface-container text-on-surface font-bold text-xs hover:bg-surface-container-high transition flex items-center gap-1"><span class="material-symbols-outlined text-sm">edit</span> Sửa</button>';
+        html += '    <button onclick="openToppingEditModal(\'' + t.ID + '\')" class="px-3.5 py-1.5 rounded-full bg-surface-container text-on-surface font-bold text-xs hover:bg-surface-container-high transition flex items-center gap-1"><span class="material-symbols-outlined text-sm">edit</span> Sửa</button>';
         html += '  </div>';
         html += '</div>';
       });
@@ -2751,10 +2780,9 @@
 
     // ── INITIALIZATION ────────────────────────────────────────────────────────
     document.addEventListener('DOMContentLoaded', function() {
-      console.log('[BOOT] TCLApp Full Native Engine Loaded Successfully.');
+      console.log('[BOOT] TCLApp Organic Vitality Engine Loaded Successfully.');
       renderApp();
       refreshData();
-      // Auto refresh KDS timers every 30 seconds
       setInterval(function() {
         if (state.currentTab === 'kitchen') renderKitchen();
       }, 30000);
