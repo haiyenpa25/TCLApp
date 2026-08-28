@@ -6,9 +6,63 @@
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport" />
   <title>Tiệm Của Lá — Organic Vitality F&B POS</title>
 
-  <!-- SEO & Meta -->
+  <!-- PWA & Mobile Web App Meta Tags -->
   <meta name="description" content="Hệ thống quản lý POS bán hàng, quầy pha chế KDS, sổ quỹ thu chi, chốt ca két tiền và báo cáo tài chính Tiệm Của Lá." />
   <meta name="theme-color" content="#154212" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Tiệm Của Lá" />
+  <meta name="application-name" content="Tiệm Của Lá" />
+  <meta name="msapplication-TileColor" content="#154212" />
+
+  <!-- Dynamic PWA Manifest Generator -->
+  <script>
+    (function() {
+      try {
+        var svgIcon = "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='128' fill='%23154212'/><circle cx='256' cy='256' r='190' fill='%232d5a27' opacity='0.4'/><text x='256' y='320' font-size='210' text-anchor='middle' font-family='sans-serif'>🌿</text><text x='256' y='440' font-size='40' font-weight='bold' text-anchor='middle' fill='%23ffffff' font-family='sans-serif' letter-spacing='3'>TIỆM CỦA LÁ</text></svg>";
+        var iconUri = "data:image/svg+xml;utf8," + encodeURIComponent(svgIcon);
+
+        var manifestData = {
+          name: "Tiệm Của Lá — F&B POS",
+          short_name: "Tiệm Của Lá",
+          description: "Hệ thống POS bán hàng, quầy pha chế KDS, sổ quỹ thu chi và báo cáo tài chính Tiệm Của Lá",
+          start_url: window.location.href || ".",
+          display: "standalone",
+          background_color: "#f8faf5",
+          theme_color: "#154212",
+          orientation: "any",
+          icons: [
+            {
+              src: iconUri,
+              sizes: "192x192 512x512",
+              type: "image/svg+xml",
+              purpose: "any maskable"
+            }
+          ]
+        };
+
+        var blob = new Blob([JSON.stringify(manifestData)], { type: 'application/manifest+json' });
+        var manifestLink = document.createElement('link');
+        manifestLink.rel = 'manifest';
+        manifestLink.href = URL.createObjectURL(blob);
+        document.head.appendChild(manifestLink);
+
+        var iconLink = document.createElement('link');
+        iconLink.rel = 'icon';
+        iconLink.type = 'image/svg+xml';
+        iconLink.href = iconUri;
+        document.head.appendChild(iconLink);
+
+        var appleIconLink = document.createElement('link');
+        appleIconLink.rel = 'apple-touch-icon';
+        appleIconLink.href = iconUri;
+        document.head.appendChild(appleIconLink);
+      } catch(e) {
+        console.warn('PWA Manifest init notice:', e);
+      }
+    })();
+  </script>
 
   <!-- Google Fonts: Plus Jakarta Sans & Inter, Material Symbols Outlined -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -91,7 +145,7 @@
 
 <body class="bg-surface font-sans text-on-surface antialiased min-h-screen flex flex-col justify-between select-none">
 
-  <!-- ── 1. STICKY TOP APP BAR (Organic Vitality Style) ────────────────────── -->
+  <!-- ── 1. STICKY TOP APP BAR (Organic Vitality PWA Style) ────────────────── -->
   <header class="sticky top-0 z-50 bg-surface/90 backdrop-blur-md border-b border-outline-variant px-4 py-2.5 flex items-center justify-between shadow-soft">
     <div class="flex items-center gap-2.5">
       <div class="w-9 h-9 rounded-2xl bg-primary flex items-center justify-center text-on-primary font-display font-extrabold text-base shadow-sm">
@@ -101,12 +155,18 @@
         <h1 id="header-shop-name" class="font-display font-bold text-base text-primary leading-tight">Tiệm Của Lá</h1>
         <div class="flex items-center gap-1.5 mt-0.5">
           <span class="w-2 h-2 rounded-full bg-status-free animate-pulse"></span>
-          <span id="header-sub-title" class="text-[11px] font-semibold text-on-surface-variant">Organic Vitality POS</span>
+          <span id="header-sub-title" class="text-[11px] font-semibold text-on-surface-variant">PWA App • Menu</span>
         </div>
       </div>
     </div>
 
     <div class="flex items-center gap-2">
+      <!-- PWA Install Button (Header) -->
+      <button onclick="promptPWAInstall()" id="btn-pwa-install-header" title="Cài đặt App lên màn hình điện thoại / máy tính" class="flex items-center gap-1 px-3 py-1.5 rounded-full bg-primary text-on-primary text-xs font-bold shadow-xs hover:bg-primary-container transition">
+        <span class="material-symbols-outlined text-sm">install_mobile</span>
+        <span class="hidden sm:inline">Cài App</span>
+      </button>
+
       <!-- Sound Chime Toggle -->
       <button onclick="toggleSound()" id="btn-sound-toggle" title="Âm thanh chuông báo đơn" class="w-9 h-9 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant hover:text-primary transition border border-outline-variant/40 shadow-xs">
         <span id="sound-icon" class="material-symbols-outlined text-base">volume_up</span>
@@ -971,6 +1031,55 @@
     </div>
   </div>
 
+  <!-- MODAL: HƯỚNG DẪN CÀI ĐẶT PWA TRÊN IPHONE / IPAD (iOS GUIDE) ──────────── -->
+  <div id="modal-pwa-ios-guide" class="modal-overlay hidden">
+    <div class="modal-container max-w-sm animate-scale-up">
+      <div class="p-4 border-b border-outline-variant/30 flex justify-between items-center">
+        <h3 class="font-display font-bold text-base text-primary flex items-center gap-1.5">
+          <span class="material-symbols-outlined text-primary">phone_iphone</span>
+          <span>Cài Đặt App Tiệm Của Lá</span>
+        </h3>
+        <button onclick="closeModal('modal-pwa-ios-guide')" class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center text-outline"><span class="material-symbols-outlined text-base">close</span></button>
+      </div>
+      <div class="p-5 space-y-4 text-xs">
+        <div class="text-center space-y-2">
+          <div class="w-16 h-16 rounded-2xl bg-primary text-white flex items-center justify-center text-3xl mx-auto shadow-md">🌿</div>
+          <h4 class="font-display font-bold text-sm text-on-surface">Cài App lên Màn Hình Chính iPhone / iPad</h4>
+          <p class="text-outline text-[11px]">Để dùng app nhanh như ứng dụng App Store, toàn màn hình và không có thanh địa chỉ:</p>
+        </div>
+
+        <div class="space-y-3 bg-surface-container-low p-3.5 rounded-2xl">
+          <div class="flex items-start gap-3">
+            <div class="w-6 h-6 rounded-full bg-primary text-white flex items-center justify-center font-bold text-xs flex-shrink-0">1</div>
+            <div>
+              <span class="font-bold text-on-surface">Bấm vào biểu tượng Chia sẻ (Share)</span>
+              <p class="text-outline text-[11px] mt-0.5">Biểu tượng hình vuông có mũi tên trỏ lên <span class="font-bold text-primary">⎋ / 📤</span> ở thanh dưới cùng Safari.</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-3">
+            <div class="w-6 h-6 rounded-full bg-primary text-white flex items-center justify-center font-bold text-xs flex-shrink-0">2</div>
+            <div>
+              <span class="font-bold text-on-surface">Chọn "Thêm vào MH chính" (Add to Home Screen)</span>
+              <p class="text-outline text-[11px] mt-0.5">Cuộn xuống danh sách tùy chọn và nhấn vào nút dấu cộng ➕.</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-3">
+            <div class="w-6 h-6 rounded-full bg-primary text-white flex items-center justify-center font-bold text-xs flex-shrink-0">3</div>
+            <div>
+              <span class="font-bold text-on-surface">Nhấn "Thêm" (Add) ở góc trên bên phải</span>
+              <p class="text-outline text-[11px] mt-0.5">Icon Tiệm Của Lá 🌿 sẽ xuất hiện ngay trên màn hình điện thoại!</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="p-4 border-t border-outline-variant/30">
+        <button onclick="closeModal('modal-pwa-ios-guide')" class="w-full py-3 bg-primary text-on-primary font-bold rounded-xl text-xs shadow-sm hover:bg-primary-container transition">
+          Đã Hiểu & Đóng
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- MODAL: Thêm / Sửa Khách Hàng CRM -->
   <div id="modal-edit-customer" class="modal-overlay hidden">
     <div class="modal-container max-w-md animate-scale-up">
@@ -1161,7 +1270,7 @@
   <!-- ── 6. TOAST CONTAINER ────────────────────────────────────────────────── -->
   <div id="toast-container"></div>
 
-  <!-- ── 7. APPLICATION JAVASCRIPT ENGINE ──────────────────────────────────── -->
+  <!-- ── 7. APPLICATION JAVASCRIPT ENGINE & PWA SERVICE WORKER ─────────────── -->
   <script>
     var state = {
       loading: false,
@@ -1255,6 +1364,60 @@
       receivedCashAmount: 0,
       paymentMethod: 'TRANSFER'
     };
+
+    // ── PWA SERVICE WORKER & INSTALL PROMPT ENGINE ────────────────────────────
+    var deferredPWAInstallPrompt = null;
+
+    window.addEventListener('beforeinstallprompt', function(e) {
+      e.preventDefault();
+      deferredPWAInstallPrompt = e;
+      console.log('[PWA] beforeinstallprompt captured!');
+      var btnHeader = document.getElementById('btn-pwa-install-header');
+      if (btnHeader) btnHeader.classList.remove('hidden');
+    });
+
+    window.addEventListener('appinstalled', function() {
+      console.log('[PWA] App successfully installed to Home Screen!');
+      showToast('Đã cài đặt App Tiệm Của Lá thành công!', 'verified');
+      deferredPWAInstallPrompt = null;
+    });
+
+    function promptPWAInstall() {
+      var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+      if (isIOS) {
+        openModal('modal-pwa-ios-guide');
+        return;
+      }
+
+      if (deferredPWAInstallPrompt) {
+        deferredPWAInstallPrompt.prompt();
+        deferredPWAInstallPrompt.userChoice.then(function(choiceResult) {
+          if (choiceResult.outcome === 'accepted') {
+            console.log('[PWA] User accepted the install prompt');
+            showToast('Đang cài đặt Tiệm Của Lá...', 'download');
+          }
+          deferredPWAInstallPrompt = null;
+        });
+      } else {
+        openModal('modal-pwa-ios-guide');
+      }
+    }
+
+    // Register Service Worker for offline performance & PWA installability
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function() {
+        try {
+          var swCode = 'const CACHE="tcl-pwa-v1";self.addEventListener("install",e=>{self.skipWaiting();});self.addEventListener("activate",e=>{e.waitUntil(self.clients.claim());});self.addEventListener("fetch",e=>{if(e.request.method==="GET"&&(e.request.url.includes("fonts.")||e.request.url.includes("cdn."))){e.respondWith(caches.open(CACHE).then(c=>c.match(e.request).then(r=>r||fetch(e.request).then(res=>{c.put(e.request,res.clone());return res;}))));}});';
+          var blob = new Blob([swCode], { type: 'text/javascript' });
+          var swUrl = URL.createObjectURL(blob);
+          navigator.serviceWorker.register(swUrl).then(function(reg) {
+            console.log('[PWA] Service Worker Active scope:', reg.scope);
+          }).catch(function(err) {
+            console.log('[PWA] Service Worker notice:', err.message);
+          });
+        } catch(e) {}
+      });
+    }
 
     function formatLocalDate(d) {
       d = d || new Date();
@@ -2964,7 +3127,7 @@
 
     // ── INITIALIZATION ────────────────────────────────────────────────────────
     document.addEventListener('DOMContentLoaded', function() {
-      console.log('[BOOT] TCLApp Organic Vitality Engine Loaded Successfully.');
+      console.log('[BOOT] TCLApp Organic Vitality PWA Engine Loaded Successfully.');
       renderApp();
       refreshData();
       setInterval(function() {
