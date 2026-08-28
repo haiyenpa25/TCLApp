@@ -939,55 +939,123 @@
     </div>
   </div>
 
-  <!-- MODAL: Customization Món (Size, Đá, Đường, Topping) -->
+    <!-- MODAL: Customization Thông Minh (Tách Biệt Đồ Uống vs Đồ Ăn Vặt) ────── -->
   <div id="modal-custom-product" class="modal-overlay hidden">
     <div class="modal-container max-w-md animate-scale-up">
       <div class="p-4 border-b border-outline-variant/30 flex justify-between items-center">
         <div>
-          <h3 id="custom-prod-name" class="font-display font-bold text-base text-primary">Tên Món</h3>
-          <span id="custom-prod-price" class="font-display font-bold text-sm text-primary">0 ₫</span>
+          <div class="flex items-center gap-2">
+            <h3 id="custom-prod-name" class="font-display font-bold text-base text-primary">Tên Món</h3>
+            <span id="custom-prod-category-badge" class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-primary/10 text-primary">Đồ Uống</span>
+          </div>
+          <span id="custom-prod-price" class="font-display font-extrabold text-sm text-primary">0 ₫</span>
         </div>
         <button onclick="closeModal('modal-custom-product')" class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center text-outline hover:text-on-surface"><span class="material-symbols-outlined text-base">close</span></button>
       </div>
 
       <div class="p-4 space-y-4 overflow-y-auto max-h-[60vh]">
-        <!-- Size Selector -->
-        <div>
-          <label class="text-xs font-bold text-outline block mb-2 uppercase tracking-wider">Kích Cỡ (Size)</label>
-          <div class="grid grid-cols-3 gap-2">
-            <button id="size-btn-S" onclick="state.selectedSize='S';renderCustomModal();" class="py-2 rounded-xl text-xs font-medium border border-outline-variant bg-surface-container-low">Size S (-3k)</button>
-            <button id="size-btn-M" onclick="state.selectedSize='M';renderCustomModal();" class="py-2 rounded-xl text-xs font-bold border-2 border-primary bg-primary-fixed text-primary">Size M (Chuẩn)</button>
-            <button id="size-btn-L" onclick="state.selectedSize='L';renderCustomModal();" class="py-2 rounded-xl text-xs font-medium border border-outline-variant bg-surface-container-low">Size L (+5k)</button>
+        
+        <!-- 🥤 NHÓM 1: TÙY CHỌN DÀNH RIÊNG CHO ĐỒ UỐNG (TRÀ SỮA, CÀ PHÊ, TRÀ TRÁI CÂY) -->
+        <div id="custom-drink-sections" class="space-y-3.5">
+          <!-- Size Selector -->
+          <div id="custom-size-section">
+            <label class="text-xs font-bold text-outline block mb-1.5 uppercase tracking-wider">Kích Cỡ Ly (Size)</label>
+            <div class="grid grid-cols-3 gap-2">
+              <button id="size-btn-S" onclick="state.selectedSize='S';renderCustomModal();" class="py-2 rounded-xl text-xs font-medium border border-outline-variant bg-surface-container-low">Size S (-3k)</button>
+              <button id="size-btn-M" onclick="state.selectedSize='M';renderCustomModal();" class="py-2 rounded-xl text-xs font-bold border-2 border-primary bg-primary-fixed text-primary">Size M (Chuẩn)</button>
+              <button id="size-btn-L" onclick="state.selectedSize='L';renderCustomModal();" class="py-2 rounded-xl text-xs font-medium border border-outline-variant bg-surface-container-low">Size L (+5k)</button>
+            </div>
+          </div>
+
+          <!-- Ice Selector -->
+          <div id="custom-ice-section">
+            <label class="text-xs font-bold text-outline block mb-1.5 uppercase tracking-wider">Mức Đá</label>
+            <div class="grid grid-cols-4 gap-1.5 text-xs">
+              <button id="ice-btn-100" onclick="state.selectedIce='100%';renderCustomModal();" class="py-1.5 rounded-lg border border-outline-variant bg-primary-fixed font-bold text-primary">100% Đá</button>
+              <button id="ice-btn-70" onclick="state.selectedIce='70%';renderCustomModal();" class="py-1.5 rounded-lg border border-outline-variant bg-surface-container-low">70% Đá</button>
+              <button id="ice-btn-50" onclick="state.selectedIce='50%';renderCustomModal();" class="py-1.5 rounded-lg border border-outline-variant bg-surface-container-low">50% Đá</button>
+              <button id="ice-btn-0" onclick="state.selectedIce='0%';renderCustomModal();" class="py-1.5 rounded-lg border border-outline-variant bg-surface-container-low">Không Đá</button>
+            </div>
+          </div>
+
+          <!-- Sugar Selector -->
+          <div id="custom-sugar-section">
+            <label class="text-xs font-bold text-outline block mb-1.5 uppercase tracking-wider">Mức Đường</label>
+            <div class="grid grid-cols-4 gap-1.5 text-xs">
+              <button id="sugar-btn-100" onclick="state.selectedSugar='100%';renderCustomModal();" class="py-1.5 rounded-lg border border-outline-variant bg-primary-fixed font-bold text-primary">100% Đường</button>
+              <button id="sugar-btn-70" onclick="state.selectedSugar='70%';renderCustomModal();" class="py-1.5 rounded-lg border border-outline-variant bg-surface-container-low">70% Đường</button>
+              <button id="sugar-btn-50" onclick="state.selectedSugar='50%';renderCustomModal();" class="py-1.5 rounded-lg border border-outline-variant bg-surface-container-low">50% Đường</button>
+              <button id="sugar-btn-0" onclick="state.selectedSugar='0%';renderCustomModal();" class="py-1.5 rounded-lg border border-outline-variant bg-surface-container-low">Không Đường</button>
+            </div>
+          </div>
+
+          <!-- Drink Toppings -->
+          <div id="custom-drink-toppings-section">
+            <label class="text-xs font-bold text-outline block mb-1.5 uppercase tracking-wider">Topping Trà Sữa / Nước</label>
+            <div id="custom-toppings-list" class="grid grid-cols-2 gap-2">
+              <!-- Rendered via JS -->
+            </div>
           </div>
         </div>
 
-        <!-- Ice Selector -->
-        <div>
-          <label class="text-xs font-bold text-outline block mb-2 uppercase tracking-wider">Mức Đá</label>
-          <div class="grid grid-cols-4 gap-1.5 text-xs">
-            <button id="ice-btn-100" onclick="state.selectedIce='100%';renderCustomModal();" class="py-1.5 rounded-lg border border-outline-variant bg-primary-fixed font-bold text-primary">100% Đá</button>
-            <button id="ice-btn-70" onclick="state.selectedIce='70%';renderCustomModal();" class="py-1.5 rounded-lg border border-outline-variant bg-surface-container-low">70% Đá</button>
-            <button id="ice-btn-50" onclick="state.selectedIce='50%';renderCustomModal();" class="py-1.5 rounded-lg border border-outline-variant bg-surface-container-low">50% Đá</button>
-            <button id="ice-btn-0" onclick="state.selectedIce='0%';renderCustomModal();" class="py-1.5 rounded-lg border border-outline-variant bg-surface-container-low">Không Đá</button>
+        <!-- 🍘 NHÓM 2: TÙY CHỌN DÀNH RIÊNG CHO ĐỒ ĂN VẶT (BÁNH TRÁNG TRỘN, KHÔ GÀ,...) -->
+        <div id="custom-snack-sections" class="hidden space-y-3.5">
+          <!-- Phân Loại Khô Gà -->
+          <div>
+            <label class="text-xs font-bold text-outline block mb-1.5 uppercase tracking-wider">🍗 Tùy Chọn Khô Gà</label>
+            <div class="grid grid-cols-2 gap-2 text-xs">
+              <button id="snack-chicken-none" onclick="state.selectedSnackChicken=false;renderCustomModal();" class="py-2 px-3 rounded-xl border font-bold flex flex-col items-start gap-0.5">
+                <span class="font-bold">Không Khô Gà</span>
+                <span class="text-[10px] text-outline font-normal">Bánh tráng trộn truyền thống</span>
+              </button>
+              <button id="snack-chicken-yes" onclick="state.selectedSnackChicken=true;renderCustomModal();" class="py-2 px-3 rounded-xl border font-bold flex flex-col items-start gap-0.5">
+                <span class="font-bold">+ Khô Gà (+5.000 ₫)</span>
+                <span class="text-[10px] text-outline font-normal">Khô gà lá chanh cay thơm</span>
+              </button>
+            </div>
           </div>
-        </div>
 
-        <!-- Sugar Selector -->
-        <div>
-          <label class="text-xs font-bold text-outline block mb-2 uppercase tracking-wider">Mức Đường</label>
-          <div class="grid grid-cols-4 gap-1.5 text-xs">
-            <button id="sugar-btn-100" onclick="state.selectedSugar='100%';renderCustomModal();" class="py-1.5 rounded-lg border border-outline-variant bg-primary-fixed font-bold text-primary">100% Đường</button>
-            <button id="sugar-btn-70" onclick="state.selectedSugar='70%';renderCustomModal();" class="py-1.5 rounded-lg border border-outline-variant bg-surface-container-low">70% Đường</button>
-            <button id="sugar-btn-50" onclick="state.selectedSugar='50%';renderCustomModal();" class="py-1.5 rounded-lg border border-outline-variant bg-surface-container-low">50% Đường</button>
-            <button id="sugar-btn-0" onclick="state.selectedSugar='0%';renderCustomModal();" class="py-1.5 rounded-lg border border-outline-variant bg-surface-container-low">Không Đường</button>
+          <!-- Mức Độ Cay -->
+          <div>
+            <label class="text-xs font-bold text-outline block mb-1.5 uppercase tracking-wider">🌶️ Mức Độ Cay</label>
+            <div class="grid grid-cols-3 gap-1.5 text-xs">
+              <button id="snack-spicy-none" onclick="state.selectedSnackSpicy='Không cay';renderCustomModal();" class="py-2 rounded-xl border border-outline-variant bg-surface-container-low font-medium">Không Cay</button>
+              <button id="snack-spicy-medium" onclick="state.selectedSnackSpicy='Cay vừa';renderCustomModal();" class="py-2 rounded-xl border-2 border-primary bg-primary-fixed text-primary font-bold">Cay Vừa</button>
+              <button id="snack-spicy-hot" onclick="state.selectedSnackSpicy='Cay nhiều';renderCustomModal();" class="py-2 rounded-xl border border-outline-variant bg-surface-container-low font-medium">Cay Nhiều 🌶️</button>
+            </div>
           </div>
-        </div>
 
-        <!-- Toppings -->
-        <div>
-          <label class="text-xs font-bold text-outline block mb-2 uppercase tracking-wider">Topping Thêm</label>
-          <div id="custom-toppings-list" class="grid grid-cols-2 gap-2">
-            <!-- Rendered via JS -->
+          <!-- Khẩu Vị / Rau Thơm -->
+          <div>
+            <label class="text-xs font-bold text-outline block mb-1.5 uppercase tracking-wider">🍋 Khẩu Vị & Rau Thơm</label>
+            <div class="grid grid-cols-3 gap-1.5 text-xs">
+              <button id="snack-sour-normal" onclick="state.selectedSnackSour='Chua vừa';renderCustomModal();" class="py-1.5 rounded-lg border border-outline-variant bg-primary-fixed font-bold text-primary">Chua Vừa</button>
+              <button id="snack-sour-extra" onclick="state.selectedSnackSour='Nhiều chua';renderCustomModal();" class="py-1.5 rounded-lg border border-outline-variant bg-surface-container-low">Nhiều Tắc</button>
+              <button id="snack-norau" onclick="state.selectedSnackNoRau=!state.selectedSnackNoRau;renderCustomModal();" class="py-1.5 rounded-lg border border-outline-variant bg-surface-container-low">Bỏ Rau Răm</button>
+            </div>
+          </div>
+
+          <!-- Topping Ăn Vặt Thêm -->
+          <div>
+            <label class="text-xs font-bold text-outline block mb-1.5 uppercase tracking-wider">🥚 Topping Ăn Vặt Thêm</label>
+            <div class="grid grid-cols-2 gap-2 text-xs">
+              <div onclick="toggleSnackTopping('TRUNG_CUT', 5000, '2 Trứng cút')" id="snack-top-trung" class="p-2.5 rounded-xl border border-outline-variant bg-surface-container-lowest flex items-center justify-between cursor-pointer transition">
+                <span>🥚 + 2 Trứng cút</span>
+                <span class="font-mono font-bold">+5.000 ₫</span>
+              </div>
+              <div onclick="toggleSnackTopping('KHO_BO', 5000, 'Khô bò đen')" id="snack-top-khobo" class="p-2.5 rounded-xl border border-outline-variant bg-surface-container-lowest flex items-center justify-between cursor-pointer transition">
+                <span>🥩 + Khô bò đen</span>
+                <span class="font-mono font-bold">+5.000 ₫</span>
+              </div>
+              <div onclick="toggleSnackTopping('SOT_BO', 3000, 'Sốt bơ béo')" id="snack-top-sotbo" class="p-2.5 rounded-xl border border-outline-variant bg-surface-container-lowest flex items-center justify-between cursor-pointer transition">
+                <span>🧈 + Sốt bơ béo</span>
+                <span class="font-mono font-bold">+3.000 ₫</span>
+              </div>
+              <div onclick="toggleSnackTopping('DAU_PHONG', 3000, 'Đậu phộng thêm')" id="snack-top-dauphong" class="p-2.5 rounded-xl border border-outline-variant bg-surface-container-lowest flex items-center justify-between cursor-pointer transition">
+                <span>🥜 + Đậu phộng</span>
+                <span class="font-mono font-bold">+3.000 ₫</span>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -1001,6 +1069,14 @@
           </div>
         </div>
       </div>
+
+      <div class="p-4 border-t border-outline-variant/30">
+        <button onclick="confirmAddCustomToCart()" class="w-full py-3 bg-primary text-on-primary font-bold rounded-xl text-xs shadow-sm hover:bg-primary-container transition">
+          Thêm Vào Giỏ Hàng
+        </button>
+      </div>
+    </div>
+  </div>
 
       <div class="p-4 border-t border-outline-variant/30">
         <button onclick="confirmAddCustomToCart()" class="w-full py-3 bg-primary text-on-primary font-bold rounded-xl text-xs shadow-sm hover:bg-primary-container transition">
@@ -1724,6 +1800,14 @@
       selectedIce: '100%',
       selectedSugar: '100%',
       selectedToppingIds: [],
+
+      // Snack Customization State
+      selectedSnackChicken: false,
+      selectedSnackSpicy: 'Cay vừa',
+      selectedSnackSour: 'Chua vừa',
+      selectedSnackNoRau: false,
+      selectedSnackToppings: {},
+
       customQuantity: 1,
 
       // Checkout State
@@ -2278,6 +2362,23 @@
       return (tab.cart || []).reduce(function(sum, it) { return sum + (it.quantity || 0); }, 0);
     }
 
+    
+    function isSnackProduct(p) {
+      if (!p) return false;
+      var cat = (p.Category || '').toLowerCase();
+      var name = (p.Name || '').toLowerCase();
+      return cat.includes('ăn vặt') || cat.includes('snack') || name.includes('bánh tráng') || name.includes('khô gà');
+    }
+
+    function toggleSnackTopping(key, price, name) {
+      if (state.selectedSnackToppings[key]) {
+        delete state.selectedSnackToppings[key];
+      } else {
+        state.selectedSnackToppings[key] = { price: price, name: name };
+      }
+      renderCustomModal();
+    }
+
     function openCustomization(productId) {
       var prod = state.products.find(function(p) { return p.ID === productId; });
       if (!prod) return;
@@ -2286,9 +2387,39 @@
       state.selectedIce = '100%';
       state.selectedSugar = '100%';
       state.selectedToppingIds = [];
+      state.selectedSnackChicken = (prod.Name || '').toLowerCase().includes('khô gà');
+      state.selectedSnackSpicy = 'Cay vừa';
+      state.selectedSnackSour = 'Chua vừa';
+      state.selectedSnackNoRau = false;
+      state.selectedSnackToppings = {};
       state.customQuantity = 1;
       renderCustomModal();
       openModal('modal-custom-product');
+    }
+
+    function quickAddProductToCart(productId, e) {
+      if (e) e.stopPropagation();
+      var prod = state.products.find(function(p) { return p.ID === productId; });
+      if (!prod) return;
+      
+      var tab = getActiveTab();
+      var isSnack = isSnackProduct(prod);
+      var cartItem = {
+        cartId: 'item_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4),
+        productId: prod.ID,
+        productName: prod.Name,
+        size: isSnack ? '' : (prod.HasSize ? 'M' : ''),
+        ice: isSnack ? '' : (prod.HasIce ? '100%' : ''),
+        sugar: isSnack ? '' : (prod.HasSugar ? '100%' : ''),
+        toppings: [],
+        quantity: 1,
+        unitPrice: prod.Price || 0,
+        subtotal: prod.Price || 0
+      };
+
+      tab.cart.push(cartItem);
+      showToast('Đã thêm 1x ' + prod.Name + ' vào ' + tab.name, 'check_circle');
+      renderPOS();
     }
 
     function toggleToppingOption(toppingId) {
@@ -2307,19 +2438,63 @@
       if (!state.customizingProduct) return;
       var prod = state.customizingProduct;
       var tab = getActiveTab();
-      var sizePrice = state.selectedSize === 'L' ? 5000 : (state.selectedSize === 'S' ? -3000 : 0);
-      var selectedToppings = state.toppings.filter(function(t) { return state.selectedToppingIds.indexOf(t.ID) > -1; });
-      var toppingPrice = selectedToppings.reduce(function(sum, t) { return sum + (t.Price || 0); }, 0);
-      var unitPrice = Math.max(0, (prod.Price || 0) + sizePrice + toppingPrice);
+      var isSnack = isSnackProduct(prod);
+
+      var unitPrice = 0;
+      var prodName = prod.Name;
+      var toppingsFormatted = [];
+      var iceVal = '';
+      var sugarVal = '';
+      var sizeVal = '';
+
+      if (isSnack) {
+        var basePrice = prod.Price || 0;
+        var chickenPrice = state.selectedSnackChicken ? 5000 : 0;
+        var snackToppingPrice = 0;
+        var snackOpts = [];
+
+        if (state.selectedSnackChicken) {
+          snackOpts.push('Thêm khô gà (+5k)');
+        }
+        if (state.selectedSnackSpicy) {
+          snackOpts.push(state.selectedSnackSpicy);
+        }
+        if (state.selectedSnackSour === 'Nhiều chua') {
+          snackOpts.push('Nhiều tắc');
+        }
+        if (state.selectedSnackNoRau) {
+          snackOpts.push('Không rau răm');
+        }
+
+        for (var k in state.selectedSnackToppings) {
+          snackToppingPrice += state.selectedSnackToppings[k].price;
+          toppingsFormatted.push({ Name: state.selectedSnackToppings[k].name, Price: state.selectedSnackToppings[k].price });
+        }
+
+        unitPrice = basePrice + chickenPrice + snackToppingPrice;
+        if (snackOpts.length > 0) {
+          iceVal = snackOpts.join(' • ');
+        }
+      } else {
+        var sizePrice = state.selectedSize === 'L' ? 5000 : (state.selectedSize === 'S' ? -3000 : 0);
+        var selectedToppings = state.toppings.filter(function(t) { return state.selectedToppingIds.indexOf(t.ID) > -1; });
+        var drinkToppingPrice = selectedToppings.reduce(function(sum, t) { return sum + (t.Price || 0); }, 0);
+        unitPrice = Math.max(0, (prod.Price || 0) + sizePrice + drinkToppingPrice);
+
+        sizeVal = prod.HasSize ? state.selectedSize : '';
+        iceVal = prod.HasIce ? state.selectedIce : '';
+        sugarVal = prod.HasSugar ? state.selectedSugar : '';
+        toppingsFormatted = selectedToppings;
+      }
 
       var cartItem = {
         cartId: 'item_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4),
         productId: prod.ID,
-        productName: prod.Name,
-        size: prod.HasSize ? state.selectedSize : '',
-        ice: prod.HasIce ? state.selectedIce : '',
-        sugar: prod.HasSugar ? state.selectedSugar : '',
-        toppings: selectedToppings,
+        productName: prodName,
+        size: sizeVal,
+        ice: iceVal,
+        sugar: sugarVal,
+        toppings: toppingsFormatted,
         quantity: state.customQuantity,
         unitPrice: unitPrice,
         subtotal: unitPrice * state.customQuantity
@@ -2327,7 +2502,7 @@
 
       tab.cart.push(cartItem);
       closeModal('modal-custom-product');
-      showToast('Đã thêm ' + prod.Name + ' vào ' + tab.name, 'check_circle');
+      showToast('Đã thêm ' + prodName + ' vào ' + tab.name, 'check_circle');
       renderPOS();
     }
 
@@ -2793,9 +2968,14 @@
             html += '      <span class="text-[10px] font-bold text-primary uppercase tracking-wider block mb-0.5">' + (p.Category || 'F&B') + '</span>';
             html += '      <h3 class="font-bold text-xs sm:text-sm text-on-surface leading-snug line-clamp-2">' + (p.Name || 'Món nước') + '</h3>';
             html += '    </div>';
-            html += '    <button class="w-full py-1 rounded-lg bg-surface-container text-primary font-bold text-xs hover:bg-surface-container-high transition-colors flex items-center justify-center gap-1">';
-            html += '      <span class="material-symbols-outlined text-[15px]">add</span> Chọn Món';
-            html += '    </button>';
+            html += '    <div class="flex gap-1.5 items-center">';
+            html += '      <button type="button" onclick="openCustomization(\'' + p.ID + '\')" class="flex-1 py-1.5 rounded-lg bg-surface-container text-primary font-bold text-xs hover:bg-surface-container-high transition-colors flex items-center justify-center gap-1">';
+            html += '        <span class="material-symbols-outlined text-[14px]">tune</span> Tùy Chọn';
+            html += '      </button>';
+            html += '      <button type="button" onclick="quickAddProductToCart(\'' + p.ID + '\', event)" title="Thêm nhanh 1 phần" class="w-8 py-1.5 rounded-lg bg-primary text-on-primary font-bold text-xs hover:bg-primary-container transition-colors flex items-center justify-center">';
+            html += '        <span class="material-symbols-outlined text-[15px]">add</span>';
+            html += '      </button>';
+            html += '    </div>';
             html += '  </div>';
             html += '</div>';
           });
@@ -2965,52 +3145,135 @@
     function renderCustomModal() {
       var p = state.customizingProduct;
       if (!p) return;
+      var isSnack = isSnackProduct(p);
+
       var nameEl = document.getElementById('custom-prod-name');
+      var catBadge = document.getElementById('custom-prod-category-badge');
       var priceEl = document.getElementById('custom-prod-price');
       var qtyEl = document.getElementById('custom-qty-val');
+      var drinkSec = document.getElementById('custom-drink-sections');
+      var snackSec = document.getElementById('custom-snack-sections');
+
       if (nameEl) nameEl.innerText = p.Name;
+      if (catBadge) {
+        catBadge.innerText = isSnack ? 'Đồ Ăn Vặt' : (p.Category || 'Đồ Uống');
+        catBadge.className = isSnack ? 'px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/15 text-amber-700' : 'px-2 py-0.5 rounded-full text-[10px] font-bold bg-primary/10 text-primary';
+      }
       if (qtyEl) qtyEl.innerText = state.customQuantity;
 
-      var sizePrice = state.selectedSize === 'L' ? 5000 : (state.selectedSize === 'S' ? -3000 : 0);
-      var toppingPrice = state.toppings.filter(function(t) { return state.selectedToppingIds.indexOf(t.ID) > -1; }).reduce(function(sum, t) { return sum + (t.Price || 0); }, 0);
-      var total = Math.max(0, (p.Price || 0) + sizePrice + toppingPrice) * state.customQuantity;
-      if (priceEl) priceEl.innerText = formatVND(total);
+      if (isSnack) {
+        if (drinkSec) drinkSec.classList.add('hidden');
+        if (snackSec) snackSec.classList.remove('hidden');
 
-      ['S', 'M', 'L'].forEach(function(sz) {
-        var btn = document.getElementById('size-btn-' + sz);
-        if (btn) {
-          if (state.selectedSize === sz) btn.className = 'py-2 rounded-xl text-xs font-bold border-2 border-primary bg-primary-fixed text-primary transition';
-          else btn.className = 'py-2 rounded-xl text-xs font-medium border border-outline-variant bg-surface-container-low text-on-surface hover:bg-surface-container transition';
+        var basePrice = p.Price || 0;
+        var chickenExtra = state.selectedSnackChicken ? 5000 : 0;
+        var snackToppingPrice = 0;
+        for (var k in state.selectedSnackToppings) {
+          snackToppingPrice += state.selectedSnackToppings[k].price;
         }
-      });
 
-      ['100', '70', '50', '0'].forEach(function(ice) {
-        var btn = document.getElementById('ice-btn-' + ice);
-        if (btn) {
-          if (state.selectedIce === (ice === '0' ? '0%' : ice + '%')) btn.className = 'py-1.5 rounded-lg border border-outline-variant bg-primary-fixed font-bold text-primary';
-          else btn.className = 'py-1.5 rounded-lg border border-outline-variant bg-surface-container-low';
+        var totalUnitPrice = basePrice + chickenExtra + snackToppingPrice;
+        if (priceEl) priceEl.innerText = formatVND(totalUnitPrice * state.customQuantity);
+
+        // Update Chicken Buttons
+        var btnNoChicken = document.getElementById('snack-chicken-none');
+        var btnYesChicken = document.getElementById('snack-chicken-yes');
+        if (btnNoChicken && btnYesChicken) {
+          if (!state.selectedSnackChicken) {
+            btnNoChicken.className = 'py-2 px-3 rounded-xl border-2 border-primary bg-primary-fixed text-primary font-bold flex flex-col items-start gap-0.5';
+            btnYesChicken.className = 'py-2 px-3 rounded-xl border border-outline-variant bg-surface-container-low text-on-surface font-medium flex flex-col items-start gap-0.5';
+          } else {
+            btnYesChicken.className = 'py-2 px-3 rounded-xl border-2 border-primary bg-primary-fixed text-primary font-bold flex flex-col items-start gap-0.5';
+            btnNoChicken.className = 'py-2 px-3 rounded-xl border border-outline-variant bg-surface-container-low text-on-surface font-medium flex flex-col items-start gap-0.5';
+          }
         }
-      });
 
-      ['100', '70', '50', '0'].forEach(function(sugar) {
-        var btn = document.getElementById('sugar-btn-' + sugar);
-        if (btn) {
-          if (state.selectedSugar === (sugar === '0' ? '0%' : sugar + '%')) btn.className = 'py-1.5 rounded-lg border border-outline-variant bg-primary-fixed font-bold text-primary';
-          else btn.className = 'py-1.5 rounded-lg border border-outline-variant bg-surface-container-low';
-        }
-      });
-
-      var topList = document.getElementById('custom-toppings-list');
-      if (topList) {
-        var topHtml = '';
-        state.toppings.forEach(function(t) {
-          var selected = state.selectedToppingIds.indexOf(t.ID) > -1;
-          topHtml += '<div onclick="toggleToppingOption(\'' + t.ID + '\')" class="p-2.5 rounded-xl border flex items-center justify-between cursor-pointer transition text-xs ' + (selected ? 'border-primary bg-primary-fixed/40 text-primary font-bold' : 'border-outline-variant bg-surface-container-lowest text-on-surface') + '">';
-          topHtml += '  <span>' + t.Name + '</span>';
-          topHtml += '  <span class="font-mono">' + formatVND(t.Price) + '</span>';
-          topHtml += '</div>';
+        // Update Spicy Buttons
+        ['none', 'medium', 'hot'].forEach(function(sp) {
+          var btn = document.getElementById('snack-spicy-' + sp);
+          var spVal = sp === 'none' ? 'Không cay' : (sp === 'medium' ? 'Cay vừa' : 'Cay nhiều');
+          if (btn) {
+            if (state.selectedSnackSpicy === spVal) btn.className = 'py-2 rounded-xl border-2 border-primary bg-primary-fixed text-primary font-bold';
+            else btn.className = 'py-2 rounded-xl border border-outline-variant bg-surface-container-low text-on-surface font-medium';
+          }
         });
-        topList.innerHTML = topHtml;
+
+        // Update Taste Buttons
+        var btnSourNorm = document.getElementById('snack-sour-normal');
+        var btnSourExtra = document.getElementById('snack-sour-extra');
+        var btnNoRau = document.getElementById('snack-norau');
+
+        if (btnSourNorm && btnSourExtra) {
+          if (state.selectedSnackSour === 'Chua vừa') {
+            btnSourNorm.className = 'py-1.5 rounded-lg border-2 border-primary bg-primary-fixed font-bold text-primary';
+            btnSourExtra.className = 'py-1.5 rounded-lg border border-outline-variant bg-surface-container-low font-medium';
+          } else {
+            btnSourExtra.className = 'py-1.5 rounded-lg border-2 border-primary bg-primary-fixed font-bold text-primary';
+            btnSourNorm.className = 'py-1.5 rounded-lg border border-outline-variant bg-surface-container-low font-medium';
+          }
+        }
+
+        if (btnNoRau) {
+          if (state.selectedSnackNoRau) btnNoRau.className = 'py-1.5 rounded-lg border-2 border-error bg-error-container/20 font-bold text-error';
+          else btnNoRau.className = 'py-1.5 rounded-lg border border-outline-variant bg-surface-container-low font-medium';
+        }
+
+        // Update Snack Topping Cards
+        ['TRUNG_CUT', 'KHO_BO', 'SOT_BO', 'DAU_PHONG'].forEach(function(k) {
+          var idMap = { 'TRUNG_CUT': 'snack-top-trung', 'KHO_BO': 'snack-top-khobo', 'SOT_BO': 'snack-top-sotbo', 'DAU_PHONG': 'snack-top-dauphong' };
+          var el = document.getElementById(idMap[k]);
+          if (el) {
+            if (state.selectedSnackToppings[k]) el.className = 'p-2.5 rounded-xl border-2 border-primary bg-primary-fixed/40 text-primary font-bold flex items-center justify-between cursor-pointer transition';
+            else el.className = 'p-2.5 rounded-xl border border-outline-variant bg-surface-container-lowest text-on-surface flex items-center justify-between cursor-pointer transition';
+          }
+        });
+
+      } else {
+        // DRINK CUSTOMIZATION
+        if (drinkSec) drinkSec.classList.remove('hidden');
+        if (snackSec) snackSec.classList.add('hidden');
+
+        var sizePrice = state.selectedSize === 'L' ? 5000 : (state.selectedSize === 'S' ? -3000 : 0);
+        var toppingPrice = state.toppings.filter(function(t) { return state.selectedToppingIds.indexOf(t.ID) > -1; }).reduce(function(sum, t) { return sum + (t.Price || 0); }, 0);
+        var total = Math.max(0, (p.Price || 0) + sizePrice + toppingPrice) * state.customQuantity;
+        if (priceEl) priceEl.innerText = formatVND(total);
+
+        ['S', 'M', 'L'].forEach(function(sz) {
+          var btn = document.getElementById('size-btn-' + sz);
+          if (btn) {
+            if (state.selectedSize === sz) btn.className = 'py-2 rounded-xl text-xs font-bold border-2 border-primary bg-primary-fixed text-primary transition';
+            else btn.className = 'py-2 rounded-xl text-xs font-medium border border-outline-variant bg-surface-container-low text-on-surface hover:bg-surface-container transition';
+          }
+        });
+
+        ['100', '70', '50', '0'].forEach(function(ice) {
+          var btn = document.getElementById('ice-btn-' + ice);
+          if (btn) {
+            if (state.selectedIce === (ice === '0' ? '0%' : ice + '%')) btn.className = 'py-1.5 rounded-lg border-2 border-primary bg-primary-fixed font-bold text-primary';
+            else btn.className = 'py-1.5 rounded-lg border border-outline-variant bg-surface-container-low';
+          }
+        });
+
+        ['100', '70', '50', '0'].forEach(function(sugar) {
+          var btn = document.getElementById('sugar-btn-' + sugar);
+          if (btn) {
+            if (state.selectedSugar === (sugar === '0' ? '0%' : sugar + '%')) btn.className = 'py-1.5 rounded-lg border-2 border-primary bg-primary-fixed font-bold text-primary';
+            else btn.className = 'py-1.5 rounded-lg border border-outline-variant bg-surface-container-low';
+          }
+        });
+
+        var topList = document.getElementById('custom-toppings-list');
+        if (topList) {
+          var topHtml = '';
+          state.toppings.forEach(function(t) {
+            var selected = state.selectedToppingIds.indexOf(t.ID) > -1;
+            topHtml += '<div onclick="toggleToppingOption(\'' + t.ID + '\')" class="p-2.5 rounded-xl border flex items-center justify-between cursor-pointer transition text-xs ' + (selected ? 'border-2 border-primary bg-primary-fixed/40 text-primary font-bold' : 'border-outline-variant bg-surface-container-lowest text-on-surface') + '">';
+            topHtml += '  <span>' + t.Name + '</span>';
+            topHtml += '  <span class="font-mono font-bold">' + formatVND(t.Price) + '</span>';
+            topHtml += '</div>';
+          });
+          topList.innerHTML = topHtml;
+        }
       }
     }
 
