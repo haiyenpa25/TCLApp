@@ -227,9 +227,9 @@
 
         <!-- 3. Khu Vực Mở Rộng Khi Chọn "Giao Hàng" -->
         <div id="pos-delivery-form" class="hidden grid grid-cols-1 sm:grid-cols-4 gap-2 pt-2 border-t border-outline-variant/20 text-xs">
-          <input id="del-customer-name" oninput="state.activeOrderTabs[state.currentOrderTabIndex].customerName=this.value" type="text" placeholder="Tên người nhận..." class="px-3 py-1.5 bg-surface-container-lowest border border-outline-variant/40 rounded-xl" />
-          <input id="del-customer-phone" oninput="state.activeOrderTabs[state.currentOrderTabIndex].customerPhone=this.value" type="tel" placeholder="Số điện thoại nhận..." class="px-3 py-1.5 bg-surface-container-lowest border border-outline-variant/40 rounded-xl" />
-          <input id="del-customer-address" oninput="state.activeOrderTabs[state.currentOrderTabIndex].deliveryAddress=this.value" type="text" placeholder="Địa chỉ giao hàng chi tiết..." class="sm:col-span-2 px-3 py-1.5 bg-surface-container-lowest border border-outline-variant/40 rounded-xl" />
+          <input id="del-customer-name" oninput="onDeliveryCustomerName(this.value)" type="text" placeholder="Tên người nhận..." class="px-3 py-1.5 bg-surface-container-lowest border border-outline-variant/40 rounded-xl" />
+          <input id="del-customer-phone" oninput="onDeliveryCustomerPhone(this.value)" type="tel" placeholder="Số điện thoại nhận..." class="px-3 py-1.5 bg-surface-container-lowest border border-outline-variant/40 rounded-xl" />
+          <input id="del-customer-address" oninput="onDeliveryCustomerAddress(this.value)" type="text" placeholder="Địa chỉ giao hàng chi tiết..." class="sm:col-span-2 px-3 py-1.5 bg-surface-container-lowest border border-outline-variant/40 rounded-xl" />
         </div>
 
         <!-- 4. Thông Báo Gom Món Khi Chọn Bàn Đang Ngồi Khách -->
@@ -1738,6 +1738,95 @@
       if (sub === 'topping') renderSettingsToppingsTable();
     }
 
+    // ── SHIFT HANDOVER (CHỐT CA & BÀN GIAO KÉT TIỀN) ──────────────────────────
+    function openShiftModal() {
+      var cashIn = 0;
+      var transferIn = 0;
+      state.activeOrders.forEach(function(o) {
+        if (o.Status === 'COMPLETED') {
+          if (o.PaymentMethod === 'CASH') cashIn += (Number(o.TotalAmount) || 0);
+          else transferIn += (Number(o.TotalAmount) || 0);
+        }
+      });
+
+      var todayStr = formatLocalDate(new Date());
+      var cashOut = state.expenses
+        .filter(function(e) { return String(e.Date || '').substring(0, 10) === todayStr && (e.FundingSource === 'Tiền quán'); })
+        .reduce(function(sum, e) { return sum + (Number(e.Amount) || 0); }, 0);
+
+      var cashInEl = document.getElementById('shift-cash-in');
+      var transferInEl = document.getElementById('shift-transfer-in');
+      var cashOutEl = document.getElementById('shift-cash-out');
+
+      if (cashInEl) cashInEl.innerText = formatVND(cashIn);
+      if (transferInEl) transferInEl.innerText = formatVND(transferIn);
+      if (cashOutEl) cashOutEl.innerText = '-' + formatVND(cashOut);
+
+      calculateShiftVariance();
+      openModal('modal-shift-handover');
+    }
+
+    function calculateShiftVariance() {
+      var opening = parseFloat(document.getElementById('shift-opening-cash')?.value) || 0;
+      var cashIn = 0;
+      state.activeOrders.forEach(function(o) {
+        if (o.Status === 'COMPLETED' && o.PaymentMethod === 'CASH') cashIn += (Number(o.TotalAmount) || 0);
+      });
+      var todayStr = formatLocalDate(new Date());
+      var cashOut = state.expenses
+        .filter(function(e) { return String(e.Date || '').substring(0, 10) === todayStr && (e.FundingSource === 'Tiền quán'); })
+        .reduce(function(sum, e) { return sum + (Number(e.Amount) || 0); }, 0);
+
+      var expected = opening + cashIn - cashOut;
+      var expectedEl = document.getElementById('shift-expected-cash');
+      if (expectedEl) expectedEl.innerText = formatVND(expected);
+
+      var actual = parseFloat(document.getElementById('shift-actual-cash')?.value);
+      var varianceEl = document.getElementById('shift-variance-badge');
+      if (varianceEl) {
+        if (isNaN(actual)) {
+          varianceEl.innerText = '0 ₫ (Chưa đếm)';
+          varianceEl.className = 'font-display font-extrabold text-base text-outline';
+        } else {
+          var diff = actual - expected;
+          if (diff === 0) {
+            varianceEl.innerText = '0 ₫ (Khớp chuẩn 100%)';
+            varianceEl.className = 'font-display font-extrabold text-base text-status-free';
+          } else if (diff > 0) {
+            varianceEl.innerText = '+' + formatVND(diff) + ' (Thừa tiền)';
+            varianceEl.className = 'font-display font-extrabold text-base text-primary';
+          } else {
+            varianceEl.innerText = '-' + formatVND(Math.abs(diff)) + ' (Thiếu hụt tiền)';
+            varianceEl.className = 'font-display font-extrabold text-base text-error';
+          }
+        }
+      }
+    }
+
+    function printShiftReceipt() {
+      window.print();
+    }
+
+    async function confirmCloseShift() {
+      showToast('Đã lưu chốt ca bán & bàn giao két tiền thành công!', 'verified');
+      closeModal('modal-shift-handover');
+    }
+
+    // ── KITCHEN KDS FILTER ────────────────────────────────────────────────────
+    function setKitchenFilter(f) {
+      state.kitchenFilter = f;
+      var btnActive = document.getElementById('kds-filter-active');
+      var btnHistory = document.getElementById('kds-filter-history');
+      if (f === 'ACTIVE') {
+        if (btnActive) btnActive.className = 'px-4 py-1.5 bg-primary text-on-primary rounded-full text-xs font-bold transition-all shadow-sm';
+        if (btnHistory) btnHistory.className = 'px-4 py-1.5 bg-surface-container text-on-surface-variant hover:bg-surface-container-high rounded-full text-xs font-medium transition-all';
+      } else {
+        if (btnHistory) btnHistory.className = 'px-4 py-1.5 bg-primary text-on-primary rounded-full text-xs font-bold transition-all shadow-sm';
+        if (btnActive) btnActive.className = 'px-4 py-1.5 bg-surface-container text-on-surface-variant hover:bg-surface-container-high rounded-full text-xs font-medium transition-all';
+      }
+      renderKitchen();
+    }
+
     // ── ADVANCED POS: ORDER TYPES & MULTI-ORDER TABS ENGINE ───────────────────
     function setOrderType(type) {
       var tab = getActiveTab();
@@ -1751,6 +1840,21 @@
       }
 
       renderPOS();
+    }
+
+    function onDeliveryCustomerName(val) {
+      var tab = getActiveTab();
+      tab.customerName = val;
+    }
+
+    function onDeliveryCustomerPhone(val) {
+      var tab = getActiveTab();
+      tab.customerPhone = val;
+    }
+
+    function onDeliveryCustomerAddress(val) {
+      var tab = getActiveTab();
+      tab.deliveryAddress = val;
     }
 
     function createNewOrderTab() {
@@ -2155,7 +2259,6 @@
       if (!state.checkoutOrder) return;
       var ord = state.checkoutOrder;
 
-      // If this is direct checkout from POS cart
       if (ord.isDirectPOS) {
         var tab = getActiveTab();
         var payload = {
@@ -3106,6 +3209,13 @@
       }
     }
 
+    async function deleteExpenseFromModal() {
+      var id = document.getElementById('expense-id')?.value;
+      if (!id) return;
+      deleteExpenseItem(id);
+      closeModal('modal-edit-expense');
+    }
+
     async function deleteExpenseItem(expenseId) {
       if (!confirm('Bạn có chắc muốn xóa khoản chi này khỏi sổ quỹ?')) return;
       var res = await callGAS('deleteExpense', expenseId);
@@ -3246,12 +3356,12 @@
       }
     }
 
-    function toggleTask(taskId) {
+    async function toggleTask(taskId) {
       var t = state.tasks.find(function(x) { return x.ID === taskId; });
       if (t) {
         t.Status = t.Status === 'DONE' ? 'PENDING' : 'DONE';
         renderTasks();
-        callGAS('updateTaskStatus', taskId, t.Status);
+        await callGAS('updateTaskStatus', taskId, t.Status);
       }
     }
 
@@ -3368,6 +3478,18 @@
       }
     }
 
+    async function deleteProductCurrent() {
+      var id = document.getElementById('edit-prod-id')?.value;
+      if (!id) return;
+      if (!confirm('Bạn có chắc chắn muốn xóa món nước này khỏi thực đơn?')) return;
+      var res = await callGAS('deleteProduct', id);
+      if (res && res.success) {
+        closeModal('modal-edit-product');
+        showToast('Đã xóa món nước khỏi thực đơn!', 'check_circle');
+        refreshData();
+      }
+    }
+
     function openToppingEditModal(toppingId) {
       var titleEl = document.getElementById('modal-top-title');
       var idInput = document.getElementById('edit-top-id');
@@ -3407,6 +3529,18 @@
       if (res && res.success) {
         closeModal('modal-edit-topping');
         showToast(id ? 'Đã cập nhật topping!' : 'Đã thêm topping mới!', 'verified');
+        refreshData();
+      }
+    }
+
+    async function deleteToppingCurrent() {
+      var id = document.getElementById('edit-top-id')?.value;
+      if (!id) return;
+      if (!confirm('Bạn có chắc chắn muốn xóa topping này?')) return;
+      var res = await callGAS('deleteTopping', id);
+      if (res && res.success) {
+        closeModal('modal-edit-topping');
+        showToast('Đã xóa topping!', 'check_circle');
         refreshData();
       }
     }
