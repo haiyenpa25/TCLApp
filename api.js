@@ -799,11 +799,23 @@ function addExpense(data) {
 
 function getExpenses(date) {
   return withErrorHandling(function() {
-    var all      = getSheetData(SHEETS.EXPENSES, false);
-    var today    = date || new Date().toISOString().split('T')[0];
-    var filtered = all.filter(function(e) { return String(e.Date).startsWith(today); });
-    var total    = filtered.reduce(function(s, e) { return s + (Number(e.Amount) || 0); }, 0);
-    filtered.sort(function(a, b) { return new Date(b.Date) - new Date(a.Date); });
+    var all = getSheetData(SHEETS.EXPENSES, false);
+    var mapped = all.map(function(e) {
+      return {
+        ID: e.ID,
+        Date: _extractDateStr(e.Date),
+        Category: e.Category || 'Kh\u00e1c',
+        Description: e.Description || '',
+        Amount: _parseCurrency(e.Amount),
+        Note: e.Note || '',
+        FundingSource: e.FundingSource || 'Ti\u1ec1n qu\u00e1n',
+        PerformedBy: e.PerformedBy || '',
+        PerformedByName: e.PerformedByName || ''
+      };
+    });
+    var filtered = date ? mapped.filter(function(e) { return String(e.Date).startsWith(date); }) : mapped;
+    var total = filtered.reduce(function(s, e) { return s + (e.Amount || 0); }, 0);
+    filtered.sort(function(a, b) { return (b.Date > a.Date) ? 1 : ((b.Date < a.Date) ? -1 : 0); });
     return { success: true, data: { expenses: filtered, total: total } };
   });
 }

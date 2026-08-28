@@ -143,7 +143,7 @@
           <input oninput="onSearchInput(this.value)" type="text" placeholder="Tìm tên món nước, cà phê, trà trái cây..." class="w-full pl-9 pr-4 py-2 bg-surface-container-lowest border border-outline-variant/40 rounded-full text-xs font-medium focus:outline-none focus:border-primary shadow-xs" />
         </div>
         <div id="pos-categories" class="flex gap-2 overflow-x-auto hide-scrollbar snap-x pb-1">
-          <!-- Rendered via JS matching docs/pos_mobile/code.html -->
+          <!-- Rendered via JS -->
         </div>
       </div>
 
@@ -174,7 +174,7 @@
       </div>
     </section>
 
-    <!-- ── VIEW 3: EXPENSES & SỔ QUỸ (NÂNG CAO) ─────────────────────────────── -->
+    <!-- ── VIEW 3: EXPENSES & SỔ QUỸ (NÂNG CAO & BULLETPROOF FILTERS) ───────── -->
     <section id="view-expenses" class="hidden space-y-4 animate-fade-in">
       <div class="bg-surface-cream rounded-2xl p-4 sm:p-5 border border-outline-variant/30 shadow-card space-y-3">
         <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-3">
@@ -188,17 +188,18 @@
           </button>
         </div>
 
-        <!-- Filter Chips -->
+        <!-- Filter Period Chips -->
         <div class="flex flex-wrap items-center gap-2 pt-2 border-t border-outline-variant/20 text-xs">
           <span class="font-bold text-outline mr-1">Thời gian:</span>
           <button id="exp-filter-today" onclick="setExpensePeriod('today')" class="px-3.5 py-1.5 rounded-full font-bold bg-primary text-on-primary shadow-xs">Hôm Nay</button>
           <button id="exp-filter-yesterday" onclick="setExpensePeriod('yesterday')" class="px-3.5 py-1.5 rounded-full font-medium bg-surface-container text-on-surface hover:bg-surface-container-high">Hôm Qua</button>
-          <button id="exp-filter-week" onclick="setExpensePeriod('week')" class="px-3.5 py-1.5 rounded-full font-medium bg-surface-container text-on-surface hover:bg-surface-container-high">Tuần Này (7 ngày)</button>
+          <button id="exp-filter-week" onclick="setExpensePeriod('week')" class="px-3.5 py-1.5 rounded-full font-medium bg-surface-container text-on-surface hover:bg-surface-container-high">7 Ngày Qua</button>
           <button id="exp-filter-month" onclick="setExpensePeriod('month')" class="px-3.5 py-1.5 rounded-full font-medium bg-surface-container text-on-surface hover:bg-surface-container-high">Tháng Này</button>
+          <button id="exp-filter-all" onclick="setExpensePeriod('all')" class="px-3.5 py-1.5 rounded-full font-medium bg-surface-container text-on-surface hover:bg-surface-container-high">Tất Cả</button>
           <button id="exp-filter-custom" onclick="setExpensePeriod('custom')" class="px-3.5 py-1.5 rounded-full font-medium bg-surface-container text-on-surface hover:bg-surface-container-high">Tùy Chọn</button>
         </div>
 
-        <!-- Custom Date Range -->
+        <!-- Custom Date Range Inputs -->
         <div id="exp-custom-date-container" class="hidden flex flex-wrap items-center gap-2 p-2.5 bg-surface-container-low rounded-xl text-xs">
           <span class="font-semibold text-outline">Từ ngày:</span>
           <input id="exp-custom-from" type="date" onchange="applyExpenseFilter()" class="px-2.5 py-1 bg-surface-container-lowest border border-outline-variant/40 rounded-lg text-xs font-medium" />
@@ -206,7 +207,7 @@
           <input id="exp-custom-to" type="date" onchange="applyExpenseFilter()" class="px-2.5 py-1 bg-surface-container-lowest border border-outline-variant/40 rounded-lg text-xs font-medium" />
         </div>
 
-        <!-- Multi-filter Row -->
+        <!-- Multi-filter Row: Category, Funding Source, Staff -->
         <div class="flex flex-wrap items-center gap-3 pt-2 text-xs">
           <div class="flex items-center gap-1.5">
             <span class="font-bold text-outline">Danh mục:</span>
@@ -223,9 +224,21 @@
             <span class="font-bold text-outline">Nguồn tiền:</span>
             <select id="exp-filter-funding" onchange="applyExpenseFilter()" class="px-2.5 py-1 bg-surface-container border border-outline-variant/40 rounded-lg text-xs font-medium">
               <option value="ALL">Tất Cả Nguồn Tiền</option>
-              <option value="Tiền quán">Tiền quán</option>
-              <option value="Tiền cá nhân">Tiền cá nhân</option>
+              <option value="Tiền quán">Tiền quán (Két)</option>
+              <option value="Tiền cá nhân">Tiền cá nhân (Ứng)</option>
               <option value="Tiền mặt">Tiền mặt</option>
+            </select>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <span class="font-bold text-outline">Người chi:</span>
+            <select id="exp-filter-staff" onchange="applyExpenseFilter()" class="px-2.5 py-1 bg-surface-container border border-outline-variant/40 rounded-lg text-xs font-medium">
+              <option value="ALL">Tất Cả Nhân Sự</option>
+              <option value="Trí">Trí</option>
+              <option value="Yến">Yến</option>
+              <option value="Dinh">Dinh</option>
+              <option value="Nhung">Nhung</option>
+              <option value="Linh">Linh</option>
+              <option value="An">An</option>
             </select>
           </div>
         </div>
@@ -233,10 +246,13 @@
 
       <!-- Expenses List -->
       <div class="bg-surface-cream rounded-2xl p-4 sm:p-5 border border-outline-variant/30 shadow-card">
-        <h3 class="font-display font-bold text-sm text-on-surface mb-3 flex items-center gap-2">
-          <span class="material-symbols-outlined text-base text-primary">receipt_long</span>
-          Danh Sách Các Khoản Chi
-        </h3>
+        <div class="flex justify-between items-center mb-3">
+          <h3 class="font-display font-bold text-sm text-on-surface flex items-center gap-2">
+            <span class="material-symbols-outlined text-base text-primary">receipt_long</span>
+            Danh Sách Các Khoản Chi
+          </h3>
+          <span id="expenses-header-badge" class="text-[11px] font-bold text-primary px-2.5 py-0.5 rounded-full bg-primary/10">Toàn Bộ Dữ Liệu</span>
+        </div>
         <div id="expenses-list" class="space-y-2">
           <!-- Rendered via JS -->
         </div>
@@ -267,7 +283,7 @@
 
       <div class="bg-surface-cream rounded-2xl p-4 sm:p-5 border border-outline-variant/30 shadow-card">
         <div id="customers-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5">
-          <!-- Rendered via JS with Loyalty badges & tel links -->
+          <!-- Rendered via JS -->
         </div>
       </div>
     </section>
@@ -378,7 +394,7 @@
             Top Món Nước Bán Chạy Nhất
           </h3>
           <div id="report-top-products" class="space-y-2 text-xs">
-            <!-- Rendered via JS with 🥇 🥈 🥉 medals -->
+            <!-- Rendered via JS -->
           </div>
         </div>
       </div>
@@ -1140,9 +1156,10 @@
       kitchenFilter: 'ACTIVE',
 
       // Filter States
-      expensePeriod: 'today',
+      expensePeriod: 'all',
       expenseCategoryFilter: 'ALL',
       expenseFundingFilter: 'ALL',
+      expenseStaffFilter: 'ALL',
       reportPeriod: 'today',
 
       // Data Collections
@@ -1273,7 +1290,7 @@
           if (d.tables && d.tables.length > 0) state.tables = d.tables;
           if (d.activeOrders) state.activeOrders = d.activeOrders;
           if (d.tasks) state.tasks = d.tasks;
-          if (d.expenses) state.expenses = d.expenses;
+          if (d.expenses && Array.isArray(d.expenses)) state.expenses = d.expenses;
           if (d.staff) state.staffList = d.staff;
           if (d.customers && d.customers.length > 0) state.customerList = d.customers;
           if (d.settings) state.settings = Object.assign({}, state.settings, d.settings);
@@ -1351,7 +1368,6 @@
         var panel = document.getElementById('settings-panel-' + s);
         if (s === sub) {
           if (btn) btn.className = 'px-4 py-2 rounded-full bg-primary text-on-primary shadow-xs';
-          else if (panel) panel.classList.remove('hidden');
           if (panel) panel.classList.remove('hidden');
         } else {
           if (btn) btn.className = 'px-4 py-2 rounded-full bg-surface-container text-on-surface hover:bg-surface-container-high';
@@ -1463,7 +1479,6 @@
     async function confirmCloseShift() {
       var opening = parseFloat(document.getElementById('shift-opening-cash')?.value) || 0;
       var actual = parseFloat(document.getElementById('shift-actual-cash')?.value) || 0;
-      var payload = { openingCash: opening, actualCash: actual, closedAt: new Date().toISOString() };
       showToast('Đã lưu chốt ca bán & bàn giao két tiền thành công!', 'verified');
       closeModal('modal-shift-handover');
     }
@@ -1476,7 +1491,7 @@
 
     function setExpensePeriod(period) {
       state.expensePeriod = period;
-      ['today', 'yesterday', 'week', 'month', 'custom'].forEach(function(p) {
+      ['today', 'yesterday', 'week', 'month', 'all', 'custom'].forEach(function(p) {
         var btn = document.getElementById('exp-filter-' + p);
         if (btn) {
           if (p === period) btn.className = 'px-3.5 py-1.5 rounded-full font-bold bg-primary text-on-primary shadow-xs';
@@ -1495,6 +1510,7 @@
     function applyExpenseFilter() {
       state.expenseCategoryFilter = document.getElementById('exp-filter-category')?.value || 'ALL';
       state.expenseFundingFilter = document.getElementById('exp-filter-funding')?.value || 'ALL';
+      state.expenseStaffFilter = document.getElementById('exp-filter-staff')?.value || 'ALL';
       renderExpenses();
     }
 
@@ -2341,24 +2357,30 @@
       var listEl = document.getElementById('expenses-list');
       var totalEl = document.getElementById('expenses-total-amount');
       var countEl = document.getElementById('expenses-count-summary');
+      var badgeEl = document.getElementById('expenses-header-badge');
       if (!listEl) return;
 
-      var todayStr = new Date().toISOString().substring(0, 10);
+      var now = new Date();
+      var todayStr = now.toISOString().substring(0, 10);
+      var currentMonth = todayStr.substring(0, 7); // e.g. "2026-08"
+
       var filtered = state.expenses.filter(function(e) {
         if (!e) return false;
-        var d = String(e.Date || '').substring(0, 10);
+        var d = e.Date ? String(e.Date).substring(0, 10) : '';
         var matchDate = true;
 
         if (state.expensePeriod === 'today') {
           matchDate = d === todayStr;
         } else if (state.expensePeriod === 'yesterday') {
-          var yest = new Date(); yest.setDate(yest.getDate() - 1);
+          var yest = new Date(now.getTime() - 86400000);
           matchDate = d === yest.toISOString().substring(0, 10);
         } else if (state.expensePeriod === 'week') {
-          var w = new Date(); w.setDate(w.getDate() - 7);
-          matchDate = d >= w.toISOString().substring(0, 10);
+          var w = new Date(now.getTime() - 7 * 86400000);
+          matchDate = d >= w.toISOString().substring(0, 10) && d <= todayStr;
         } else if (state.expensePeriod === 'month') {
-          matchDate = d.substring(0, 7) === todayStr.substring(0, 7);
+          matchDate = d.substring(0, 7) === currentMonth;
+        } else if (state.expensePeriod === 'all') {
+          matchDate = true;
         } else if (state.expensePeriod === 'custom') {
           var from = document.getElementById('exp-custom-from')?.value;
           var to = document.getElementById('exp-custom-to')?.value;
@@ -2368,28 +2390,41 @@
 
         var matchCat = state.expenseCategoryFilter === 'ALL' || e.Category === state.expenseCategoryFilter;
         var matchFund = state.expenseFundingFilter === 'ALL' || e.FundingSource === state.expenseFundingFilter;
+        var matchStaff = state.expenseStaffFilter === 'ALL' || (e.PerformedByName === state.expenseStaffFilter || e.PerformedBy === state.expenseStaffFilter);
 
-        return matchDate && matchCat && matchFund;
+        return matchDate && matchCat && matchFund && matchStaff;
       });
 
-      var total = filtered.reduce(function(sum, e) { return sum + (e.Amount || 0); }, 0);
+      var total = filtered.reduce(function(sum, e) {
+        var num = typeof e.Amount === 'number' ? e.Amount : parseFloat(String(e.Amount).replace(/\./g, '').replace(/,/g, '')) || 0;
+        return sum + num;
+      }, 0);
+
       if (totalEl) totalEl.innerText = formatVND(total);
-      if (countEl) countEl.innerText = filtered.length + ' khoản chi thực tế • Cao nhất: ' + formatVND(filtered.reduce(function(m, e) { return Math.max(m, e.Amount || 0); }, 0));
+      if (countEl) countEl.innerText = filtered.length + ' khoản chi (Tổng: ' + state.expenses.length + ' khoản) • Tổng: ' + formatVND(total);
+
+      var periodLabels = { today: 'Hôm Nay', yesterday: 'Hôm Qua', week: '7 Ngày Qua', month: 'Tháng ' + currentMonth.substring(5) + '/' + currentMonth.substring(0,4), all: 'Toàn Bộ Dữ Liệu (' + state.expenses.length + ' khoản)', custom: 'Tùy Chọn' };
+      if (badgeEl) badgeEl.innerText = periodLabels[state.expensePeriod] || 'Toàn Bộ';
 
       if (filtered.length === 0) {
-        listEl.innerHTML = '<div class="py-12 text-center text-on-surface-variant text-xs">Không có khoản chi nào trong khoảng thời gian này</div>';
+        listEl.innerHTML = '<div class="py-12 text-center text-on-surface-variant text-xs space-y-2">' +
+          '<span class="material-symbols-outlined text-4xl opacity-40">receipt_long</span>' +
+          '<p class="font-bold text-on-surface">Không có khoản chi nào trong ' + (periodLabels[state.expensePeriod] || 'kỳ này') + '</p>' +
+          '<p class="text-outline text-[11px]">Bấm vào nút <button onclick="setExpensePeriod(\'all\')" class="font-bold text-primary underline">Tất Cả</button> để xem toàn bộ ' + state.expenses.length + ' khoản chi của các tháng trước.</p>' +
+          '</div>';
         return;
       }
 
       var html = '';
       filtered.forEach(function(e) {
+        var num = typeof e.Amount === 'number' ? e.Amount : parseFloat(String(e.Amount).replace(/\./g, '').replace(/,/g, '')) || 0;
         html += '<div class="bg-surface-container-lowest p-3 rounded-xl border border-outline-variant/30 flex items-center justify-between text-xs shadow-card hover:border-primary/30 transition">';
         html += '  <div>';
         html += '    <div class="font-bold text-sm text-on-surface">' + e.Description + '</div>';
         html += '    <div class="text-[11px] text-outline mt-0.5"><span class="font-semibold text-primary">' + (e.Category || 'Chi tiêu') + '</span> • ' + (e.Date || '') + ' • <span class="text-on-surface font-medium">' + (e.FundingSource || 'Tiền quán') + '</span> • ' + (e.PerformedByName || 'NV') + '</div>';
         html += '  </div>';
         html += '  <div class="flex items-center gap-3">';
-        html += '    <div class="font-display font-bold text-sm text-error">' + formatVND(e.Amount) + '</div>';
+        html += '    <div class="font-display font-bold text-sm text-error">' + formatVND(num) + '</div>';
         html += '    <button onclick="deleteExpenseItem(\'' + e.ID + '\')" title="Xóa khoản chi" class="w-7 h-7 rounded-lg text-outline hover:text-error hover:bg-error-container/20 flex items-center justify-center transition"><span class="material-symbols-outlined text-sm">delete</span></button>';
         html += '  </div>';
         html += '</div>';
