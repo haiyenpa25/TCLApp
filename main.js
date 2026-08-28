@@ -33,7 +33,7 @@ function setupDatabase() {
     'Customers':       ['ID','Name','Phone','Type','Company','Address','Email','Points','TotalSpent','CreatedAt','Note'],
     'Expenses':        ['ID','Date','Category','Description','Amount','Note','FundingSource','PerformedBy','PerformedByName','ReceiptImage'],
     // Task Management
-    'Staff':           ['ID','Name','Status'],
+    'Staff':           ['ID','Name','Role','PIN','Status'],
     'TaskTemplates':   ['ID','Title','Description','AssignedTo','AssignedName','RepeatType','RepeatEvery','Priority','StartDate','Status'],
     'TaskInstances':   ['ID','TemplateID','Title','AssignedTo','AssignedName','DueDate','Priority','Status','CompletedAt','CompletedBy','Note'],
     // Financial & Session Management
@@ -74,6 +74,19 @@ function setupDatabase() {
 }
 
 function seedSampleData(ss) {
+  const staffSheet = ss.getSheetByName('Staff');
+  if (staffSheet && staffSheet.getLastRow() <= 1) {
+    const defaultStaff = [
+      ['NV-ADMIN','Chủ Quán (Admin)','ADMIN','1234','ACTIVE'],
+      ['NV01','Trí','MANAGER','1111','ACTIVE'],
+      ['NV02','Yến','CASHIER','2222','ACTIVE'],
+      ['NV03','Dinh','CASHIER','3333','ACTIVE'],
+      ['NV04','Nhung','BARISTA','4444','ACTIVE'],
+      ['NV05','Linh','BARISTA','5555','ACTIVE'],
+      ['NV06','An','WAITER','6666','ACTIVE']
+    ];
+    staffSheet.getRange(2, 1, defaultStaff.length, defaultStaff[0].length).setValues(defaultStaff);
+  }
   const prodSheet = ss.getSheetByName('Products');
   if (prodSheet.getLastRow() <= 1) {
     const products = [
@@ -111,32 +124,28 @@ function seedSampleData(ss) {
       ['TB04','B\u00e0n 04','FREE',4,''],
       ['TB05','B\u00e0n 05','FREE',2,''],
       ['TB06','B\u00e0n 06','FREE',8,''],
-      ['TB07','B\u00e0n Ngo\u00e0i Tr\u1eddi 1','FREE',4,''],
-      ['TB08','B\u00e0n Ngo\u00e0i Tr\u1eddi 2','FREE',4,''],
+      ['TB01','Bàn 01','FREE',4,''],
+      ['TB02','Bàn 02','FREE',2,''],
+      ['TB03','Bàn 03','FREE',6,''],
+      ['TB04','Bàn 04','FREE',4,''],
+      ['TB05','Bàn 05','FREE',2,''],
+      ['TB06','Bàn 06','FREE',8,''],
+      ['TB07','Bàn Ngoài Trời 1','FREE',4,''],
+      ['TB08','Bàn Ngoài Trời 2','FREE',4,''],
     ];
     tableSheet.getRange(2, 1, tables.length, tables[0].length).setValues(tables);
-  }
-
-  const staffSheet = ss.getSheetByName('Staff');
-  if (staffSheet.getLastRow() <= 1) {
-    const staff = [
-      ['ST01','Dinh (Ch\u1ee7 qu\u00e1n)','ACTIVE'],
-      ['ST02','Linh (Pha ch\u1ebf)','ACTIVE'],
-      ['ST03','An (Ph\u1ee5c v\u1ee5)','ACTIVE'],
-    ];
-    staffSheet.getRange(2, 1, staff.length, staff[0].length).setValues(staff);
   }
 
   const tmplSheet = ss.getSheetByName('TaskTemplates');
   if (tmplSheet.getLastRow() <= 1) {
     const today = new Date().toISOString().split('T')[0];
     const templates = [
-      ['TT01','Ki\u1ec3m k\u00ea nguy\u00ean li\u1ec7u \u0111\u1ea7u ng\u00e0y','Ki\u1ec3m tra s\u1eefa, tr\u00e0, siro, topping','ST02','Linh (Pha ch\u1ebf)','DAILY',1,'HIGH',today,'ACTIVE'],
-      ['TT02','V\u1ec7 sinh m\u00e1y pha c\u00e0 ph\u00ea & d\u1ee5ng c\u1ee5','R\u1eeda s\u1ea1ch v\u00f2i steam, c\u1ecd r\u1eeda ca \u0111ong','ST02','Linh (Pha ch\u1ebf)','DAILY',1,'HIGH',today,'ACTIVE'],
-      ['TT03','Lau d\u1ecdn b\u00e0n gh\u1ebf & khu v\u1ef1c kh\u00e1ch ng\u1ed3i','Lau s\u1ea1ch t\u1ea5t c\u1ea3 b\u00e0n, s\u1eafp x\u1ebfp gh\u1ebf ngay ng\u1eafn','ST03','An (Ph\u1ee5c v\u1ee5)','DAILY',1,'MEDIUM',today,'ACTIVE'],
-      ['TT04','\u0110\u1ed5 r\u00e1c & v\u1ec7 sinh qu\u1ea7y pha ch\u1ebf cu\u1ed1i ca','Thu gom t\u00fai r\u00e1c, lau s\u00e0n qu\u1ea7y bar','ST03','An (Ph\u1ee5c v\u1ee5)','DAILY',1,'HIGH',today,'ACTIVE'],
-      ['TT05','T\u1ed5ng k\u1ebft doanh thu & ki\u1ec3m qu\u1ef9 ti\u1ec1n m\u1eb7t','\u0110\u1ebfm ti\u1ec1n m\u1eb7t, \u0111\u1ed1i so\u00e1t v\u1edbi h\u1ec7 th\u1ed1ng POS','ST01','Dinh (Ch\u1ee7 qu\u00e1n)','DAILY',1,'HIGH',today,'ACTIVE'],
-      ['TT06','Ki\u1ec3m tra h\u1ea1n s\u1eed d\u1ee5ng nguy\u00ean li\u1ec7u t\u1ed3n kho','Ki\u1ec3m tra date c\u00e1c h\u1ed9p siro, s\u1eefa, tr\u00e0 \u1ee7','ST02','Linh (Pha ch\u1ebf)','WEEKLY',1,'MEDIUM',today,'ACTIVE'],
+      ['TT01','Kiểm kê nguyên liệu đầu ngày','Kiểm tra sữa, trà, siro, topping','ST02','Linh (Pha chế)','DAILY',1,'HIGH',today,'ACTIVE'],
+      ['TT02','Vệ sinh máy pha cà phê & dụng cụ','Rửa sạch vòi steam, cọ rửa ca đong','ST02','Linh (Pha chế)','DAILY',1,'HIGH',today,'ACTIVE'],
+      ['TT03','Lau dọn bàn ghế & khu vực khách ngồi','Lau sạch tất cả bàn, sắp xếp ghế ngay ngắn','ST03','An (Phục vụ)','DAILY',1,'MEDIUM',today,'ACTIVE'],
+      ['TT04','Đổ rác & vệ sinh quầy pha chế cuối ca','Thu gom túi rác, lau sàn quầy bar','ST03','An (Phục vụ)','DAILY',1,'HIGH',today,'ACTIVE'],
+      ['TT05','Tổng kết doanh thu & kiểm quỹ tiền mặt','Đếm tiền mặt, đối soát với hệ thống POS','ST01','Dinh (Chủ quán)','DAILY',1,'HIGH',today,'ACTIVE'],
+      ['TT06','Kiểm tra hạn sử dụng nguyên liệu tồn kho','Kiểm tra date các hộp siro, sữa, trà ủ','ST02','Linh (Pha chế)','WEEKLY',1,'MEDIUM',today,'ACTIVE'],
     ];
     tmplSheet.getRange(2, 1, templates.length, templates[0].length).setValues(templates);
   }

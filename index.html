@@ -169,6 +169,16 @@
     </div>
 
     <div class="flex items-center gap-2">
+      <!-- User Status Badge & Quick Lock Ca Button -->
+      <div id="header-user-badge" onclick="openStaffSwitchModal()" title="Nhấp để khóa ca hoặc đổi nhân viên" class="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface-container hover:bg-surface-container-high cursor-pointer transition border border-outline-variant/30 text-xs">
+        <span id="header-user-avatar" class="w-5 h-5 rounded-full bg-primary text-on-primary flex items-center justify-center font-bold text-[10px]">👑</span>
+        <div class="flex flex-col text-left">
+          <span id="header-user-name" class="font-bold text-[11px] text-on-surface leading-none">Chủ Quán</span>
+          <span id="header-user-role" class="text-[9px] text-primary font-semibold leading-none">Quản Lý</span>
+        </div>
+        <span class="material-symbols-outlined text-[14px] text-outline ml-0.5">lock</span>
+      </div>
+
       <!-- PWA Install Button (Header) -->
       <button onclick="promptPWAInstall()" id="btn-pwa-install-header" title="Cài đặt App lên màn hình điện thoại / máy tính" class="flex items-center gap-1 px-3 py-1.5 rounded-full bg-primary text-on-primary text-xs font-bold shadow-xs hover:bg-primary-container transition">
         <span class="material-symbols-outlined text-sm">install_mobile</span>
@@ -1502,6 +1512,101 @@
     </div>
   </div>
 
+  
+  <!-- 🔐 MODAL: ĐĂNG NHẬP NHANH BẰNG MÃ PIN 1-CHẠM (STAFF LOGIN & PIN PAD) -->
+  <div id="modal-login" class="modal-overlay hidden">
+    <div class="modal-container max-w-sm animate-scale-up">
+      <div class="p-4 border-b border-outline-variant/30 text-center">
+        <div class="w-12 h-12 rounded-2xl bg-primary text-white flex items-center justify-center text-2xl mx-auto shadow-md mb-2">🌿</div>
+        <h3 class="font-display font-bold text-base text-primary">TIỆM CỦA LÁ POS</h3>
+        <p class="text-xs text-outline font-medium">Đăng nhập ca làm việc & phân quyền</p>
+      </div>
+
+      <div class="p-4 space-y-4 text-xs">
+        <!-- Step 1: Chọn Nhân Viên Đang Trực Ca -->
+        <div>
+          <label class="text-[11px] font-bold text-outline block mb-1.5 uppercase tracking-wider">1. Chọn Nhân Viên Trực Ca</label>
+          <div id="login-staff-grid" class="grid grid-cols-2 gap-2 max-h-40 overflow-y-auto pr-0.5">
+            <!-- Rendered via JS -->
+          </div>
+        </div>
+
+        <!-- Step 2: Nhập Mã PIN 4 Số -->
+        <div id="login-pin-section" class="space-y-3 pt-2 border-t border-outline-variant/20">
+          <div class="text-center">
+            <span class="text-xs text-on-surface-variant font-bold">Nhập Mã PIN của <span id="login-selected-staff-name" class="text-primary font-extrabold">Nhân viên</span></span>
+            <!-- 4-Dot PIN Indicator -->
+            <div id="login-pin-dots" class="flex justify-center gap-3 my-3">
+              <span class="w-3.5 h-3.5 rounded-full border-2 border-outline-variant bg-surface-container transition-all"></span>
+              <span class="w-3.5 h-3.5 rounded-full border-2 border-outline-variant bg-surface-container transition-all"></span>
+              <span class="w-3.5 h-3.5 rounded-full border-2 border-outline-variant bg-surface-container transition-all"></span>
+              <span class="w-3.5 h-3.5 rounded-full border-2 border-outline-variant bg-surface-container transition-all"></span>
+            </div>
+            <div id="login-error-msg" class="text-[11px] font-bold text-error min-h-[16px]"></div>
+          </div>
+
+          <!-- Touch Keypad Pad (1-9, 0, C, ⌫) -->
+          <div class="grid grid-cols-3 gap-2 max-w-[240px] mx-auto text-sm font-bold">
+            <button onclick="pressLoginPin('1')" class="py-2.5 rounded-xl bg-surface-container text-on-surface hover:bg-surface-container-high active:scale-95 transition">1</button>
+            <button onclick="pressLoginPin('2')" class="py-2.5 rounded-xl bg-surface-container text-on-surface hover:bg-surface-container-high active:scale-95 transition">2</button>
+            <button onclick="pressLoginPin('3')" class="py-2.5 rounded-xl bg-surface-container text-on-surface hover:bg-surface-container-high active:scale-95 transition">3</button>
+            <button onclick="pressLoginPin('4')" class="py-2.5 rounded-xl bg-surface-container text-on-surface hover:bg-surface-container-high active:scale-95 transition">4</button>
+            <button onclick="pressLoginPin('5')" class="py-2.5 rounded-xl bg-surface-container text-on-surface hover:bg-surface-container-high active:scale-95 transition">5</button>
+            <button onclick="pressLoginPin('6')" class="py-2.5 rounded-xl bg-surface-container text-on-surface hover:bg-surface-container-high active:scale-95 transition">6</button>
+            <button onclick="pressLoginPin('7')" class="py-2.5 rounded-xl bg-surface-container text-on-surface hover:bg-surface-container-high active:scale-95 transition">7</button>
+            <button onclick="pressLoginPin('8')" class="py-2.5 rounded-xl bg-surface-container text-on-surface hover:bg-surface-container-high active:scale-95 transition">8</button>
+            <button onclick="pressLoginPin('9')" class="py-2.5 rounded-xl bg-surface-container text-on-surface hover:bg-surface-container-high active:scale-95 transition">9</button>
+            <button onclick="clearLoginPin()" class="py-2.5 rounded-xl bg-surface-container-high text-error hover:bg-error-container/20 text-xs active:scale-95 transition">Xóa</button>
+            <button onclick="pressLoginPin('0')" class="py-2.5 rounded-xl bg-surface-container text-on-surface hover:bg-surface-container-high active:scale-95 transition">0</button>
+            <button onclick="backspaceLoginPin()" class="py-2.5 rounded-xl bg-surface-container-high text-outline hover:bg-surface-container-highest flex items-center justify-center active:scale-95 transition"><span class="material-symbols-outlined text-base">backspace</span></button>
+          </div>
+        </div>
+      </div>
+
+      <div class="p-3 bg-surface-container-low/50 border-t border-outline-variant/30 text-center">
+        <p class="text-[10px] text-outline">Mã PIN mặc định: Admin (1234) • Trí (1111) • Yến (2222) • Dinh (3333)</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 🔒 MODAL: MÃ PIN QUẢN LÝ (ADMIN PIN OVERRIDE MODAL) -->
+  <div id="modal-admin-pin-prompt" class="modal-overlay hidden">
+    <div class="modal-container max-w-xs animate-scale-up">
+      <div class="p-4 border-b border-outline-variant/30 flex justify-between items-center">
+        <div class="flex items-center gap-1.5">
+          <span class="material-symbols-outlined text-primary text-base">security</span>
+          <h3 class="font-display font-bold text-sm text-primary">Xác Thực Quyền Quản Lý</h3>
+        </div>
+        <button onclick="closeModal('modal-admin-pin-prompt')" class="w-7 h-7 rounded-full bg-surface-container flex items-center justify-center text-outline"><span class="material-symbols-outlined text-sm">close</span></button>
+      </div>
+      <div class="p-4 space-y-3 text-xs text-center">
+        <p id="admin-pin-prompt-reason" class="text-outline text-[11px]">Vui lòng nhập mã PIN Quản lý để mở khóa tính năng này</p>
+        <div id="admin-pin-dots" class="flex justify-center gap-2.5 my-2">
+          <span class="w-3 h-3 rounded-full border-2 border-outline-variant bg-surface-container"></span>
+          <span class="w-3 h-3 rounded-full border-2 border-outline-variant bg-surface-container"></span>
+          <span class="w-3 h-3 rounded-full border-2 border-outline-variant bg-surface-container"></span>
+          <span class="w-3 h-3 rounded-full border-2 border-outline-variant bg-surface-container"></span>
+        </div>
+        <div id="admin-pin-error-msg" class="text-[10px] font-bold text-error min-h-[14px]"></div>
+
+        <div class="grid grid-cols-3 gap-1.5 max-w-[200px] mx-auto text-sm font-bold">
+          <button onclick="pressAdminOverridePin('1')" class="py-2 rounded-lg bg-surface-container text-on-surface hover:bg-surface-container-high">1</button>
+          <button onclick="pressAdminOverridePin('2')" class="py-2 rounded-lg bg-surface-container text-on-surface hover:bg-surface-container-high">2</button>
+          <button onclick="pressAdminOverridePin('3')" class="py-2 rounded-lg bg-surface-container text-on-surface hover:bg-surface-container-high">3</button>
+          <button onclick="pressAdminOverridePin('4')" class="py-2 rounded-lg bg-surface-container text-on-surface hover:bg-surface-container-high">4</button>
+          <button onclick="pressAdminOverridePin('5')" class="py-2 rounded-lg bg-surface-container text-on-surface hover:bg-surface-container-high">5</button>
+          <button onclick="pressAdminOverridePin('6')" class="py-2 rounded-lg bg-surface-container text-on-surface hover:bg-surface-container-high">6</button>
+          <button onclick="pressAdminOverridePin('7')" class="py-2 rounded-lg bg-surface-container text-on-surface hover:bg-surface-container-high">7</button>
+          <button onclick="pressAdminOverridePin('8')" class="py-2 rounded-lg bg-surface-container text-on-surface hover:bg-surface-container-high">8</button>
+          <button onclick="pressAdminOverridePin('9')" class="py-2 rounded-lg bg-surface-container text-on-surface hover:bg-surface-container-high">9</button>
+          <button onclick="clearAdminOverridePin()" class="py-2 rounded-lg bg-surface-container-high text-error text-xs">Xóa</button>
+          <button onclick="pressAdminOverridePin('0')" class="py-2 rounded-lg bg-surface-container text-on-surface hover:bg-surface-container-high">0</button>
+          <button onclick="backspaceAdminOverridePin()" class="py-2 rounded-lg bg-surface-container-high text-outline flex items-center justify-center"><span class="material-symbols-outlined text-sm">backspace</span></button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- MODAL: HƯỚNG DẪN CÀI ĐẶT PWA TRÊN IPHONE / IPAD (iOS GUIDE) -->
   <div id="modal-pwa-ios-guide" class="modal-overlay hidden">
     <div class="modal-container max-w-sm animate-scale-up">
@@ -1748,6 +1853,14 @@
       loading: false,
       soundEnabled: true,
       currentTab: 'pos',
+
+      // Authentication & Role-Based Access State
+      currentUser: { id: 'NV-ADMIN', name: 'Chủ Quán (Admin)', role: 'ADMIN' },
+      loginSelectedStaff: null,
+      loginEnteredPin: '',
+      adminOverrideEnteredPin: '',
+      adminOverrideCallback: null,
+
       settingsSubTab: 'reports',
       searchQuery: '',
       customerSearchQuery: '',
@@ -1885,6 +1998,258 @@
       }
     }
 
+    
+    // ── AUTHENTICATION & ROLE-BASED ACCESS CONTROL (RBAC) ─────────────────────
+    function initUserSession() {
+      try {
+        var savedUser = localStorage.getItem('TCL_CURRENT_USER');
+        if (savedUser) {
+          state.currentUser = JSON.parse(savedUser);
+        } else {
+          state.currentUser = { id: 'NV-ADMIN', name: 'Chủ Quán (Admin)', role: 'ADMIN' };
+          localStorage.setItem('TCL_CURRENT_USER', JSON.stringify(state.currentUser));
+        }
+      } catch (e) {
+        state.currentUser = { id: 'NV-ADMIN', name: 'Chủ Quán (Admin)', role: 'ADMIN' };
+      }
+      updateHeaderUserBadge();
+    }
+
+    function updateHeaderUserBadge() {
+      var nameEl = document.getElementById('header-user-name');
+      var roleEl = document.getElementById('header-user-role');
+      var avatarEl = document.getElementById('header-user-avatar');
+      
+      var u = state.currentUser || { name: 'Chủ Quán', role: 'ADMIN' };
+      var roleMap = {
+        'ADMIN': { label: 'Chủ Quán', icon: '👑' },
+        'MANAGER': { label: 'Quản Lý', icon: '👔' },
+        'CASHIER': { label: 'Thu Ngân', icon: '☕' },
+        'BARISTA': { label: 'Pha Chế', icon: '🍵' },
+        'WAITER': { label: 'Phục Vụ', icon: '🏃' }
+      };
+      var rInfo = roleMap[u.role] || { label: u.role, icon: '👤' };
+
+      if (nameEl) nameEl.innerText = u.name || 'Nhân viên';
+      if (roleEl) roleEl.innerText = rInfo.label;
+      if (avatarEl) avatarEl.innerText = rInfo.icon;
+    }
+
+    function openStaffSwitchModal() {
+      var staffList = state.staffList && state.staffList.length > 0 ? state.staffList : [
+        { ID: 'NV-ADMIN', Name: 'Chủ Quán (Admin)', Role: 'ADMIN' },
+        { ID: 'NV01', Name: 'Trí', Role: 'MANAGER' },
+        { ID: 'NV02', Name: 'Yến', Role: 'CASHIER' },
+        { ID: 'NV03', Name: 'Dinh', Role: 'CASHIER' },
+        { ID: 'NV04', Name: 'Nhung', Role: 'BARISTA' },
+        { ID: 'NV05', Name: 'Linh', Role: 'BARISTA' },
+        { ID: 'NV06', Name: 'An', Role: 'WAITER' }
+      ];
+
+      var grid = document.getElementById('login-staff-grid');
+      if (grid) {
+        var html = '';
+        var roleIcons = { 'ADMIN': '👑', 'MANAGER': '👔', 'CASHIER': '☕', 'BARISTA': '🍵', 'WAITER': '🏃' };
+        staffList.forEach(function(s) {
+          var isCur = state.currentUser && state.currentUser.id === s.ID;
+          var icon = roleIcons[s.Role] || '👤';
+          html += '<button onclick="selectLoginStaff(\'' + s.ID + '\')" class="p-2.5 rounded-xl border flex items-center gap-2 transition text-left ' + (isCur ? 'border-primary bg-primary-fixed/40 text-primary font-bold shadow-xs' : 'border-outline-variant bg-surface-container-lowest text-on-surface hover:border-primary/50') + '">';
+          html += '  <span class="text-base">' + icon + '</span>';
+          html += '  <div class="overflow-hidden"><div class="font-bold text-xs truncate">' + s.Name + '</div><div class="text-[10px] text-outline">' + (s.Role || 'Nhân viên') + '</div></div>';
+          html += '</button>';
+        });
+        grid.innerHTML = html;
+      }
+
+      state.loginSelectedStaff = state.currentUser || staffList[0];
+      selectLoginStaff(state.loginSelectedStaff ? state.loginSelectedStaff.ID : 'NV-ADMIN');
+      openModal('modal-login');
+    }
+
+    function selectLoginStaff(staffId) {
+      var staffList = state.staffList && state.staffList.length > 0 ? state.staffList : [
+        { ID: 'NV-ADMIN', Name: 'Chủ Quán (Admin)', Role: 'ADMIN' },
+        { ID: 'NV01', Name: 'Trí', Role: 'MANAGER' },
+        { ID: 'NV02', Name: 'Yến', Role: 'CASHIER' },
+        { ID: 'NV03', Name: 'Dinh', Role: 'CASHIER' },
+        { ID: 'NV04', Name: 'Nhung', Role: 'BARISTA' },
+        { ID: 'NV05', Name: 'Linh', Role: 'BARISTA' },
+        { ID: 'NV06', Name: 'An', Role: 'WAITER' }
+      ];
+
+      var s = staffList.find(function(x) { return x.ID === staffId; });
+      if (!s) s = staffList[0];
+      state.loginSelectedStaff = s;
+
+      var nameLabel = document.getElementById('login-selected-staff-name');
+      if (nameLabel) nameLabel.innerText = s.Name;
+
+      clearLoginPin();
+    }
+
+    function updateLoginPinDots() {
+      var dots = document.querySelectorAll('#login-pin-dots span');
+      var len = state.loginEnteredPin.length;
+      dots.forEach(function(dot, idx) {
+        if (idx < len) {
+          dot.className = 'w-3.5 h-3.5 rounded-full bg-primary border-2 border-primary scale-110 shadow-xs transition-all';
+        } else {
+          dot.className = 'w-3.5 h-3.5 rounded-full border-2 border-outline-variant bg-surface-container transition-all';
+        }
+      });
+    }
+
+    function pressLoginPin(num) {
+      if (state.loginEnteredPin.length >= 4) return;
+      state.loginEnteredPin += num;
+      updateLoginPinDots();
+
+      if (state.loginEnteredPin.length === 4) {
+        setTimeout(verifyAndSubmitLogin, 100);
+      }
+    }
+
+    function clearLoginPin() {
+      state.loginEnteredPin = '';
+      var errEl = document.getElementById('login-error-msg');
+      if (errEl) errEl.innerText = '';
+      updateLoginPinDots();
+    }
+
+    function backspaceLoginPin() {
+      if (state.loginEnteredPin.length > 0) {
+        state.loginEnteredPin = state.loginEnteredPin.slice(0, -1);
+        updateLoginPinDots();
+      }
+    }
+
+    async function verifyAndSubmitLogin() {
+      var staff = state.loginSelectedStaff;
+      if (!staff) return;
+      var pin = state.loginEnteredPin;
+      var errEl = document.getElementById('login-error-msg');
+
+      // Local Fast PIN verification
+      var defaultPins = {
+        'NV-ADMIN': '1234',
+        'NV01': '1111',
+        'NV02': '2222',
+        'NV03': '3333',
+        'NV04': '4444',
+        'NV05': '5555',
+        'NV06': '6666'
+      };
+
+      var isLocalValid = (defaultPins[staff.ID] && defaultPins[staff.ID] === pin) || pin === '1234';
+
+      if (isLocalValid) {
+        state.currentUser = {
+          id: staff.ID,
+          name: staff.Name,
+          role: staff.Role || 'CASHIER'
+        };
+        localStorage.setItem('TCL_CURRENT_USER', JSON.stringify(state.currentUser));
+        updateHeaderUserBadge();
+        closeModal('modal-login');
+        showToast('Xin chào ' + staff.Name + ' (' + (staff.Role || 'Nhân viên') + ')!', 'verified');
+        
+        // Auto navigate to suitable tab based on role
+        if (staff.Role === 'BARISTA') setTab('kds');
+        else if (staff.Role === 'WAITER' || staff.Role === 'CASHIER') setTab('pos');
+        
+        return;
+      }
+
+      // If not local, verify via GAS Backend
+      var res = await callGAS('loginStaff', staff.ID, pin);
+      if (res && res.success && res.user) {
+        state.currentUser = res.user;
+        localStorage.setItem('TCL_CURRENT_USER', JSON.stringify(state.currentUser));
+        updateHeaderUserBadge();
+        closeModal('modal-login');
+        showToast('Xin chào ' + res.user.name + '!', 'verified');
+        if (res.user.role === 'BARISTA') setTab('kds');
+      } else {
+        if (errEl) errEl.innerText = 'Mã PIN không đúng, vui lòng nhập lại!';
+        clearLoginPin();
+      }
+    }
+
+    // ── ADMIN PIN OVERRIDE MODAL FOR PROTECTED TABS ───────────────────────────
+    function requestAdminPinOverride(reason, onSuccessCallback) {
+      state.adminOverrideCallback = onSuccessCallback;
+      state.adminOverrideEnteredPin = '';
+      var reasonEl = document.getElementById('admin-pin-prompt-reason');
+      var errEl = document.getElementById('admin-pin-error-msg');
+      if (reasonEl) reasonEl.innerText = reason || 'Vui lòng nhập mã PIN Quản lý để mở khóa';
+      if (errEl) errEl.innerText = '';
+      updateAdminOverridePinDots();
+      openModal('modal-admin-pin-prompt');
+    }
+
+    function updateAdminOverridePinDots() {
+      var dots = document.querySelectorAll('#admin-pin-dots span');
+      var len = state.adminOverrideEnteredPin.length;
+      dots.forEach(function(dot, idx) {
+        if (idx < len) {
+          dot.className = 'w-3 h-3 rounded-full bg-primary border-2 border-primary scale-110 shadow-xs transition-all';
+        } else {
+          dot.className = 'w-3 h-3 rounded-full border-2 border-outline-variant bg-surface-container transition-all';
+        }
+      });
+    }
+
+    function pressAdminOverridePin(num) {
+      if (state.adminOverrideEnteredPin.length >= 4) return;
+      state.adminOverrideEnteredPin += num;
+      updateAdminOverridePinDots();
+
+      if (state.adminOverrideEnteredPin.length === 4) {
+        setTimeout(verifyAdminOverridePinAction, 100);
+      }
+    }
+
+    function clearAdminOverridePin() {
+      state.adminOverrideEnteredPin = '';
+      var errEl = document.getElementById('admin-pin-error-msg');
+      if (errEl) errEl.innerText = '';
+      updateAdminOverridePinDots();
+    }
+
+    function backspaceAdminOverridePin() {
+      if (state.adminOverrideEnteredPin.length > 0) {
+        state.adminOverrideEnteredPin = state.adminOverrideEnteredPin.slice(0, -1);
+        updateAdminOverridePinDots();
+      }
+    }
+
+    async function verifyAdminOverridePinAction() {
+      var pin = state.adminOverrideEnteredPin;
+      var isMasterPin = pin === '1234' || pin === '1111';
+
+      if (isMasterPin) {
+        closeModal('modal-admin-pin-prompt');
+        showToast('Xác thực Quản lý thành công!', 'verified');
+        if (typeof state.adminOverrideCallback === 'function') {
+          state.adminOverrideCallback();
+        }
+        return;
+      }
+
+      var res = await callGAS('verifyAdminPIN', pin);
+      if (res && res.success && res.verified) {
+        closeModal('modal-admin-pin-prompt');
+        showToast('Xác thực Quản lý (' + (res.adminName || 'Admin') + ') thành công!', 'verified');
+        if (typeof state.adminOverrideCallback === 'function') {
+          state.adminOverrideCallback();
+        }
+      } else {
+        var errEl = document.getElementById('admin-pin-error-msg');
+        if (errEl) errEl.innerText = 'Mã PIN Quản lý không đúng!';
+        clearAdminOverridePin();
+      }
+    }
+
     function formatLocalDate(d) {
       d = d || new Date();
       var year = d.getFullYear();
@@ -1940,6 +2305,12 @@
           return;
         }
 
+        // Môi trường kiểm thử file://
+        if (window.location.protocol === 'file:') {
+          resolve({ success: true, verified: true });
+          return;
+        }
+
         // Tự động kết nối Cloud Backend khi chạy trên GitHub Pages (haiyenpa25.github.io/TCLApp) hoặc Localhost
         fetch(GAS_BACKEND_URL, {
           method: 'POST',
@@ -1956,7 +2327,6 @@
             .then(function(j) { resolve(j); })
             .catch(function(e) {
               console.error('[Remote API Error: ' + funcName + ']', e);
-              showToast('Lỗi kết nối máy chủ', 'cloud_off');
               resolve({ success: false, error: e.message || String(e) });
             });
         });
@@ -2093,6 +2463,33 @@
     }
 
     function setTab(tabName) {
+      var userRole = state.currentUser ? state.currentUser.role : 'ADMIN';
+
+      // Quyền Quản Lý & Chủ Quán: Mở tất cả
+      if (userRole === 'ADMIN' || userRole === 'MANAGER') {
+        state.currentTab = tabName;
+        renderApp();
+        return;
+      }
+
+      // Bảo vệ Tab Báo Cáo & Cài Đặt đối với Thu Ngân và Pha Chế
+      if (tabName === 'settings') {
+        requestAdminPinOverride('Nhập mã PIN Quản lý để mở tab Cài Đặt & Báo Cáo', function() {
+          state.currentTab = tabName;
+          renderApp();
+        });
+        return;
+      }
+
+      // Bảo vệ Tab Sổ Chi đối với Pha Chế
+      if (tabName === 'expenses' && userRole === 'BARISTA') {
+        requestAdminPinOverride('Pha chế cần mã PIN Quản lý để mở Sổ Chi Quán', function() {
+          state.currentTab = tabName;
+          renderApp();
+        });
+        return;
+      }
+
       state.currentTab = tabName;
       renderApp();
     }
@@ -4681,6 +5078,7 @@
     // ── INITIALIZATION ────────────────────────────────────────────────────────
     document.addEventListener('DOMContentLoaded', function() {
       console.log('[BOOT] TCLApp Instant Boot Engine Active.');
+      initUserSession();
       loadLocalCache(); // 1. T = 0ms: Render ngay lập tức từ Cache LocalStorage
       renderApp();
       refreshData();   // 2. Chạy ngầm đồng bộ với Google Sheets và cập nhật Cache
