@@ -497,23 +497,32 @@
           </div>
         </div>
 
-        <!-- Filter Period Chips (1-Touch) -->
+        <!-- Filter Period Chips & Monthly Selector (1-Touch) -->
         <div class="flex flex-wrap items-center gap-1.5 pt-2 border-t border-outline-variant/20 text-xs">
-          <span class="font-bold text-outline mr-1">Bộ Lọc:</span>
+          <span class="font-bold text-outline mr-1">Bộ Lọc Kỳ:</span>
           <button id="exp-filter-all" onclick="setExpensePeriod('all')" class="px-3.5 py-1.5 rounded-full font-bold bg-primary text-on-primary shadow-xs transition">Tất Cả</button>
           <button id="exp-filter-month" onclick="setExpensePeriod('month')" class="px-3.5 py-1.5 rounded-full font-medium bg-surface-container text-on-surface hover:bg-surface-container-high transition">Tháng Này</button>
+          <button id="exp-filter-last-month" onclick="setExpensePeriod('last_month')" class="px-3.5 py-1.5 rounded-full font-medium bg-surface-container text-on-surface hover:bg-surface-container-high transition">Tháng Trước</button>
+          <button id="exp-filter-select-month" onclick="setExpensePeriod('select_month')" class="px-3.5 py-1.5 rounded-full font-medium bg-surface-container text-on-surface hover:bg-surface-container-high transition">📅 Chọn Tháng...</button>
           <button id="exp-filter-week" onclick="setExpensePeriod('week')" class="px-3.5 py-1.5 rounded-full font-medium bg-surface-container text-on-surface hover:bg-surface-container-high transition">7 Ngày Qua</button>
-          <button id="exp-filter-yesterday" onclick="setExpensePeriod('yesterday')" class="px-3.5 py-1.5 rounded-full font-medium bg-surface-container text-on-surface hover:bg-surface-container-high transition">Hôm Qua</button>
           <button id="exp-filter-today" onclick="setExpensePeriod('today')" class="px-3.5 py-1.5 rounded-full font-medium bg-surface-container text-on-surface hover:bg-surface-container-high transition">Hôm Nay</button>
-          <button id="exp-filter-custom" onclick="setExpensePeriod('custom')" class="px-3.5 py-1.5 rounded-full font-medium bg-surface-container text-on-surface hover:bg-surface-container-high transition">Khoảng Ngày...</button>
+          <button id="exp-filter-custom" onclick="setExpensePeriod('custom')" class="px-3.5 py-1.5 rounded-full font-medium bg-surface-container text-on-surface hover:bg-surface-container-high transition">Từ Ngày - Đến Ngày...</button>
+        </div>
+
+        <!-- Specific Month Picker Container -->
+        <div id="exp-month-picker-container" class="hidden flex flex-wrap items-center gap-2 p-2.5 bg-surface-container-low rounded-xl text-xs">
+          <span class="font-bold text-primary flex items-center gap-1"><span class="material-symbols-outlined text-sm">calendar_month</span> Chọn Tháng Cần Xem:</span>
+          <input id="exp-selected-month" type="month" onchange="onExpenseMonthPickerChange(this.value)" class="px-3 py-1.5 bg-surface-container-lowest border border-primary rounded-lg text-xs font-bold text-primary focus:outline-none" />
         </div>
 
         <!-- Custom Date Range Inputs -->
         <div id="exp-custom-date-container" class="hidden flex flex-wrap items-center gap-2 p-2.5 bg-surface-container-low rounded-xl text-xs">
+          <span class="font-bold text-primary flex items-center gap-1"><span class="material-symbols-outlined text-sm">date_range</span> Khoảng Ngày:</span>
           <span class="font-semibold text-outline">Từ ngày:</span>
           <input id="exp-custom-from" type="date" onchange="applyExpenseFilter()" class="px-2.5 py-1 bg-surface-container-lowest border border-outline-variant/40 rounded-lg text-xs font-medium" />
           <span class="font-semibold text-outline">Đến ngày:</span>
           <input id="exp-custom-to" type="date" onchange="applyExpenseFilter()" class="px-2.5 py-1 bg-surface-container-lowest border border-outline-variant/40 rounded-lg text-xs font-medium" />
+          <button onclick="applyExpenseFilter()" class="px-3 py-1 bg-primary text-on-primary font-bold rounded-lg text-xs hover:bg-primary-container transition">Lọc Dữ Liệu</button>
         </div>
 
         <!-- Multi-filter Row: Specific Date, Category, Funding, Staff -->
@@ -663,18 +672,34 @@
             <div class="flex flex-wrap items-center gap-1.5 text-xs">
               <button id="rep-filter-all" onclick="setReportPeriod('all')" class="px-3.5 py-1.5 rounded-full font-bold bg-primary text-on-primary shadow-xs">Tất Cả</button>
               <button id="rep-filter-month" onclick="setReportPeriod('month')" class="px-3.5 py-1.5 rounded-full font-medium bg-surface-container text-on-surface hover:bg-surface-container-high">Tháng Này</button>
-              <button id="rep-filter-week" onclick="setReportPeriod('week')" class="px-3.5 py-1.5 rounded-full font-medium bg-surface-container text-on-surface hover:bg-surface-container-high">7 Ngày Qua</button>
-              <button id="rep-filter-yesterday" onclick="setReportPeriod('yesterday')" class="px-3.5 py-1.5 rounded-full font-medium bg-surface-container text-on-surface hover:bg-surface-container-high">Hôm Qua</button>
+              <button id="rep-filter-last-month" onclick="setReportPeriod('last_month')" class="px-3.5 py-1.5 rounded-full font-medium bg-surface-container text-on-surface hover:bg-surface-container-high">Tháng Trước</button>
+              <button id="rep-filter-select-month" onclick="setReportPeriod('select_month')" class="px-3.5 py-1.5 rounded-full font-medium bg-surface-container text-on-surface hover:bg-surface-container-high">📅 Chọn Tháng...</button>
+              <button id="rep-filter-week" onclick="setReportPeriod('week')" class="px-3.5 py-1.5 rounded-full font-medium bg-surface-container text-on-surface hover:bg-surface-container-high">7 Ngày</button>
               <button id="rep-filter-today" onclick="setReportPeriod('today')" class="px-3.5 py-1.5 rounded-full font-medium bg-surface-container text-on-surface hover:bg-surface-container-high">Hôm Nay</button>
-              <button id="rep-filter-custom" onclick="setReportPeriod('custom')" class="px-3.5 py-1.5 rounded-full font-medium bg-surface-container text-on-surface hover:bg-surface-container-high">Tùy Chọn</button>
+              <button id="rep-filter-custom" onclick="setReportPeriod('custom')" class="px-3.5 py-1.5 rounded-full font-medium bg-surface-container text-on-surface hover:bg-surface-container-high">Từ Ngày - Đến Ngày...</button>
             </div>
           </div>
 
+          <!-- Report Month Picker Container -->
+          <div id="rep-month-picker-container" class="hidden flex flex-wrap items-center gap-2 pt-2 border-t border-outline-variant/20 text-xs">
+            <span class="font-bold text-primary flex items-center gap-1"><span class="material-symbols-outlined text-sm">calendar_month</span> Chọn Tháng Báo Cáo:</span>
+            <input id="rep-selected-month" type="month" onchange="onReportMonthPickerChange(this.value)" class="px-3 py-1.5 bg-surface-container-lowest border border-primary rounded-lg text-xs font-bold text-primary focus:outline-none" />
+            <button onclick="fetchReportForPeriod()" class="px-3.5 py-1.5 bg-primary text-on-primary font-bold rounded-lg text-xs hover:bg-primary-container transition">Xem Báo Cáo Tháng</button>
+          </div>
+
+          <!-- Report Custom Date Range Container -->
           <div id="rep-custom-date-container" class="hidden flex flex-wrap items-center gap-2 pt-2 border-t border-outline-variant/20 text-xs">
+            <span class="font-bold text-primary flex items-center gap-1"><span class="material-symbols-outlined text-sm">date_range</span> Khoảng Ngày:</span>
             <span class="font-semibold text-outline">Từ ngày:</span>
             <input id="rep-custom-from" type="date" onchange="fetchReportForPeriod()" class="px-2.5 py-1 bg-surface-container-lowest border border-outline-variant/40 rounded-lg text-xs font-medium" />
             <span class="font-semibold text-outline">Đến ngày:</span>
             <input id="rep-custom-to" type="date" onchange="fetchReportForPeriod()" class="px-2.5 py-1 bg-surface-container-lowest border border-outline-variant/40 rounded-lg text-xs font-medium" />
+            <button onclick="fetchReportForPeriod()" class="px-3.5 py-1 bg-primary text-on-primary font-bold rounded-lg text-xs hover:bg-primary-container transition">Xem Báo Cáo</button>
+          </div>
+
+          <div id="rep-active-period-banner" class="p-2.5 bg-surface-container-low rounded-xl text-xs font-bold text-primary flex items-center gap-2">
+            <span class="material-symbols-outlined text-base">info</span>
+            <span id="rep-period-title">Đang xem: Tất Cả Dữ Liệu</span>
           </div>
         </div>
 
@@ -1762,7 +1787,9 @@
       expenseCategoryFilter: 'ALL',
       expenseFundingFilter: 'ALL',
       expenseStaffFilter: 'ALL',
-      reportPeriod: 'all',
+      reportPeriod: 'month',
+      reportSelectedMonth: '',
+      expenseSelectedMonth: '',
 
       // Data Collections
       products: [],
@@ -3576,6 +3603,13 @@
           matchDate = d >= formatLocalDate(w) && d <= todayStr;
         } else if (state.expensePeriod === 'month') {
           matchDate = d.substring(0, 7) === currentMonth;
+        } else if (state.expensePeriod === 'last_month') {
+          var prevDate = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+          var lastMonthStr = formatLocalDate(prevDate).substring(0, 7);
+          matchDate = d.substring(0, 7) === lastMonthStr;
+        } else if (state.expensePeriod === 'select_month') {
+          var selMonth = state.expenseSelectedMonth || document.getElementById('exp-selected-month')?.value || currentMonth;
+          matchDate = d.substring(0, 7) === selMonth;
         } else if (state.expensePeriod === 'all') {
           matchDate = true;
         } else if (state.expensePeriod === 'custom') {
@@ -3629,14 +3663,20 @@
       if (reimburseCountEl) reimburseCountEl.innerText = reimburseCount + ' khoản';
       if (reimburseTotalBadge) reimburseTotalBadge.innerText = 'Tổng Nợ Ứng: ' + formatVND(reimburseTotal);
 
+      var prevDateObj = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+      var lastMonthLabel = formatLocalDate(prevDateObj).substring(0, 7);
+      var selMonthLabel = state.expenseSelectedMonth || document.getElementById('exp-selected-month')?.value || currentMonth;
+
       var periodLabels = {
         all: 'Tất Cả Dữ Liệu (' + state.expenses.length + ' khoản chi)',
         month: 'Tháng Này (' + currentMonth.substring(5) + '/' + currentMonth.substring(0,4) + ')',
+        last_month: 'Tháng Trước (' + lastMonthLabel.substring(5) + '/' + lastMonthLabel.substring(0,4) + ')',
+        select_month: 'Tháng ' + selMonthLabel.substring(5) + '/' + selMonthLabel.substring(0,4),
         week: '7 Ngày Qua',
         yesterday: 'Hôm Qua',
         today: 'Hôm Nay (' + todayStr + ')',
         specific: 'Ngày ' + state.expenseSpecificDate,
-        custom: 'Khoảng Ngày Tùy Chọn'
+        custom: 'Từ ' + (document.getElementById('exp-custom-from')?.value || '...') + ' Đến ' + (document.getElementById('exp-custom-to')?.value || '...')
       };
       if (badgeEl) badgeEl.innerText = periodLabels[state.expensePeriod] || 'Tất Cả Dữ Liệu';
 
@@ -4087,19 +4127,52 @@
       var specInput = document.getElementById('exp-specific-date');
       if (specInput) specInput.value = '';
 
-      ['all', 'month', 'week', 'yesterday', 'today', 'custom'].forEach(function(p) {
+      var allPeriods = ['all', 'month', 'last-month', 'select-month', 'week', 'today', 'custom'];
+      allPeriods.forEach(function(p) {
         var btn = document.getElementById('exp-filter-' + p);
         if (btn) {
-          if (p === period) btn.className = 'px-3.5 py-1.5 rounded-full font-bold bg-primary text-on-primary shadow-xs transition';
+          var isMatch = p === period || (p === 'last-month' && period === 'last_month') || (p === 'select-month' && period === 'select_month');
+          if (isMatch) btn.className = 'px-3.5 py-1.5 rounded-full font-bold bg-primary text-on-primary shadow-xs transition';
           else btn.className = 'px-3.5 py-1.5 rounded-full font-medium bg-surface-container text-on-surface hover:bg-surface-container-high transition';
         }
       });
 
+      var monthCont = document.getElementById('exp-month-picker-container');
       var customCont = document.getElementById('exp-custom-date-container');
-      if (customCont) {
-        if (period === 'custom') customCont.classList.remove('hidden');
-        else customCont.classList.add('hidden');
+
+      if (monthCont) {
+        if (period === 'select_month') {
+          monthCont.classList.remove('hidden');
+          var mInput = document.getElementById('exp-selected-month');
+          if (mInput && !mInput.value) {
+            var now = new Date();
+            mInput.value = formatLocalDate(now).substring(0, 7);
+            state.expenseSelectedMonth = mInput.value;
+          }
+        } else {
+          monthCont.classList.add('hidden');
+        }
       }
+
+      if (customCont) {
+        if (period === 'custom') {
+          customCont.classList.remove('hidden');
+          var now = new Date();
+          var todayStr = formatLocalDate(now);
+          var fromInput = document.getElementById('exp-custom-from');
+          var toInput = document.getElementById('exp-custom-to');
+          if (fromInput && !fromInput.value) fromInput.value = formatLocalDate(new Date(now.getFullYear(), now.getMonth(), 1));
+          if (toInput && !toInput.value) toInput.value = todayStr;
+        } else {
+          customCont.classList.add('hidden');
+        }
+      }
+
+      applyExpenseFilter();
+    }
+
+    function onExpenseMonthPickerChange(monthVal) {
+      state.expenseSelectedMonth = monthVal;
       applyExpenseFilter();
     }
 
@@ -4120,26 +4193,105 @@
 
     async function setReportPeriod(period) {
       state.reportPeriod = period;
-      ['all', 'month', 'week', 'yesterday', 'today', 'custom'].forEach(function(p) {
+      var allPeriods = ['all', 'month', 'last-month', 'select-month', 'week', 'today', 'custom'];
+      allPeriods.forEach(function(p) {
         var btn = document.getElementById('rep-filter-' + p);
         if (btn) {
-          if (p === period) btn.className = 'px-3.5 py-1.5 rounded-full font-bold bg-primary text-on-primary shadow-xs';
+          var isMatch = p === period || (p === 'last-month' && period === 'last_month') || (p === 'select-month' && period === 'select_month');
+          if (isMatch) btn.className = 'px-3.5 py-1.5 rounded-full font-bold bg-primary text-on-primary shadow-xs';
           else btn.className = 'px-3.5 py-1.5 rounded-full font-medium bg-surface-container text-on-surface hover:bg-surface-container-high';
         }
       });
+
+      var monthCont = document.getElementById('rep-month-picker-container');
       var customCont = document.getElementById('rep-custom-date-container');
-      if (customCont) {
-        if (period === 'custom') customCont.classList.remove('hidden');
-        else customCont.classList.add('hidden');
+
+      if (monthCont) {
+        if (period === 'select_month') {
+          monthCont.classList.remove('hidden');
+          var mInput = document.getElementById('rep-selected-month');
+          if (mInput && !mInput.value) {
+            var now = new Date();
+            mInput.value = formatLocalDate(now).substring(0, 7);
+            state.reportSelectedMonth = mInput.value;
+          }
+        } else {
+          monthCont.classList.add('hidden');
+        }
       }
+
+      if (customCont) {
+        if (period === 'custom') {
+          customCont.classList.remove('hidden');
+          var now = new Date();
+          var todayStr = formatLocalDate(now);
+          var fromInput = document.getElementById('rep-custom-from');
+          var toInput = document.getElementById('rep-custom-to');
+          if (fromInput && !fromInput.value) fromInput.value = formatLocalDate(new Date(now.getFullYear(), now.getMonth(), 1));
+          if (toInput && !toInput.value) toInput.value = todayStr;
+        } else {
+          customCont.classList.add('hidden');
+        }
+      }
+
       await fetchReportForPeriod();
     }
 
+    function onReportMonthPickerChange(monthVal) {
+      state.reportSelectedMonth = monthVal;
+      fetchReportForPeriod();
+    }
+
     async function fetchReportForPeriod() {
-      var customFrom = document.getElementById('rep-custom-from')?.value;
-      var customTo = document.getElementById('rep-custom-to')?.value;
-      var res = await callGAS('getReport', state.reportPeriod, customFrom, customTo);
-      if (res && res.success && res.data) state.reportData = res.data;
+      var periodParam = state.reportPeriod;
+      var customFrom = '';
+      var customTo = '';
+
+      var now = new Date();
+      var todayStr = formatLocalDate(now);
+      var currentMonth = todayStr.substring(0, 7);
+
+      var titleText = 'Đang xem: Tất Cả Dữ Liệu';
+
+      if (state.reportPeriod === 'month') {
+        customFrom = currentMonth + '-01';
+        customTo = currentMonth + '-31';
+        titleText = 'Đang xem: Tháng Này (' + currentMonth.substring(5) + '/' + currentMonth.substring(0,4) + ')';
+      } else if (state.reportPeriod === 'last_month') {
+        var prevDate = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+        var lastMonthStr = formatLocalDate(prevDate).substring(0, 7);
+        customFrom = lastMonthStr + '-01';
+        customTo = lastMonthStr + '-31';
+        titleText = 'Đang xem: Tháng Trước (' + lastMonthStr.substring(5) + '/' + lastMonthStr.substring(0,4) + ')';
+      } else if (state.reportPeriod === 'select_month') {
+        var selM = state.reportSelectedMonth || document.getElementById('rep-selected-month')?.value || currentMonth;
+        customFrom = selM + '-01';
+        customTo = selM + '-31';
+        titleText = 'Đang xem: Tháng ' + selM.substring(5) + '/' + selM.substring(0,4) + ' (' + customFrom + ' đến ' + customTo + ')';
+      } else if (state.reportPeriod === 'today') {
+        customFrom = todayStr;
+        customTo = todayStr;
+        titleText = 'Đang xem: Hôm Nay (' + todayStr + ')';
+      } else if (state.reportPeriod === 'week') {
+        var w = new Date(now.getTime() - 6 * 86400000);
+        customFrom = formatLocalDate(w);
+        customTo = todayStr;
+        titleText = 'Đang xem: 7 Ngày Qua (' + customFrom + ' đến ' + customTo + ')';
+      } else if (state.reportPeriod === 'custom') {
+        customFrom = document.getElementById('rep-custom-from')?.value || todayStr;
+        customTo = document.getElementById('rep-custom-to')?.value || todayStr;
+        titleText = 'Đang xem: Khoảng Ngày (Từ ' + customFrom + ' Đến ' + customTo + ')';
+      }
+
+      var bannerTitle = document.getElementById('rep-period-title');
+      if (bannerTitle) bannerTitle.innerText = titleText;
+
+      showToast('Đang tải báo cáo tài chính...', 'analytics');
+      var res = await callGAS('getReport', periodParam, customFrom, customTo);
+      if (res && res.success && res.data) {
+        state.reportData = res.data;
+        showToast('Đã cập nhật báo cáo thành công!', 'check_circle');
+      }
       renderReports();
     }
 

@@ -1031,7 +1031,28 @@ function getReport(period, dateFrom, dateTo) {
     var tz = Session.getScriptTimeZone() || 'Asia/Ho_Chi_Minh';
     var todayStr = Utilities.formatDate(now, tz, 'yyyy-MM-dd');
 
-    if (p === 'today') {
+    // Kiểm tra nếu period là chuỗi định dạng Tháng YYYY-MM (ví dụ '2026-08')
+    if (typeof p === 'string' && /^\d{4}-\d{2}$/.test(p)) {
+      from = p + '-01';
+      to = p + '-31';
+    } else if (p === 'month') {
+      var targetMonth = (typeof period === 'object' && period.month) ? period.month : (dateFrom && /^\d{4}-\d{2}$/.test(dateFrom) ? dateFrom : '');
+      if (targetMonth) {
+        from = targetMonth + '-01';
+        to = targetMonth + '-31';
+      } else {
+        var y = now.getFullYear();
+        var m = String(now.getMonth() + 1).padStart(2, '0');
+        from = y + '-' + m + '-01';
+        to = y + '-' + m + '-31';
+      }
+    } else if (p === 'last_month') {
+      var prevMonthDate = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+      var py = prevMonthDate.getFullYear();
+      var pm = String(prevMonthDate.getMonth() + 1).padStart(2, '0');
+      from = py + '-' + pm + '-01';
+      to = py + '-' + pm + '-31';
+    } else if (p === 'today') {
       from = todayStr;
       to = todayStr;
     } else if (p === 'yesterday') {
@@ -1043,15 +1064,10 @@ function getReport(period, dateFrom, dateTo) {
       var w = new Date(now.getTime() - 6 * 86400000);
       from = Utilities.formatDate(w, tz, 'yyyy-MM-dd');
       to = todayStr;
-    } else if (p === 'month') {
-      var y = now.getFullYear();
-      var m = String(now.getMonth() + 1).padStart(2, '0');
-      from = y + '-' + m + '-01';
-      to = y + '-' + m + '-31';
     } else if (p === 'all' || p === 'all_time') {
       from = '2000-01-01';
       to = '2099-12-31';
-    } else if (p === 'custom') {
+    } else if (p === 'custom' || dateFrom) {
       from = (typeof period === 'object' && period.dateFrom) ? period.dateFrom : (dateFrom || '2000-01-01');
       to   = (typeof period === 'object' && period.dateTo)   ? period.dateTo   : (dateTo || from);
     }
