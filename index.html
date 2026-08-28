@@ -7,7 +7,7 @@
   <title>Tiệm Của Lá — Organic Vitality F&B POS</title>
 
   <!-- PWA & Mobile Web App Meta Tags -->
-  <meta name="description" content="Hệ thống quản lý POS bán hàng, quầy pha chế KDS, sổ quỹ thu chi, chốt ca két tiền và báo cáo tài chính Tiệm Của Lá." />
+  <meta name="description" content="Hệ thống POS bán hàng, quầy pha chế KDS, quản lý chi phí CHI, chốt ca két tiền và báo cáo tài chính Tiệm Của Lá." />
   <meta name="theme-color" content="#154212" />
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -26,7 +26,7 @@
         var manifestData = {
           name: "Tiệm Của Lá — F&B POS",
           short_name: "Tiệm Của Lá",
-          description: "Hệ thống POS bán hàng, quầy pha chế KDS, sổ quỹ thu chi và báo cáo tài chính Tiệm Của Lá",
+          description: "Hệ thống POS bán hàng, quầy pha chế KDS, quản lý CHI và báo cáo tài chính Tiệm Của Lá",
           start_url: window.location.href || ".",
           display: "standalone",
           background_color: "#f8faf5",
@@ -155,7 +155,7 @@
         <h1 id="header-shop-name" class="font-display font-bold text-base text-primary leading-tight">Tiệm Của Lá</h1>
         <div class="flex items-center gap-1.5 mt-0.5">
           <span class="w-2 h-2 rounded-full bg-status-free animate-pulse"></span>
-          <span id="header-sub-title" class="text-[11px] font-semibold text-on-surface-variant">PWA App • Menu</span>
+          <span id="header-sub-title" class="text-[11px] font-semibold text-on-surface-variant">Menu Bán Hàng</span>
         </div>
       </div>
     </div>
@@ -207,7 +207,7 @@
         </div>
       </div>
 
-      <!-- 2-Column Responsive Product Grid -->
+      <!-- Responsive Product Grid -->
       <div id="pos-products-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3.5 sm:gap-4">
         <!-- Rendered via JS -->
       </div>
@@ -221,7 +221,7 @@
             <span class="material-symbols-outlined text-primary">countertops</span>
             Active Orders (Quầy Pha Chế)
           </h2>
-          <p class="text-xs text-on-surface-variant">Theo dõi tiến độ chế biến và thời gian thực món nước</p>
+          <p class="text-xs text-on-surface-variant">Theo dõi tiến độ chế biến và phục vụ món nước thời gian thực</p>
         </div>
         <div class="flex items-center gap-2">
           <button id="kds-filter-active" onclick="setKitchenFilter('ACTIVE')" class="px-4 py-1.5 bg-primary text-on-primary rounded-full text-xs font-bold transition-all shadow-sm">Đang Phục Vụ</button>
@@ -234,17 +234,17 @@
       </div>
     </section>
 
-    <!-- ── VIEW 3: EXPENSES & SỔ QUỸ (FULL CRUD + OPTIMIZED FILTERS) ─────────── -->
+    <!-- ── VIEW 3: CHI (QUẢN LÝ CHI PHÍ & SỔ QUỸ) ────────────────────────────── -->
     <section id="view-expenses" class="hidden space-y-4 animate-fade-in">
       <div class="bg-surface-cream rounded-2xl p-4 sm:p-5 border border-outline-variant/30 shadow-card space-y-3">
         <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-3">
           <div>
             <div class="flex items-center gap-2">
-              <span class="text-xs font-bold text-outline uppercase tracking-wider">Tổng Chi Phí</span>
-              <span id="expenses-header-badge" class="text-[11px] font-bold text-primary px-2.5 py-0.5 rounded-full bg-primary/10">Hôm Nay</span>
+              <span class="text-xs font-bold text-outline uppercase tracking-wider">Tổng Khoản Chi</span>
+              <span id="expenses-header-badge" class="text-[11px] font-bold text-primary px-2.5 py-0.5 rounded-full bg-primary/10">Tất Cả Dữ Liệu</span>
             </div>
             <div id="expenses-total-amount" class="font-display font-extrabold text-2xl sm:text-3xl text-error mt-0.5">0 ₫</div>
-            <span id="expenses-count-summary" class="text-xs text-outline font-medium">0 khoản chi thực tế</span>
+            <span id="expenses-count-summary" class="text-xs text-outline font-medium">0 khoản chi từ Google Sheet</span>
           </div>
           <button onclick="openExpenseEditModal(null)" class="px-4 py-2.5 bg-primary text-on-primary rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 shadow-sm hover:bg-primary-container transition">
             <span class="material-symbols-outlined text-sm">add_circle</span> + Ghi Khoản Chi Mới
@@ -254,11 +254,11 @@
         <!-- Filter Period Chips (1-Touch) -->
         <div class="flex flex-wrap items-center gap-1.5 pt-2 border-t border-outline-variant/20 text-xs">
           <span class="font-bold text-outline mr-1">Bộ Lọc:</span>
-          <button id="exp-filter-today" onclick="setExpensePeriod('today')" class="px-3.5 py-1.5 rounded-full font-bold bg-primary text-on-primary shadow-xs transition">Hôm Nay</button>
-          <button id="exp-filter-yesterday" onclick="setExpensePeriod('yesterday')" class="px-3.5 py-1.5 rounded-full font-medium bg-surface-container text-on-surface hover:bg-surface-container-high transition">Hôm Qua</button>
-          <button id="exp-filter-week" onclick="setExpensePeriod('week')" class="px-3.5 py-1.5 rounded-full font-medium bg-surface-container text-on-surface hover:bg-surface-container-high transition">7 Ngày Qua</button>
+          <button id="exp-filter-all" onclick="setExpensePeriod('all')" class="px-3.5 py-1.5 rounded-full font-bold bg-primary text-on-primary shadow-xs transition">Tất Cả</button>
           <button id="exp-filter-month" onclick="setExpensePeriod('month')" class="px-3.5 py-1.5 rounded-full font-medium bg-surface-container text-on-surface hover:bg-surface-container-high transition">Tháng Này</button>
-          <button id="exp-filter-all" onclick="setExpensePeriod('all')" class="px-3.5 py-1.5 rounded-full font-medium bg-surface-container text-on-surface hover:bg-surface-container-high transition">Tất Cả</button>
+          <button id="exp-filter-week" onclick="setExpensePeriod('week')" class="px-3.5 py-1.5 rounded-full font-medium bg-surface-container text-on-surface hover:bg-surface-container-high transition">7 Ngày Qua</button>
+          <button id="exp-filter-yesterday" onclick="setExpensePeriod('yesterday')" class="px-3.5 py-1.5 rounded-full font-medium bg-surface-container text-on-surface hover:bg-surface-container-high transition">Hôm Qua</button>
+          <button id="exp-filter-today" onclick="setExpensePeriod('today')" class="px-3.5 py-1.5 rounded-full font-medium bg-surface-container text-on-surface hover:bg-surface-container-high transition">Hôm Nay</button>
           <button id="exp-filter-custom" onclick="setExpensePeriod('custom')" class="px-3.5 py-1.5 rounded-full font-medium bg-surface-container text-on-surface hover:bg-surface-container-high transition">Khoảng Ngày...</button>
         </div>
 
@@ -316,7 +316,7 @@
         <div class="flex justify-between items-center mb-3">
           <h3 class="font-display font-bold text-sm text-on-surface flex items-center gap-2">
             <span class="material-symbols-outlined text-base text-primary">receipt_long</span>
-            Danh Sách Chi Phí Chi Tiết (Sửa & Xóa)
+            Danh Sách Chi Tiết Các Khoản Chi
           </h3>
           <span id="expenses-count-pill" class="text-[11px] font-bold text-primary px-2 py-0.5 rounded-full bg-primary/10">0 mục</span>
         </div>
@@ -378,128 +378,130 @@
       </div>
     </section>
 
-    <!-- ── VIEW 6: BÁO CÁO BENTO ─────────────────────────────────────────────── -->
-    <section id="view-reports" class="hidden space-y-4 animate-fade-in">
-      <div class="bg-surface-cream p-4 sm:p-5 rounded-2xl border border-outline-variant/30 shadow-card space-y-3">
-        <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-2">
-          <h2 class="font-display font-bold text-base text-primary flex items-center gap-2">
-            <span class="material-symbols-outlined text-primary">analytics</span>
-            Báo Cáo Hoạt Động & Tài Chính Chi Tiết
-          </h2>
-          <div class="flex flex-wrap items-center gap-1.5 text-xs">
-            <button id="rep-filter-today" onclick="setReportPeriod('today')" class="px-3.5 py-1.5 rounded-full font-bold bg-primary text-on-primary shadow-xs">Hôm Nay</button>
-            <button id="rep-filter-yesterday" onclick="setReportPeriod('yesterday')" class="px-3.5 py-1.5 rounded-full font-medium bg-surface-container text-on-surface hover:bg-surface-container-high">Hôm Qua</button>
-            <button id="rep-filter-week" onclick="setReportPeriod('week')" class="px-3.5 py-1.5 rounded-full font-medium bg-surface-container text-on-surface hover:bg-surface-container-high">7 Ngày Qua</button>
-            <button id="rep-filter-month" onclick="setReportPeriod('month')" class="px-3.5 py-1.5 rounded-full font-medium bg-surface-container text-on-surface hover:bg-surface-container-high">Tháng Này</button>
-            <button id="rep-filter-custom" onclick="setReportPeriod('custom')" class="px-3.5 py-1.5 rounded-full font-medium bg-surface-container text-on-surface hover:bg-surface-container-high">Tùy Chọn</button>
-          </div>
-        </div>
-
-        <div id="rep-custom-date-container" class="hidden flex flex-wrap items-center gap-2 pt-2 border-t border-outline-variant/20 text-xs">
-          <span class="font-semibold text-outline">Từ ngày:</span>
-          <input id="rep-custom-from" type="date" onchange="fetchReportForPeriod()" class="px-2.5 py-1 bg-surface-container-lowest border border-outline-variant/40 rounded-lg text-xs font-medium" />
-          <span class="font-semibold text-outline">Đến ngày:</span>
-          <input id="rep-custom-to" type="date" onchange="fetchReportForPeriod()" class="px-2.5 py-1 bg-surface-container-lowest border border-outline-variant/40 rounded-lg text-xs font-medium" />
-        </div>
-      </div>
-
-      <!-- Bento-style Financial KPI Cards -->
-      <div class="grid grid-cols-2 gap-4">
-        <!-- Revenue Card -->
-        <div class="bg-surface-container-lowest p-4 rounded-xl shadow-card border border-outline-variant/20 flex flex-col justify-between gap-1">
-          <div class="flex items-center gap-2 text-on-surface-variant mb-1">
-            <span class="material-symbols-outlined text-primary text-sm">payments</span>
-            <span class="text-xs uppercase font-bold text-outline">Doanh Thu</span>
-          </div>
-          <div id="report-revenue" class="font-display font-extrabold text-xl sm:text-2xl text-on-surface">0 ₫</div>
-          <span id="report-orders-badge" class="text-[11px] text-status-free font-bold flex items-center gap-1">
-            <span class="material-symbols-outlined text-[14px]">trending_up</span> 0 đơn hoàn tất
-          </span>
-        </div>
-
-        <!-- Orders Card -->
-        <div class="bg-surface-container-lowest p-4 rounded-xl shadow-card border border-outline-variant/20 flex flex-col justify-between gap-1">
-          <div class="flex items-center gap-2 text-on-surface-variant mb-1">
-            <span class="material-symbols-outlined text-primary text-sm">receipt_long</span>
-            <span class="text-xs uppercase font-bold text-outline">Chi Phí</span>
-          </div>
-          <div id="report-expenses" class="font-display font-extrabold text-xl sm:text-2xl text-error">0 ₫</div>
-          <span id="report-expenses-count" class="text-[11px] text-outline font-semibold">0 khoản chi</span>
-        </div>
-
-        <!-- Net Profit Full-width Bento Card -->
-        <div class="col-span-2 bg-primary-container p-4 sm:p-5 rounded-2xl shadow-float flex justify-between items-center relative overflow-hidden text-on-primary">
-          <div class="absolute right-[-20%] top-[-50%] w-48 h-48 bg-primary rounded-full opacity-30 blur-xl"></div>
-          <div class="flex flex-col gap-1 z-10">
-            <div class="flex items-center gap-2 text-on-primary-container mb-1">
-              <span class="material-symbols-outlined text-sm">account_balance</span>
-              <span class="text-xs uppercase font-bold tracking-wider">Lợi Nhuận Thuần (Net Profit)</span>
-            </div>
-            <div id="report-profit" class="font-display font-extrabold text-2xl sm:text-3xl text-on-primary">0 ₫</div>
-          </div>
-          <div id="report-profit-margin" class="bg-surface-container-lowest/20 rounded-full px-3.5 py-1.5 backdrop-blur-sm z-10 text-xs font-bold text-on-primary">
-            Tỷ suất: 0%
-          </div>
-        </div>
-      </div>
-
-      <!-- Payment Breakdown & Best Sellers -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div class="bg-surface-container-lowest p-4 rounded-2xl border border-outline-variant/30 shadow-card">
-          <h3 class="font-display font-bold text-sm text-on-surface mb-3 flex items-center gap-2">
-            <span class="material-symbols-outlined text-primary">pie_chart</span>
-            Phân Bổ Hình Thức Thanh Toán
-          </h3>
-          <div id="report-payment-breakdown" class="space-y-3 text-xs">
-            <!-- Rendered via JS -->
-          </div>
-        </div>
-
-        <div class="bg-surface-container-lowest p-4 rounded-2xl border border-outline-variant/30 shadow-card">
-          <h3 class="font-display font-bold text-sm text-on-surface mb-3 flex items-center gap-2">
-            <span class="material-symbols-outlined text-primary">local_fire_department</span>
-            Top Món Nước Bán Chạy Nhất
-          </h3>
-          <div id="report-top-products" class="space-y-2 text-xs">
-            <!-- Rendered via JS -->
-          </div>
-        </div>
-      </div>
-
-      <!-- Hourly Sales Breakdown -->
-      <div class="bg-surface-container-lowest p-4 rounded-2xl border border-outline-variant/30 shadow-card">
-        <h3 class="font-display font-bold text-sm text-on-surface mb-3 flex items-center gap-2">
-          <span class="material-symbols-outlined text-primary">schedule</span>
-          Doanh Thu Theo Khung Giờ Hoạt Động
-        </h3>
-        <div id="report-hourly-bars" class="space-y-2 text-xs">
-          <!-- Rendered via JS -->
-        </div>
-      </div>
-
-      <!-- Detailed Orders Log Table -->
-      <div class="bg-surface-container-lowest p-4 rounded-2xl border border-outline-variant/30 shadow-card">
-        <h3 class="font-display font-bold text-sm text-on-surface mb-3 flex items-center gap-2">
-          <span class="material-symbols-outlined text-primary">receipt_long</span>
-          Bảng Kê Chi Tiết Đơn Hàng Trong Kỳ
-        </h3>
-        <div id="report-orders-table" class="space-y-2 overflow-x-auto text-xs">
-          <!-- Rendered via JS -->
-        </div>
-      </div>
-    </section>
-
-    <!-- ── VIEW 7: SETTINGS & MENU QUẢN LÝ ─────────────────────────────────── -->
+    <!-- ── VIEW 6: SETTINGS (CHỨA BÁO CÁO, CẤU HÌNH, MENU, TOPPING, BÀN) ──────── -->
     <section id="view-settings" class="hidden space-y-4 animate-fade-in">
+      <!-- Subtabs inside Settings -->
       <div class="flex gap-2 overflow-x-auto hide-scrollbar pb-1 border-b border-outline-variant/30 text-xs font-bold">
-        <button id="set-subtab-store" onclick="setSettingsSubTab('store')" class="px-4 py-2 rounded-full bg-primary text-on-primary shadow-xs">Cấu Hình Quán & VietQR</button>
-        <button id="set-subtab-menu" onclick="setSettingsSubTab('menu')" class="px-4 py-2 rounded-full bg-surface-container text-on-surface hover:bg-surface-container-high">Quản Lý Món Nước</button>
-        <button id="set-subtab-topping" onclick="setSettingsSubTab('topping')" class="px-4 py-2 rounded-full bg-surface-container text-on-surface hover:bg-surface-container-high">Quản Lý Topping</button>
-        <button id="set-subtab-tables" onclick="setSettingsSubTab('tables')" class="px-4 py-2 rounded-full bg-surface-container text-on-surface hover:bg-surface-container-high">Sơ Đồ Bàn</button>
+        <button id="set-subtab-reports" onclick="setSettingsSubTab('reports')" class="px-4 py-2 rounded-full bg-primary text-on-primary shadow-xs flex items-center gap-1.5"><span class="material-symbols-outlined text-sm">analytics</span> Báo Cáo Doanh Thu</button>
+        <button id="set-subtab-store" onclick="setSettingsSubTab('store')" class="px-4 py-2 rounded-full bg-surface-container text-on-surface hover:bg-surface-container-high flex items-center gap-1.5"><span class="material-symbols-outlined text-sm">storefront</span> Cấu Hình Quán & QR</button>
+        <button id="set-subtab-menu" onclick="setSettingsSubTab('menu')" class="px-4 py-2 rounded-full bg-surface-container text-on-surface hover:bg-surface-container-high flex items-center gap-1.5"><span class="material-symbols-outlined text-sm">local_cafe</span> Quản Lý Món</button>
+        <button id="set-subtab-topping" onclick="setSettingsSubTab('topping')" class="px-4 py-2 rounded-full bg-surface-container text-on-surface hover:bg-surface-container-high flex items-center gap-1.5"><span class="material-symbols-outlined text-sm">icecream</span> Quản Lý Topping</button>
+        <button id="set-subtab-tables" onclick="setSettingsSubTab('tables')" class="px-4 py-2 rounded-full bg-surface-container text-on-surface hover:bg-surface-container-high flex items-center gap-1.5"><span class="material-symbols-outlined text-sm">table_restaurant</span> Sơ Đồ Bàn</button>
       </div>
 
-      <!-- SUB-PANEL 1: Store Info & VietQR -->
-      <div id="settings-panel-store" class="space-y-4">
+      <!-- SUB-PANEL 1: BÁO CÁO DOANH THU & TÀI CHÍNH (BENTO REPORT) -->
+      <div id="settings-panel-reports" class="space-y-4">
+        <div class="bg-surface-cream p-4 sm:p-5 rounded-2xl border border-outline-variant/30 shadow-card space-y-3">
+          <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-2">
+            <h3 class="font-display font-bold text-base text-primary flex items-center gap-2">
+              <span class="material-symbols-outlined text-primary">analytics</span>
+              Báo Cáo Hoạt Động & Tài Chính Chi Tiết
+            </h3>
+            <div class="flex flex-wrap items-center gap-1.5 text-xs">
+              <button id="rep-filter-today" onclick="setReportPeriod('today')" class="px-3.5 py-1.5 rounded-full font-bold bg-primary text-on-primary shadow-xs">Hôm Nay</button>
+              <button id="rep-filter-yesterday" onclick="setReportPeriod('yesterday')" class="px-3.5 py-1.5 rounded-full font-medium bg-surface-container text-on-surface hover:bg-surface-container-high">Hôm Qua</button>
+              <button id="rep-filter-week" onclick="setReportPeriod('week')" class="px-3.5 py-1.5 rounded-full font-medium bg-surface-container text-on-surface hover:bg-surface-container-high">7 Ngày Qua</button>
+              <button id="rep-filter-month" onclick="setReportPeriod('month')" class="px-3.5 py-1.5 rounded-full font-medium bg-surface-container text-on-surface hover:bg-surface-container-high">Tháng Này</button>
+              <button id="rep-filter-custom" onclick="setReportPeriod('custom')" class="px-3.5 py-1.5 rounded-full font-medium bg-surface-container text-on-surface hover:bg-surface-container-high">Tùy Chọn</button>
+            </div>
+          </div>
+
+          <div id="rep-custom-date-container" class="hidden flex flex-wrap items-center gap-2 pt-2 border-t border-outline-variant/20 text-xs">
+            <span class="font-semibold text-outline">Từ ngày:</span>
+            <input id="rep-custom-from" type="date" onchange="fetchReportForPeriod()" class="px-2.5 py-1 bg-surface-container-lowest border border-outline-variant/40 rounded-lg text-xs font-medium" />
+            <span class="font-semibold text-outline">Đến ngày:</span>
+            <input id="rep-custom-to" type="date" onchange="fetchReportForPeriod()" class="px-2.5 py-1 bg-surface-container-lowest border border-outline-variant/40 rounded-lg text-xs font-medium" />
+          </div>
+        </div>
+
+        <!-- Bento-style Financial KPI Cards -->
+        <div class="grid grid-cols-2 gap-4">
+          <!-- Revenue Card -->
+          <div class="bg-surface-container-lowest p-4 rounded-xl shadow-card border border-outline-variant/20 flex flex-col justify-between gap-1">
+            <div class="flex items-center gap-2 text-on-surface-variant mb-1">
+              <span class="material-symbols-outlined text-primary text-sm">payments</span>
+              <span class="text-xs uppercase font-bold text-outline">Doanh Thu</span>
+            </div>
+            <div id="report-revenue" class="font-display font-extrabold text-xl sm:text-2xl text-on-surface">0 ₫</div>
+            <span id="report-orders-badge" class="text-[11px] text-status-free font-bold flex items-center gap-1">
+              <span class="material-symbols-outlined text-[14px]">trending_up</span> 0 đơn hoàn tất
+            </span>
+          </div>
+
+          <!-- Expenses Card -->
+          <div class="bg-surface-container-lowest p-4 rounded-xl shadow-card border border-outline-variant/20 flex flex-col justify-between gap-1">
+            <div class="flex items-center gap-2 text-on-surface-variant mb-1">
+              <span class="material-symbols-outlined text-primary text-sm">receipt_long</span>
+              <span class="text-xs uppercase font-bold text-outline">Chi Phí (CHI)</span>
+            </div>
+            <div id="report-expenses" class="font-display font-extrabold text-xl sm:text-2xl text-error">0 ₫</div>
+            <span id="report-expenses-count" class="text-[11px] text-outline font-semibold">0 khoản chi</span>
+          </div>
+
+          <!-- Net Profit Full-width Bento Card -->
+          <div class="col-span-2 bg-primary-container p-4 sm:p-5 rounded-2xl shadow-float flex justify-between items-center relative overflow-hidden text-on-primary">
+            <div class="absolute right-[-20%] top-[-50%] w-48 h-48 bg-primary rounded-full opacity-30 blur-xl"></div>
+            <div class="flex flex-col gap-1 z-10">
+              <div class="flex items-center gap-2 text-on-primary-container mb-1">
+                <span class="material-symbols-outlined text-sm">account_balance</span>
+                <span class="text-xs uppercase font-bold tracking-wider">Lợi Nhuận Thuần (Net Profit)</span>
+              </div>
+              <div id="report-profit" class="font-display font-extrabold text-2xl sm:text-3xl text-on-primary">0 ₫</div>
+            </div>
+            <div id="report-profit-margin" class="bg-surface-container-lowest/20 rounded-full px-3.5 py-1.5 backdrop-blur-sm z-10 text-xs font-bold text-on-primary">
+              Tỷ suất: 0%
+            </div>
+          </div>
+        </div>
+
+        <!-- Payment Breakdown & Best Sellers -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="bg-surface-container-lowest p-4 rounded-2xl border border-outline-variant/30 shadow-card">
+            <h3 class="font-display font-bold text-sm text-on-surface mb-3 flex items-center gap-2">
+              <span class="material-symbols-outlined text-primary">pie_chart</span>
+              Phân Bổ Hình Thức Thanh Toán
+            </h3>
+            <div id="report-payment-breakdown" class="space-y-3 text-xs">
+              <!-- Rendered via JS -->
+            </div>
+          </div>
+
+          <div class="bg-surface-container-lowest p-4 rounded-2xl border border-outline-variant/30 shadow-card">
+            <h3 class="font-display font-bold text-sm text-on-surface mb-3 flex items-center gap-2">
+              <span class="material-symbols-outlined text-primary">local_fire_department</span>
+              Top Món Nước Bán Chạy Nhất
+            </h3>
+            <div id="report-top-products" class="space-y-2 text-xs">
+              <!-- Rendered via JS -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Hourly Sales Breakdown -->
+        <div class="bg-surface-container-lowest p-4 rounded-2xl border border-outline-variant/30 shadow-card">
+          <h3 class="font-display font-bold text-sm text-on-surface mb-3 flex items-center gap-2">
+            <span class="material-symbols-outlined text-primary">schedule</span>
+            Doanh Thu Theo Khung Giờ Hoạt Động
+          </h3>
+          <div id="report-hourly-bars" class="space-y-2 text-xs">
+            <!-- Rendered via JS -->
+          </div>
+        </div>
+
+        <!-- Detailed Orders Log Table -->
+        <div class="bg-surface-container-lowest p-4 rounded-2xl border border-outline-variant/30 shadow-card">
+          <h3 class="font-display font-bold text-sm text-on-surface mb-3 flex items-center gap-2">
+            <span class="material-symbols-outlined text-primary">receipt_long</span>
+            Bảng Kê Chi Tiết Đơn Hàng Trong Kỳ
+          </h3>
+          <div id="report-orders-table" class="space-y-2 overflow-x-auto text-xs">
+            <!-- Rendered via JS -->
+          </div>
+        </div>
+      </div>
+
+      <!-- SUB-PANEL 2: Store Info & VietQR -->
+      <div id="settings-panel-store" class="hidden space-y-4">
         <div class="bg-surface-cream rounded-2xl p-5 border border-outline-variant/30 shadow-card space-y-4">
           <h3 class="font-display font-bold text-base text-primary flex items-center gap-2">
             <span class="material-symbols-outlined text-primary">storefront</span>
@@ -537,7 +539,7 @@
         </div>
       </div>
 
-      <!-- SUB-PANEL 2: Menu Products CRUD -->
+      <!-- SUB-PANEL 3: Menu Products CRUD -->
       <div id="settings-panel-menu" class="hidden space-y-4">
         <div class="bg-surface-cream rounded-2xl p-5 border border-outline-variant/30 shadow-card space-y-4">
           <div class="flex justify-between items-center">
@@ -559,7 +561,7 @@
         </div>
       </div>
 
-      <!-- SUB-PANEL 3: Topping CRUD -->
+      <!-- SUB-PANEL 4: Topping CRUD -->
       <div id="settings-panel-topping" class="hidden space-y-4">
         <div class="bg-surface-cream rounded-2xl p-5 border border-outline-variant/30 shadow-card space-y-4">
           <div class="flex justify-between items-center">
@@ -581,7 +583,7 @@
         </div>
       </div>
 
-      <!-- SUB-PANEL 4: Tables Management -->
+      <!-- SUB-PANEL 5: Tables Management -->
       <div id="settings-panel-tables" class="hidden space-y-4">
         <div class="bg-surface-cream rounded-2xl p-5 border border-outline-variant/30 shadow-card space-y-4">
           <h3 class="font-display font-bold text-base text-primary flex items-center gap-2">
@@ -610,35 +612,36 @@
     </button>
   </div>
 
-  <!-- ── 4. BOTTOM NAVIGATION BAR (7 PHÂN HỆ) ──────────────────────────────── -->
-  <nav data-bottom-nav class="fixed bottom-0 left-0 right-0 z-50 bg-surface/95 backdrop-blur-lg border-t border-outline-variant flex items-center justify-around px-2 py-1 shadow-soft">
-    <button data-tab="pos" onclick="setTab('pos')" class="flex-1 flex flex-col items-center justify-center py-1.5 text-primary font-bold transition">
-      <span class="material-symbols-outlined text-xl">point_of_sale</span>
-      <span class="text-[10px] mt-0.5">Bán Hàng</span>
+  <!-- ── 4. CLEAN ICON-ONLY BOTTOM NAVIGATION BAR (KHÔNG CHỮ VIỆT) ──────────── -->
+  <nav data-bottom-nav class="fixed bottom-0 left-0 right-0 z-50 bg-surface/95 backdrop-blur-lg border-t border-outline-variant flex items-center justify-around px-3 py-2 shadow-soft">
+    <!-- 1. POS / Bán Hàng -->
+    <button data-tab="pos" onclick="setTab('pos')" title="Bán Hàng" class="flex items-center justify-center p-2.5 rounded-2xl text-primary bg-primary-fixed/50 transition-all">
+      <span class="material-symbols-outlined text-2xl">point_of_sale</span>
     </button>
-    <button data-tab="kitchen" onclick="setTab('kitchen')" class="flex-1 flex flex-col items-center justify-center py-1.5 text-on-surface-variant font-medium opacity-70 hover:opacity-100 transition">
-      <span class="material-symbols-outlined text-xl">countertops</span>
-      <span class="text-[10px] mt-0.5">Bếp KDS</span>
+
+    <!-- 2. Bếp KDS -->
+    <button data-tab="kitchen" onclick="setTab('kitchen')" title="Bếp Pha Chế KDS" class="flex items-center justify-center p-2.5 rounded-2xl text-on-surface-variant opacity-70 hover:opacity-100 transition-all">
+      <span class="material-symbols-outlined text-2xl">countertops</span>
     </button>
-    <button data-tab="expenses" onclick="setTab('expenses')" class="flex-1 flex flex-col items-center justify-center py-1.5 text-on-surface-variant font-medium opacity-70 hover:opacity-100 transition">
-      <span class="material-symbols-outlined text-xl">receipt_long</span>
-      <span class="text-[10px] mt-0.5">Sổ Quỹ</span>
+
+    <!-- 3. CHI (Sổ Quỹ / Chi Phí) -->
+    <button data-tab="expenses" onclick="setTab('expenses')" title="Quản Lý Chi Phí (CHI)" class="flex items-center justify-center p-2.5 rounded-2xl text-on-surface-variant opacity-70 hover:opacity-100 transition-all">
+      <span class="material-symbols-outlined text-2xl">receipt_long</span>
     </button>
-    <button data-tab="customers" onclick="setTab('customers')" class="flex-1 flex flex-col items-center justify-center py-1.5 text-on-surface-variant font-medium opacity-70 hover:opacity-100 transition">
-      <span class="material-symbols-outlined text-xl">group</span>
-      <span class="text-[10px] mt-0.5">Khách Hàng</span>
+
+    <!-- 4. Khách Hàng CRM -->
+    <button data-tab="customers" onclick="setTab('customers')" title="Khách Hàng" class="flex items-center justify-center p-2.5 rounded-2xl text-on-surface-variant opacity-70 hover:opacity-100 transition-all">
+      <span class="material-symbols-outlined text-2xl">group</span>
     </button>
-    <button data-tab="tasks" onclick="setTab('tasks')" class="flex-1 flex flex-col items-center justify-center py-1.5 text-on-surface-variant font-medium opacity-70 hover:opacity-100 transition">
-      <span class="material-symbols-outlined text-xl">assignment</span>
-      <span class="text-[10px] mt-0.5">Nhiệm Vụ</span>
+
+    <!-- 5. Nhiệm Vụ -->
+    <button data-tab="tasks" onclick="setTab('tasks')" title="Nhiệm Vụ Checklist" class="flex items-center justify-center p-2.5 rounded-2xl text-on-surface-variant opacity-70 hover:opacity-100 transition-all">
+      <span class="material-symbols-outlined text-2xl">assignment</span>
     </button>
-    <button data-tab="reports" onclick="setTab('reports')" class="flex-1 flex flex-col items-center justify-center py-1.5 text-on-surface-variant font-medium opacity-70 hover:opacity-100 transition">
-      <span class="material-symbols-outlined text-xl">dashboard</span>
-      <span class="text-[10px] mt-0.5">Báo Cáo</span>
-    </button>
-    <button data-tab="settings" onclick="setTab('settings')" class="flex-1 flex flex-col items-center justify-center py-1.5 text-on-surface-variant font-medium opacity-70 hover:opacity-100 transition">
-      <span class="material-symbols-outlined text-xl">settings</span>
-      <span class="text-[10px] mt-0.5">Cài Đặt</span>
+
+    <!-- 6. Cài Đặt & Báo Cáo -->
+    <button data-tab="settings" onclick="setTab('settings')" title="Cài Đặt & Báo Cáo" class="flex items-center justify-center p-2.5 rounded-2xl text-on-surface-variant opacity-70 hover:opacity-100 transition-all">
+      <span class="material-symbols-outlined text-2xl">settings</span>
     </button>
   </nav>
 
@@ -937,7 +940,7 @@
     </div>
   </div>
 
-  <!-- MODAL: THÊM & CHỈNH SỬA KHOẢN CHI (FULL CRUD MODAL) ──────────────────── -->
+  <!-- MODAL: THÊM & CHỈNH SỬA KHOẢN CHI (CHI CRUD MODAL) ──────────────────── -->
   <div id="modal-edit-expense" class="modal-overlay hidden">
     <div class="modal-container max-w-md animate-scale-up">
       <div class="p-4 border-b border-outline-variant/30 flex justify-between items-center">
@@ -1276,7 +1279,7 @@
       loading: false,
       soundEnabled: true,
       currentTab: 'pos',
-      settingsSubTab: 'store',
+      settingsSubTab: 'reports', // Default to Reports inside Settings
       searchQuery: '',
       customerSearchQuery: '',
       selectedCategory: 'all',
@@ -1292,49 +1295,25 @@
       lastCreatedOrder: null,
       kitchenFilter: 'ACTIVE',
 
-      // Expense Filter States (Default: 'today')
-      expensePeriod: 'today',
+      // CHI (Expense) Filter States (Default: 'all' to show all sheet data immediately)
+      expensePeriod: 'all',
       expenseSpecificDate: '',
       expenseCategoryFilter: 'ALL',
       expenseFundingFilter: 'ALL',
       expenseStaffFilter: 'ALL',
-      reportPeriod: 'today',
+      reportPeriod: 'month',
 
       // Data Collections
-      products: [
-        { ID: 'P01', Name: 'Trà Trái Cây Summer Pineapple', Category: 'Trà Trái Cây', Price: 28000, Image: 'https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=300', HasSize: true, HasIce: true, HasSugar: true, Status: 'ACTIVE' },
-        { ID: 'P02', Name: 'Trà Sữa Oolong Nướng', Category: 'Trà Sữa', Price: 32000, Image: 'https://images.unsplash.com/photo-1558857563-b37cf05d8a58?w=300', HasSize: true, HasIce: true, HasSugar: true, Status: 'ACTIVE' },
-        { ID: 'P03', Name: 'Trà Lài Đác Thơm Hạt Sen', Category: 'Trà Trái Cây', Price: 30000, Image: 'https://images.unsplash.com/photo-1544787219-7f47ccb76574?w=300', HasSize: true, HasIce: true, HasSugar: true, Status: 'ACTIVE' },
-        { ID: 'P04', Name: 'Cà Phê Muối Kem Béo', Category: 'Cà Phê', Price: 25000, Image: 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=300', HasSize: true, HasIce: true, HasSugar: true, Status: 'ACTIVE' },
-        { ID: 'P05', Name: 'Trà Sữa Trân Châu Hoàng Kim', Category: 'Trà Sữa', Price: 35000, Image: 'https://images.unsplash.com/photo-1576092768241-dec231879fc3?w=300', HasSize: true, HasIce: true, HasSugar: true, Status: 'ACTIVE' },
-        { ID: 'P06', Name: 'Trà Mãng Cầu Tươi', Category: 'Trà Trái Cây', Price: 29000, Image: 'https://images.unsplash.com/photo-1556881286-fc6915169721?w=300', HasSize: true, HasIce: true, HasSugar: true, Status: 'ACTIVE' },
-        { ID: 'P07', Name: 'Bạc Xỉu Sữa Dừa Lá Dứa', Category: 'Cà Phê', Price: 27000, Image: 'https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=300', HasSize: true, HasIce: true, HasSugar: true, Status: 'ACTIVE' },
-        { ID: 'P08', Name: 'Trà Đào Cam Sả Tươi Mát', Category: 'Trà Trái Cây', Price: 28000, Image: 'https://images.unsplash.com/photo-1497534446932-c925b458314e?w=300', HasSize: true, HasIce: true, HasSugar: true, Status: 'ACTIVE' }
-      ],
-      toppings: [
-        { ID: 'T01', Name: 'Thạch Lá Dứa Tươi', Price: 5000, Status: 'ACTIVE' },
-        { ID: 'T02', Name: 'Trân Châu Hoàng Kim', Price: 5000, Status: 'ACTIVE' },
-        { ID: 'T03', Name: 'Hạt Sen Nấu Đường Phèn', Price: 7000, Status: 'ACTIVE' },
-        { ID: 'T04', Name: 'Kem Cheese Macchiato', Price: 8000, Status: 'ACTIVE' }
-      ],
-      categories: ['Trà Trái Cây', 'Trà Sữa', 'Cà Phê'],
-      tables: [
-        { ID: 'TBL01', Name: 'Bàn 1 (Sân vườn)', Status: 'FREE', Capacity: 4 },
-        { ID: 'TBL02', Name: 'Bàn 2 (Sân vườn)', Status: 'FREE', Capacity: 4 },
-        { ID: 'TBL03', Name: 'Bàn 3 (Trong nhà)', Status: 'OCCUPIED', Capacity: 2 },
-        { ID: 'TBL04', Name: 'Bàn 4 (Trong nhà)', Status: 'FREE', Capacity: 6 },
-        { ID: 'TBL05', Name: 'Bàn 5 (Gác lửng)', Status: 'FREE', Capacity: 4 }
-      ],
+      products: [],
+      toppings: [],
+      categories: [],
+      tables: [],
       activeOrders: [],
       orderHistoryList: [],
       tasks: [],
       expenses: [],
       staffList: [],
-      customerList: [
-        { ID: 'CUS-01', Name: 'Anh Hiếu', Phone: '0339849159', Type: 'Khách VIP', Company: 'Global City', Points: 15, TotalSpent: 450000, Note: 'Trà ít đường' },
-        { ID: 'CUS-02', Name: 'Chị Yến', Phone: '0909123456', Type: 'Công ty', Company: 'Cty Huy Hoàng', Points: 28, TotalSpent: 890000, Note: 'Giao lầu 3' },
-        { ID: 'CUS-03', Name: 'Cty Nhung', Phone: '0988765432', Type: 'Công ty', Company: 'Nhung Design', Points: 42, TotalSpent: 1350000, Note: 'Ly giấy' }
-      ],
+      customerList: [],
       settings: {
         shopName: 'Tiệm Của Lá',
         slogan: 'Ngồi bên Lá quên vội vã',
@@ -1401,22 +1380,6 @@
       } else {
         openModal('modal-pwa-ios-guide');
       }
-    }
-
-    // Register Service Worker for offline performance & PWA installability
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', function() {
-        try {
-          var swCode = 'const CACHE="tcl-pwa-v1";self.addEventListener("install",e=>{self.skipWaiting();});self.addEventListener("activate",e=>{e.waitUntil(self.clients.claim());});self.addEventListener("fetch",e=>{if(e.request.method==="GET"&&(e.request.url.includes("fonts.")||e.request.url.includes("cdn."))){e.respondWith(caches.open(CACHE).then(c=>c.match(e.request).then(r=>r||fetch(e.request).then(res=>{c.put(e.request,res.clone());return res;}))));}});';
-          var blob = new Blob([swCode], { type: 'text/javascript' });
-          var swUrl = URL.createObjectURL(blob);
-          navigator.serviceWorker.register(swUrl).then(function(reg) {
-            console.log('[PWA] Service Worker Active scope:', reg.scope);
-          }).catch(function(err) {
-            console.log('[PWA] Service Worker notice:', err.message);
-          });
-        } catch(e) {}
-      });
     }
 
     function formatLocalDate(d) {
@@ -1490,8 +1453,13 @@
           if (d.tables && d.tables.length > 0) state.tables = d.tables;
           if (d.activeOrders) state.activeOrders = d.activeOrders;
           if (d.tasks) state.tasks = d.tasks;
-          if (d.expenses && Array.isArray(d.expenses)) state.expenses = d.expenses;
-          if (d.staff) state.staffList = d.staff;
+          
+          if (d.expenses) {
+            if (Array.isArray(d.expenses)) state.expenses = d.expenses;
+            else if (Array.isArray(d.expenses.expenses)) state.expenses = d.expenses.expenses;
+          }
+          
+          if (d.staff && d.staff.length > 0) state.staffList = d.staff;
           if (d.customers && d.customers.length > 0) state.customerList = d.customers;
           if (d.settings) state.settings = Object.assign({}, state.settings, d.settings);
           if (d.report) state.reportData = d.report;
@@ -1500,7 +1468,9 @@
           state.products.forEach(function(p) { if (p.Category) catSet.add(p.Category); });
           if (catSet.size > 0) state.categories = Array.from(catSet);
 
-          if (toastFeedback) showToast('Đã đồng bộ dữ liệu Google Sheets!', 'verified');
+          if (toastFeedback) {
+            showToast('Đã tải ' + state.products.length + ' món & ' + state.expenses.length + ' khoản chi từ Google Sheet!', 'verified');
+          }
         }
       } catch (err) {
         console.error('refreshData error:', err);
@@ -1563,17 +1533,18 @@
 
     function setSettingsSubTab(sub) {
       state.settingsSubTab = sub;
-      ['store', 'menu', 'topping', 'tables'].forEach(function(s) {
+      ['reports', 'store', 'menu', 'topping', 'tables'].forEach(function(s) {
         var btn = document.getElementById('set-subtab-' + s);
         var panel = document.getElementById('settings-panel-' + s);
         if (s === sub) {
-          if (btn) btn.className = 'px-4 py-2 rounded-full bg-primary text-on-primary shadow-xs';
+          if (btn) btn.className = 'px-4 py-2 rounded-full bg-primary text-on-primary shadow-xs flex items-center gap-1.5';
           if (panel) panel.classList.remove('hidden');
         } else {
-          if (btn) btn.className = 'px-4 py-2 rounded-full bg-surface-container text-on-surface hover:bg-surface-container-high';
+          if (btn) btn.className = 'px-4 py-2 rounded-full bg-surface-container text-on-surface hover:bg-surface-container-high flex items-center gap-1.5';
           if (panel) panel.classList.add('hidden');
         }
       });
+      if (sub === 'reports') renderReports();
       if (sub === 'menu') renderSettingsProductsTable();
       if (sub === 'topping') renderSettingsToppingsTable();
     }
@@ -1677,13 +1648,11 @@
     }
 
     async function confirmCloseShift() {
-      var opening = parseFloat(document.getElementById('shift-opening-cash')?.value) || 0;
-      var actual = parseFloat(document.getElementById('shift-actual-cash')?.value) || 0;
       showToast('Đã lưu chốt ca bán & bàn giao két tiền thành công!', 'verified');
       closeModal('modal-shift-handover');
     }
 
-    // ── EXPENSE FILTER & FULL CRUD (THÊM, SỬA, XÓA) ───────────────────────────
+    // ── CHI (EXPENSE) FILTER & FULL CRUD (THÊM, SỬA, XÓA) ─────────────────────
     function setExpQuickAmount(amt) {
       var input = document.getElementById('expense-amount');
       if (input) input.value = amt;
@@ -1695,7 +1664,7 @@
       var specInput = document.getElementById('exp-specific-date');
       if (specInput) specInput.value = '';
 
-      ['today', 'yesterday', 'week', 'month', 'all', 'custom'].forEach(function(p) {
+      ['all', 'month', 'week', 'yesterday', 'today', 'custom'].forEach(function(p) {
         var btn = document.getElementById('exp-filter-' + p);
         if (btn) {
           if (p === period) btn.className = 'px-3.5 py-1.5 rounded-full font-bold bg-primary text-on-primary shadow-xs transition';
@@ -1715,7 +1684,7 @@
       if (dateVal) {
         state.expenseSpecificDate = dateVal;
         state.expensePeriod = 'specific';
-        ['today', 'yesterday', 'week', 'month', 'all', 'custom'].forEach(function(p) {
+        ['all', 'month', 'week', 'yesterday', 'today', 'custom'].forEach(function(p) {
           var btn = document.getElementById('exp-filter-' + p);
           if (btn) btn.className = 'px-3.5 py-1.5 rounded-full font-medium bg-surface-container text-on-surface hover:bg-surface-container-high transition';
         });
@@ -1732,7 +1701,6 @@
       renderExpenses();
     }
 
-    // Open Modal to ADD or EDIT Expense
     function openExpenseEditModal(expenseId) {
       var titleEl = document.getElementById('modal-exp-title');
       var idInput = document.getElementById('expense-id');
@@ -2466,7 +2434,7 @@
 
       var subTitleEl = document.getElementById('header-sub-title');
       if (subTitleEl) {
-        var titles = { pos: 'Bán Hàng / Menu', kitchen: 'Bếp KDS Pha Chế', expenses: 'Sổ Quỹ Thu Chi', customers: 'Khách Hàng & Loyalty', tasks: 'Nhiệm Vụ Checklist', reports: 'Báo Cáo Doanh Thu', settings: 'Cài Đặt Quán' };
+        var titles = { pos: 'Menu Bán Hàng', kitchen: 'Bếp KDS Pha Chế', expenses: 'CHI • Sổ Chi Phí', customers: 'Khách Hàng & Loyalty', tasks: 'Nhiệm Vụ Checklist', settings: 'Cài Đặt & Báo Cáo' };
         subTitleEl.innerText = state.currentTableName ? 'Bàn: ' + state.currentTableName : (titles[state.currentTab] || 'Menu');
       }
 
@@ -2487,17 +2455,18 @@
         }
       }
 
+      // Update Clean Icon Navigation Bar
       var navButtons = document.querySelectorAll('nav[data-bottom-nav] button[data-tab]');
       navButtons.forEach(function(btn) {
         var tab = btn.getAttribute('data-tab');
         if (tab === state.currentTab) {
-          btn.className = 'flex-1 flex flex-col items-center justify-center py-1.5 text-primary font-bold transition';
+          btn.className = 'flex items-center justify-center p-2.5 rounded-2xl text-primary bg-primary-fixed/50 shadow-xs transition-all';
         } else {
-          btn.className = 'flex-1 flex flex-col items-center justify-center py-1.5 text-on-surface-variant font-medium opacity-70 hover:opacity-100 transition';
+          btn.className = 'flex items-center justify-center p-2.5 rounded-2xl text-on-surface-variant opacity-70 hover:opacity-100 transition-all';
         }
       });
 
-      ['pos', 'kitchen', 'expenses', 'customers', 'tasks', 'reports', 'settings'].forEach(function(v) {
+      ['pos', 'kitchen', 'expenses', 'customers', 'tasks', 'settings'].forEach(function(v) {
         var el = document.getElementById('view-' + v);
         if (el) {
           if (v === state.currentTab) el.classList.remove('hidden');
@@ -2510,7 +2479,6 @@
       else if (state.currentTab === 'expenses') renderExpenses();
       else if (state.currentTab === 'customers') renderCustomers();
       else if (state.currentTab === 'tasks') renderTasks();
-      else if (state.currentTab === 'reports') renderReports();
       else if (state.currentTab === 'settings') renderSettings();
     }
 
@@ -2529,7 +2497,7 @@
       if (prodContainer) {
         var filtered = state.products.filter(function(p) {
           var matchCat = state.selectedCategory === 'all' || p.Category === state.selectedCategory;
-          var matchSearch = !state.searchQuery || p.Name.toLowerCase().includes(state.searchQuery);
+          var matchSearch = !state.searchQuery || (p.Name || '').toLowerCase().includes(state.searchQuery);
           return matchCat && matchSearch;
         });
 
@@ -2545,7 +2513,7 @@
           
           html += '<div onclick="' + (isOutOfStock ? '' : 'openCustomization(\'' + p.ID + '\')') + '" class="bg-surface-cream rounded-xl overflow-hidden shadow-card border border-outline-variant/30 flex flex-col justify-between active:scale-[0.98] transition-transform cursor-pointer hover:border-primary/40 ' + (isOutOfStock ? 'opacity-50 grayscale' : '') + '">';
           html += '  <div class="relative pt-[100%] w-full bg-surface-container-low overflow-hidden">';
-          html += '    <img class="absolute inset-0 w-full h-full object-cover" src="' + (p.Image || fallbackImg) + '" onerror="onImgError(this)" alt="' + p.Name + '" />';
+          html += '    <img class="absolute inset-0 w-full h-full object-cover" src="' + (p.Image || fallbackImg) + '" onerror="onImgError(this)" alt="' + (p.Name || 'Món') + '" />';
           html += '    <div class="absolute top-2 right-2 bg-surface/90 backdrop-blur-sm px-2 py-0.5 rounded-md">';
           html += '      <span class="font-bold text-xs text-primary">' + formatVND(p.Price) + '</span>';
           html += '    </div>';
@@ -2556,7 +2524,7 @@
           html += '  <div class="p-3 flex flex-col flex-grow justify-between gap-2">';
           html += '    <div>';
           html += '      <span class="text-[10px] font-bold text-primary uppercase tracking-wider block mb-0.5">' + (p.Category || 'F&B') + '</span>';
-          html += '      <h3 class="font-bold text-xs sm:text-sm text-on-surface leading-snug line-clamp-2">' + p.Name + '</h3>';
+          html += '      <h3 class="font-bold text-xs sm:text-sm text-on-surface leading-snug line-clamp-2">' + (p.Name || 'Món nước') + '</h3>';
           html += '    </div>';
           html += '    <button class="w-full py-1.5 rounded-lg bg-surface-container text-primary font-bold text-xs hover:bg-surface-container-high transition-colors flex items-center justify-center gap-1">';
           html += '      <span class="material-symbols-outlined text-[16px]">add</span> Chọn Món';
@@ -2693,19 +2661,19 @@
       }, 0);
 
       if (totalEl) totalEl.innerText = formatVND(total);
-      if (countEl) countEl.innerText = filtered.length + ' khoản chi • Tổng chi: ' + formatVND(total);
+      if (countEl) countEl.innerText = filtered.length + ' khoản chi từ Google Sheet • Tổng: ' + formatVND(total);
       if (countPill) countPill.innerText = filtered.length + ' mục';
 
       var periodLabels = {
-        today: 'Hôm Nay (' + todayStr + ')',
-        yesterday: 'Hôm Qua',
-        week: '7 Ngày Qua',
+        all: 'Tất Cả Dữ Liệu (' + state.expenses.length + ' khoản chi)',
         month: 'Tháng Này (' + currentMonth.substring(5) + '/' + currentMonth.substring(0,4) + ')',
-        all: 'Toàn Bộ Dữ Liệu (' + state.expenses.length + ' khoản)',
+        week: '7 Ngày Qua',
+        yesterday: 'Hôm Qua',
+        today: 'Hôm Nay (' + todayStr + ')',
         specific: 'Ngày ' + state.expenseSpecificDate,
         custom: 'Khoảng Ngày Tùy Chọn'
       };
-      if (badgeEl) badgeEl.innerText = periodLabels[state.expensePeriod] || 'Hôm Nay';
+      if (badgeEl) badgeEl.innerText = periodLabels[state.expensePeriod] || 'Tất Cả Dữ Liệu';
 
       if (filtered.length === 0) {
         listEl.innerHTML = '<div class="py-12 text-center text-on-surface-variant text-xs space-y-2 bg-surface-container-lowest rounded-xl border border-outline-variant/20">' +
@@ -2722,7 +2690,7 @@
         html += '<div class="bg-surface-container-lowest p-3.5 rounded-xl border border-outline-variant/30 flex items-center justify-between text-xs shadow-card hover:border-primary/40 transition">';
         html += '  <div class="flex-1 pr-2">';
         html += '    <div class="flex items-center gap-2">';
-        html += '      <span class="font-bold text-sm text-on-surface">' + e.Description + '</span>';
+        html += '      <span class="font-bold text-sm text-on-surface">' + (e.Description || 'Khoản chi') + '</span>';
         html += '      <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-primary/10 text-primary">' + (e.Category || 'Chi tiêu') + '</span>';
         html += '    </div>';
         html += '    <div class="text-[11px] text-outline mt-1 flex flex-wrap items-center gap-2">';
@@ -2757,7 +2725,7 @@
       });
 
       if (filtered.length === 0) {
-        grid.innerHTML = '<div class="col-span-full py-12 text-center text-outline text-xs"><span class="material-symbols-outlined text-4xl mb-1 opacity-50">person_off</span><p>Không tìm thấy khách hàng</p></div>';
+        grid.innerHTML = '<div class="col-span-full py-12 text-center text-outline text-xs"><span class="material-symbols-outlined text-4xl mb-1 opacity-50">person_off</span><p>Chưa có thông tin khách hàng</p></div>';
         return;
       }
 
@@ -2770,7 +2738,7 @@
         html += '<div class="bg-surface-container-lowest p-4 rounded-2xl border border-outline-variant/30 shadow-card flex flex-col justify-between gap-3 text-xs">';
         html += '  <div>';
         html += '    <div class="flex items-center justify-between">';
-        html += '      <h3 class="font-display font-bold text-sm text-on-surface">' + c.Name + '</h3>';
+        html += '      <h3 class="font-display font-bold text-sm text-on-surface">' + (c.Name || 'Khách hàng') + '</h3>';
         html += '      <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold ' + tierBg + '">' + tier + '</span>';
         html += '    </div>';
         html += '    <div class="font-mono text-outline text-[11px] mt-1 flex items-center gap-1.5"><span class="material-symbols-outlined text-xs text-primary">call</span><a href="tel:' + (c.Phone || '') + '" class="hover:underline font-bold text-primary">' + (c.Phone || '---') + '</a></div>';
@@ -2803,7 +2771,7 @@
         html += '  <div class="flex items-center gap-3">';
         html += '    <button onclick="toggleTask(\'' + t.ID + '\')" class="w-6 h-6 rounded-md border flex items-center justify-center ' + (isDone ? 'bg-status-free text-white border-status-free' : 'border-outline text-transparent') + '"><span class="material-symbols-outlined text-sm">check</span></button>';
         html += '    <div>';
-        html += '      <div class="font-bold text-sm ' + (isDone ? 'line-through text-outline' : 'text-on-surface') + '">' + t.Title + '</div>';
+        html += '      <div class="font-bold text-sm ' + (isDone ? 'line-through text-outline' : 'text-on-surface') + '">' + (t.Title || 'Nhiệm vụ') + '</div>';
         html += '      <div class="text-[11px] text-outline mt-0.5">' + (t.AssignedName || 'Nhân viên') + ' • Hạn: ' + (t.DueDate || 'Trong ca') + '</div>';
         html += '    </div>';
         html += '  </div>';
@@ -2937,6 +2905,7 @@
         });
         tablesContainer.innerHTML = html;
       }
+      setSettingsSubTab(state.settingsSubTab);
     }
 
     function renderSettingsProductsTable() {
@@ -2951,7 +2920,7 @@
         html += '  <div class="flex items-center gap-3 flex-1">';
         html += '    <img src="' + (p.Image || fallbackImg) + '" class="w-12 h-12 rounded-xl object-cover bg-surface-container" onerror="onImgError(this)" />';
         html += '    <div>';
-        html += '      <div class="font-bold text-sm text-on-surface">' + p.Name + '</div>';
+        html += '      <div class="font-bold text-sm text-on-surface">' + (p.Name || 'Món') + '</div>';
         html += '      <div class="text-[11px] text-outline"><span class="text-primary font-semibold">' + (p.Category || 'F&B') + '</span> • ' + (p.HasSize ? 'Có Size • ' : '') + (isOut ? '<span class="text-error font-bold">Hết hàng</span>' : '<span class="text-status-free font-bold">Đang bán</span>') + '</div>';
         html += '    </div>';
         html += '  </div>';
@@ -2971,7 +2940,7 @@
       var html = '';
       state.toppings.forEach(function(t) {
         html += '<div class="bg-surface-container-lowest p-3 rounded-xl border border-outline-variant/30 flex items-center justify-between gap-3 text-xs shadow-card">';
-        html += '  <div><div class="font-bold text-sm text-on-surface">' + t.Name + '</div><span class="text-[10px] text-status-free font-semibold">Hoạt động</span></div>';
+        html += '  <div><div class="font-bold text-sm text-on-surface">' + (t.Name || 'Topping') + '</div><span class="text-[10px] text-status-free font-semibold">Hoạt động</span></div>';
         html += '  <div class="flex items-center gap-3">';
         html += '    <span class="font-display font-bold text-sm text-primary">+' + formatVND(t.Price) + '</span>';
         html += '    <button onclick="openToppingEditModal(\'' + t.ID + '\')" class="px-3.5 py-1.5 rounded-full bg-surface-container text-on-surface font-bold text-xs hover:bg-surface-container-high transition flex items-center gap-1"><span class="material-symbols-outlined text-sm">edit</span> Sửa</button>';
@@ -3127,7 +3096,7 @@
 
     // ── INITIALIZATION ────────────────────────────────────────────────────────
     document.addEventListener('DOMContentLoaded', function() {
-      console.log('[BOOT] TCLApp Organic Vitality PWA Engine Loaded Successfully.');
+      console.log('[BOOT] TCLApp Clean-Icon & Direct DB Sync Loaded.');
       renderApp();
       refreshData();
       setInterval(function() {

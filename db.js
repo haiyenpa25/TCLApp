@@ -31,10 +31,17 @@ const SPREADSHEET_ID = '1co9xhrZFdYi649Dl1OrWDuRAwbs4HsCoPTlt6i9QYw4';
 
 function getSpreadsheet() {
   try {
+    if (SPREADSHEET_ID) {
+      return SpreadsheetApp.openById(SPREADSHEET_ID);
+    }
+  } catch (e) {
+    Logger.log('[getSpreadsheet openById notice] ' + e.message);
+  }
+  try {
     const ss = SpreadsheetApp.getActiveSpreadsheet();
     if (ss && ss.getId()) return ss;
   } catch (e) {}
-  return SpreadsheetApp.openById(SPREADSHEET_ID);
+  return SpreadsheetApp.openById('1co9xhrZFdYi649Dl1OrWDuRAwbs4HsCoPTlt6i9QYw4');
 }
 
 /**
