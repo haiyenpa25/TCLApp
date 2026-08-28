@@ -4,10 +4,10 @@
   <base target="_top">
   <meta charset="utf-8" />
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport" />
-  <title>Tiệm Của Lá — Hệ Thống Bán Hàng POS & Quản Lý Quán F&B</title>
+  <title>Tiệm Của Lá — Hệ Thống Bán Hàng POS & Quản Lý F&B Toàn Diện</title>
 
   <!-- SEO & Meta -->
-  <meta name="description" content="Hệ thống quản lý POS bán hàng, quản lý thực đơn menu, sổ quỹ thu chi, chốt ca két tiền, khách hàng CRM và báo cáo tài chính Tiệm Của Lá." />
+  <meta name="description" content="Hệ thống quản lý POS bán hàng, thực đơn menu, sổ quỹ thu chi, chốt ca két tiền, khách hàng CRM và báo cáo tài chính Tiệm Của Lá." />
   <meta name="theme-color" content="#154212" />
 
   <!-- Google Fonts & Material Symbols -->
@@ -34,11 +34,11 @@
             'on-surface-variant': '#42493e',
             'outline': '#72796e',
             'outline-variant': '#c2c9bb',
-            'status-free': '#4CAF50',
-            'status-occupied': '#FF9800',
-            'status-reserved': '#2196F3',
-            'status-urgent': '#D32F2F',
-            'status-preparing': '#FFC107',
+            'status-free': '#2e7d32',
+            'status-occupied': '#e65100',
+            'status-reserved': '#0288d1',
+            'status-urgent': '#c62828',
+            'status-preparing': '#f57f17',
             'error': '#ba1a1a'
           }
         }
@@ -104,6 +104,11 @@
     </div>
 
     <div class="flex items-center gap-2">
+      <!-- Sound Chime Toggle -->
+      <button onclick="toggleSound()" id="btn-sound-toggle" title="Âm thanh chuông báo đơn" class="w-9 h-9 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant hover:text-primary transition border border-outline-variant/30 shadow-xs">
+        <span id="sound-icon" class="material-symbols-outlined text-base">volume_up</span>
+      </button>
+
       <!-- Shift Handover Button -->
       <button onclick="openShiftModal()" title="Chốt ca & Bàn giao két tiền" class="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-surface-container hover:bg-surface-container-high transition text-xs font-bold text-on-surface border border-outline-variant/40 shadow-xs">
         <span class="material-symbols-outlined text-sm text-status-occupied">point_of_sale</span>
@@ -148,8 +153,11 @@
     <section id="view-kitchen" class="hidden space-y-4 animate-fade-in">
       <div class="flex justify-between items-center bg-surface-container-lowest p-3.5 rounded-2xl border border-outline-variant/30 shadow-card">
         <div>
-          <h2 class="font-display font-bold text-base text-on-surface">Quầy Pha Chế (Kitchen KDS)</h2>
-          <p class="text-xs text-outline">Theo dõi và cập nhật tiến độ đơn theo thời gian thực</p>
+          <h2 class="font-display font-bold text-base text-on-surface flex items-center gap-2">
+            <span class="material-symbols-outlined text-primary">soup_kitchen</span>
+            Quầy Pha Chế (Kitchen KDS)
+          </h2>
+          <p class="text-xs text-outline">Theo dõi thời gian trôi qua và cập nhật trạng thái chế biến tức thì</p>
         </div>
         <div class="flex items-center gap-2">
           <button id="kds-filter-active" onclick="setKitchenFilter('ACTIVE')" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-primary text-on-primary shadow-xs">Đang Phục Vụ</button>
@@ -844,11 +852,18 @@
           <label class="font-bold text-outline block mb-1">Nội Dung Chi</label>
           <input id="expense-desc" type="text" placeholder="VD: Mua sữa đặc, đá viên, túi nilon..." class="w-full px-3 py-2 bg-surface-container border border-outline-variant/40 rounded-xl font-medium" />
         </div>
-        <div class="grid grid-cols-2 gap-2">
-          <div>
-            <label class="font-bold text-outline block mb-1">Số Tiền (VNĐ)</label>
-            <input id="expense-amount" type="number" placeholder="50000" class="w-full px-3 py-2 bg-surface-container border border-outline-variant/40 rounded-xl font-bold text-sm" />
+        <div>
+          <label class="font-bold text-outline block mb-1">Số Tiền (VNĐ)</label>
+          <input id="expense-amount" type="number" placeholder="50000" class="w-full px-3 py-2 bg-surface-container border border-outline-variant/40 rounded-xl font-bold text-sm" />
+          <div class="flex gap-1.5 mt-1.5 flex-wrap">
+            <button onclick="setExpQuickAmount(20000)" class="px-2 py-0.5 rounded bg-surface-container-low hover:bg-surface-container text-[11px] font-semibold">+20k</button>
+            <button onclick="setExpQuickAmount(50000)" class="px-2 py-0.5 rounded bg-surface-container-low hover:bg-surface-container text-[11px] font-semibold">+50k</button>
+            <button onclick="setExpQuickAmount(100000)" class="px-2 py-0.5 rounded bg-surface-container-low hover:bg-surface-container text-[11px] font-semibold">+100k</button>
+            <button onclick="setExpQuickAmount(200000)" class="px-2 py-0.5 rounded bg-surface-container-low hover:bg-surface-container text-[11px] font-semibold">+200k</button>
+            <button onclick="setExpQuickAmount(500000)" class="px-2 py-0.5 rounded bg-surface-container-low hover:bg-surface-container text-[11px] font-semibold">+500k</button>
           </div>
+        </div>
+        <div class="grid grid-cols-2 gap-2">
           <div>
             <label class="font-bold text-outline block mb-1">Người Chi</label>
             <select id="expense-performed-by" class="w-full px-3 py-2 bg-surface-container border border-outline-variant/40 rounded-xl font-medium">
@@ -856,6 +871,13 @@
               <option value="Trí">Trí</option>
               <option value="Linh">Linh</option>
               <option value="An">An</option>
+            </select>
+          </div>
+          <div>
+            <label class="font-bold text-outline block mb-1">Hình Thức Chi</label>
+            <select id="expense-payment-method" class="w-full px-3 py-2 bg-surface-container border border-outline-variant/40 rounded-xl font-medium">
+              <option value="Tiền mặt">Tiền mặt</option>
+              <option value="Chuyển khoản">Chuyển khoản</option>
             </select>
           </div>
         </div>
@@ -1058,9 +1080,9 @@
 
   <!-- ── 7. APPLICATION JAVASCRIPT ENGINE ──────────────────────────────────── -->
   <script>
-
     var state = {
       loading: false,
+      soundEnabled: true,
       currentTab: 'pos',
       settingsSubTab: 'store',
       searchQuery: '',
@@ -1149,6 +1171,38 @@
       paymentMethod: 'TRANSFER'
     };
 
+    function playChime() {
+      if (!state.soundEnabled) return;
+      try {
+        var AudioContext = window.AudioContext || window.webkitAudioContext;
+        if (!AudioContext) return;
+        var ctx = new AudioContext();
+        var osc = ctx.createOscillator();
+        var gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(587.33, ctx.currentTime);
+        osc.frequency.setValueAtTime(880, ctx.currentTime + 0.1);
+        gain.gain.setValueAtTime(0.25, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.5);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.5);
+      } catch (e) {
+        console.warn('Audio chime error:', e);
+      }
+    }
+
+    function toggleSound() {
+      state.soundEnabled = !state.soundEnabled;
+      var icon = document.getElementById('sound-icon');
+      if (icon) {
+        icon.innerText = state.soundEnabled ? 'volume_up' : 'volume_off';
+      }
+      showToast(state.soundEnabled ? 'Đã bật chuông báo đơn mới' : 'Đã tắt chuông báo', 'volume_up');
+      if (state.soundEnabled) playChime();
+    }
+
     function callGAS(funcName) {
       var args = Array.prototype.slice.call(arguments, 1);
       return new Promise(function(resolve) {
@@ -1172,9 +1226,9 @@
       state.loading = true;
       updateSyncIcon(true);
       try {
-        const res = await callGAS('getInitialData');
+        var res = await callGAS('getInitialData');
         if (res && res.success && res.data) {
-          const d = res.data;
+          var d = res.data;
           if (d.menu && d.menu.products && d.menu.products.length > 0) state.products = d.menu.products;
           if (d.menu && d.menu.toppings && d.menu.toppings.length > 0) state.toppings = d.menu.toppings;
           if (d.tables && d.tables.length > 0) state.tables = d.tables;
@@ -1186,8 +1240,8 @@
           if (d.settings) state.settings = Object.assign({}, state.settings, d.settings);
           if (d.report) state.reportData = d.report;
 
-          const catSet = new Set();
-          state.products.forEach(p => { if (p.Category) catSet.add(p.Category); });
+          var catSet = new Set();
+          state.products.forEach(function(p) { if (p.Category) catSet.add(p.Category); });
           if (catSet.size > 0) state.categories = Array.from(catSet);
 
           if (toastFeedback) showToast('Đã đồng bộ dữ liệu Google Sheets!', 'verified');
@@ -1202,7 +1256,7 @@
     }
 
     function updateSyncIcon(syncing) {
-      const icon = document.getElementById('sync-icon');
+      var icon = document.getElementById('sync-icon');
       if (icon) {
         if (syncing) icon.classList.add('animate-spin-slow');
         else icon.classList.remove('animate-spin-slow');
@@ -1374,7 +1428,12 @@
       closeModal('modal-shift-handover');
     }
 
-    // ── EXPENSE FILTER CONTROLS ────────────────────────────────────────────────
+    // ── EXPENSE FILTER & PRESETS ───────────────────────────────────────────────
+    function setExpQuickAmount(amt) {
+      var input = document.getElementById('expense-amount');
+      if (input) input.value = amt;
+    }
+
     function setExpensePeriod(period) {
       state.expensePeriod = period;
       ['today', 'yesterday', 'week', 'month', 'custom'].forEach(function(p) {
@@ -1585,6 +1644,7 @@
         state.lastCreatedOrder = res.data;
         state.cart = [];
         closeModal('drawer-cart');
+        playChime();
         showToast('Đã gửi đơn hàng đến quầy pha chế!', 'verified');
         refreshData();
       } else {
@@ -1699,11 +1759,13 @@
       var cat = document.getElementById('expense-category')?.value || 'Nguyên liệu';
       var funding = document.getElementById('expense-funding')?.value || 'Tiền quán';
       var performedBy = document.getElementById('expense-performed-by')?.value || 'Yến';
+      var method = document.getElementById('expense-payment-method')?.value || 'Tiền mặt';
+
       if (!desc || amount <= 0) {
         showToast('Vui lòng điền nội dung và số tiền hợp lệ', 'warning');
         return;
       }
-      var payload = { description: desc, amount: amount, category: cat, fundingSource: funding, performedByName: performedBy };
+      var payload = { description: desc, amount: amount, category: cat, fundingSource: funding, performedByName: performedBy, paymentMethod: method };
       var res = await callGAS('addExpense', payload);
       if (res && res.success) {
         closeModal('modal-add-expense');
@@ -2134,10 +2196,13 @@
           colHtml += '<div class="py-8 text-center text-on-surface-variant text-xs opacity-60">Trống đơn</div>';
         } else {
           orders.forEach(function(o) {
+            var diffMin = Math.max(0, Math.floor((new Date().getTime() - new Date(o.CreatedAt).getTime()) / 60000));
+            var timeBadge = diffMin > 10 ? 'bg-rose-100 text-rose-800 animate-pulse font-bold' : (diffMin > 5 ? 'bg-amber-100 text-amber-800' : 'bg-emerald-100 text-emerald-800');
+
             colHtml += '<div class="bg-surface-container-lowest rounded-xl p-3 shadow-card border border-outline-variant/30 space-y-2">';
             colHtml += '  <div class="flex items-center justify-between">';
             colHtml += '    <span class="font-display font-bold text-sm text-primary">#' + o.ID.slice(-4) + '</span>';
-            colHtml += '    <span class="text-[11px] font-mono text-outline">' + formatElapsedTime(o.CreatedAt) + ' trước</span>';
+            colHtml += '    <span class="px-2 py-0.5 rounded-full text-[10px] font-mono ' + timeBadge + '">' + formatElapsedTime(o.CreatedAt) + ' trước</span>';
             colHtml += '  </div>';
             colHtml += '  <div class="text-xs font-bold text-on-surface">' + (o.TableID ? getTableName(o.TableID) : (o.OrderType === 'TAKEAWAY' ? 'Mang Về' : 'Giao Hàng')) + '</div>';
             colHtml += '  <div class="space-y-1 py-1 border-t border-b border-outline-variant/20 text-xs">';
@@ -2246,13 +2311,17 @@
 
       var html = '';
       filtered.forEach(function(c) {
+        var spent = c.TotalSpent || 0;
+        var tier = spent > 1000000 ? 'VIP Kim Cương' : (spent > 500000 ? 'Vàng' : (spent > 100000 ? 'Bạc' : 'Thành Viên Mới'));
+        var tierBg = spent > 1000000 ? 'bg-amber-100 text-amber-900 border-amber-300' : (spent > 500000 ? 'bg-yellow-100 text-yellow-800' : 'bg-primary/10 text-primary');
+
         html += '<div class="bg-surface-container-lowest p-3.5 rounded-2xl border border-outline-variant/30 shadow-card flex flex-col justify-between gap-3 text-xs">';
         html += '  <div>';
         html += '    <div class="flex items-center justify-between">';
         html += '      <h3 class="font-display font-bold text-sm text-on-surface">' + c.Name + '</h3>';
-        html += '      <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-primary/10 text-primary">' + (c.Type || 'Cá nhân') + '</span>';
+        html += '      <span class="px-2 py-0.5 rounded-full text-[10px] font-bold ' + tierBg + '">' + tier + '</span>';
         html += '    </div>';
-        html += '    <div class="font-mono text-outline text-[11px] mt-0.5 flex items-center gap-1"><span class="material-symbols-outlined text-xs">call</span>' + (c.Phone || '---') + '</div>';
+        html += '    <div class="font-mono text-outline text-[11px] mt-0.5 flex items-center gap-1.5"><span class="material-symbols-outlined text-xs">call</span><a href="tel:' + (c.Phone || '') + '" class="hover:underline font-bold text-primary">' + (c.Phone || '---') + '</a></div>';
         if (c.Company) html += '    <div class="text-[11px] text-on-surface-variant mt-1">🏢 ' + c.Company + '</div>';
         if (c.Note) html += '    <div class="text-[10px] text-outline italic mt-1">"' + c.Note + '"</div>';
         html += '  </div>';
@@ -2347,9 +2416,10 @@
           topContainer.innerHTML = '<div class="py-6 text-center text-outline text-xs">Chưa có dữ liệu bán hàng</div>';
         } else {
           var tHtml = '';
+          var medals = ['🥇', '🥈', '🥉', '4', '5'];
           sortedProds.forEach(function(pair, idx) {
             tHtml += '<div class="flex items-center justify-between py-1.5 border-b border-outline-variant/20">';
-            tHtml += '  <div class="flex items-center gap-2"><span class="w-5 h-5 rounded-full bg-primary/10 text-primary font-bold text-xs flex items-center justify-center">' + (idx + 1) + '</span><span class="font-bold text-on-surface">' + pair[0] + '</span></div>';
+            tHtml += '  <div class="flex items-center gap-2"><span class="w-5 text-center font-bold text-sm">' + medals[idx] + '</span><span class="font-bold text-on-surface">' + pair[0] + '</span></div>';
             tHtml += '  <div class="font-mono text-outline font-semibold">' + pair[1].qty + ' ly • ' + formatVND(pair[1].revenue) + '</div>';
             tHtml += '</div>';
           });
@@ -2609,8 +2679,11 @@
       console.log('[BOOT] TCLApp Full Native Engine Loaded Successfully.');
       renderApp();
       refreshData();
+      // Auto refresh KDS timers every 30 seconds
+      setInterval(function() {
+        if (state.currentTab === 'kitchen') renderKitchen();
+      }, 30000);
     });
-  
   </script>
 </body>
 </html>
