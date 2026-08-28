@@ -4,7 +4,7 @@
   <base target="_top">
   <meta charset="utf-8" />
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport" />
-  <title>Tiệm Của Lá — Organic Vitality F&B POS</title>
+  <title>Tiệm Của Lá — Organic Vitality F&B POS & KDS</title>
 
   <!-- PWA & Mobile Web App Meta Tags -->
   <meta name="description" content="Hệ thống POS bán hàng nâng cao, quầy pha chế KDS, quản lý CHI và báo cáo tài chính Tiệm Của Lá." />
@@ -24,7 +24,7 @@
         var iconUri = "data:image/svg+xml;utf8," + encodeURIComponent(svgIcon);
 
         var manifestData = {
-          name: "Tiệm Của Lá — F&B POS",
+          name: "Tiệm Của Lá — F&B POS & KDS",
           short_name: "Tiệm Của Lá",
           description: "Hệ thống POS bán hàng, quầy pha chế KDS, quản lý CHI và báo cáo tài chính Tiệm Của Lá",
           start_url: window.location.href || ".",
@@ -124,9 +124,11 @@
     @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
     @keyframes scaleUp { from { opacity: 0; transform: scale(0.96); } to { opacity: 1; transform: scale(1); } }
     @keyframes spinSlow { to { transform: rotate(360deg); } }
+    @keyframes pulseGlow { 0%, 100% { box-shadow: 0 0 15px rgba(211, 47, 47, 0.4); } 50% { box-shadow: 0 0 25px rgba(211, 47, 47, 0.8); } }
     .animate-fade-in { animation: fadeIn 0.2s ease-out forwards; }
     .animate-scale-up { animation: scaleUp 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
     .animate-spin-slow { animation: spinSlow 1.2s linear infinite; }
+    .animate-pulse-glow { animation: pulseGlow 1.5s infinite; }
     .shadow-soft { box-shadow: 0 4px 20px -2px rgba(21, 66, 18, 0.06); }
     .shadow-card { box-shadow: 0 2px 8px rgba(21, 66, 18, 0.04); }
     .shadow-float { box-shadow: 0 10px 30px -5px rgba(21, 66, 18, 0.18); }
@@ -135,10 +137,16 @@
     #toast-container { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); z-index: 9999; display: flex; flex-direction: column; gap: 8px; pointer-events: none; }
     .toast-item { pointer-events: auto; background: #191c1a; color: #ffffff; padding: 10px 18px; border-radius: 9999px; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); animation: fadeIn 0.2s ease-out forwards; }
     .hidden { display: none !important; }
+    
+    /* KDS Fullscreen mode */
+    :fullscreen #app-header, :fullscreen nav[data-bottom-nav] { display: none !important; }
+    :fullscreen main { max-width: 100% !important; padding: 10px !important; }
+
     @media print {
       body * { visibility: hidden; }
-      #printable-receipt, #printable-receipt *, #printable-shift, #printable-shift * { visibility: visible; }
+      #printable-receipt, #printable-receipt *, #printable-shift, #printable-shift *, #printable-cup-sticker, #printable-cup-sticker * { visibility: visible; }
       #printable-receipt, #printable-shift { position: absolute; left: 0; top: 0; width: 80mm; margin: 0 auto; padding: 10px; }
+      #printable-cup-sticker { position: absolute; left: 0; top: 0; width: 50mm; height: 30mm; margin: 0 auto; padding: 4px; }
     }
   </style>
 </head>
@@ -146,7 +154,7 @@
 <body class="bg-surface font-sans text-on-surface antialiased min-h-screen flex flex-col justify-between select-none">
 
   <!-- ── 1. STICKY TOP APP BAR (Organic Vitality PWA Style) ────────────────── -->
-  <header class="sticky top-0 z-50 bg-surface/90 backdrop-blur-md border-b border-outline-variant px-4 py-2.5 flex items-center justify-between shadow-soft">
+  <header id="app-header" class="sticky top-0 z-50 bg-surface/90 backdrop-blur-md border-b border-outline-variant px-4 py-2.5 flex items-center justify-between shadow-soft">
     <div class="flex items-center gap-2.5">
       <div class="w-9 h-9 rounded-2xl bg-primary flex items-center justify-center text-on-primary font-display font-extrabold text-base shadow-sm">
         🌿
@@ -197,17 +205,14 @@
           
           <!-- 1. Thanh Chuyển 3 Loại Đơn (Segmented Control 1 Chạm) -->
           <div class="flex items-center gap-1.5 p-1 bg-surface-container rounded-2xl text-xs font-bold self-start sm:self-auto shadow-inner">
-            <!-- Takeaway -->
             <button id="pos-type-takeaway" onclick="setOrderType('TAKEAWAY')" class="px-3.5 py-1.5 rounded-xl transition flex items-center gap-1.5 bg-primary text-on-primary shadow-xs">
               <span class="material-symbols-outlined text-sm">local_mall</span>
               <span>Mang Về</span>
             </button>
-            <!-- Dine-in -->
             <button id="pos-type-dinein" onclick="setOrderType('DINE_IN')" class="px-3.5 py-1.5 rounded-xl transition flex items-center gap-1.5 text-on-surface hover:bg-surface-container-high">
               <span class="material-symbols-outlined text-sm text-status-occupied">table_restaurant</span>
               <span id="pos-table-label">Tại Bàn (Chọn Bàn)</span>
             </button>
-            <!-- Delivery -->
             <button id="pos-type-delivery" onclick="setOrderType('DELIVERY')" class="px-3.5 py-1.5 rounded-xl transition flex items-center gap-1.5 text-on-surface hover:bg-surface-container-high">
               <span class="material-symbols-outlined text-sm text-status-reserved">two_wheeler</span>
               <span>Giao Hàng</span>
@@ -333,24 +338,64 @@
       </div>
     </section>
 
-    <!-- ── VIEW 2: BẾP PHA CHẾ KDS ───────────────────────────────────────────── -->
-    <section id="view-kitchen" class="hidden space-y-4 animate-fade-in">
-      <header class="flex justify-between items-center bg-surface-container-lowest p-3.5 sm:p-4 rounded-2xl shadow-card border border-outline-variant/30">
-        <div>
-          <h2 class="font-display font-bold text-base text-primary flex items-center gap-2">
-            <span class="material-symbols-outlined text-primary">countertops</span>
-            Active Orders (Quầy Pha Chế)
-          </h2>
-          <p class="text-xs text-on-surface-variant">Theo dõi tiến độ chế biến và phục vụ món nước thời gian thực</p>
-        </div>
-        <div class="flex items-center gap-2">
-          <button id="kds-filter-active" onclick="setKitchenFilter('ACTIVE')" class="px-4 py-1.5 bg-primary text-on-primary rounded-full text-xs font-bold transition-all shadow-sm">Đang Phục Vụ</button>
-          <button id="kds-filter-history" onclick="setKitchenFilter('HISTORY')" class="px-4 py-1.5 bg-surface-container text-on-surface-variant hover:bg-surface-container-high rounded-full text-xs font-medium transition-all">Lịch Sử</button>
-        </div>
-      </header>
+    <!-- ── VIEW 2: BẾP PHA CHẾ KDS NÂNG CAO (KITCHEN DISPLAY SYSTEM) ─────────── -->
+    <section id="view-kitchen" class="hidden space-y-3.5 animate-fade-in">
+      
+      <!-- 🌟 TOP KDS HEADER & CONTROLS (Full Barista Dashboard) ─────────────── -->
+      <div class="bg-surface-cream p-3.5 sm:p-4 rounded-2xl shadow-card border border-outline-variant/30 space-y-3">
+        <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-3">
+          <div>
+            <div class="flex items-center gap-2">
+              <h2 class="font-display font-bold text-base text-primary flex items-center gap-1.5">
+                <span class="material-symbols-outlined text-primary text-xl">countertops</span>
+                <span>Quầy Pha Chế KDS</span>
+              </h2>
+              <span id="kds-active-count-badge" class="px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-primary text-on-primary">0 đơn đang chờ</span>
+            </div>
+            <p class="text-xs text-on-surface-variant mt-0.5">Tự động đồng bộ thời gian thực • Chạm vào từng ly để tick hoàn thành</p>
+          </div>
 
+          <div class="flex items-center gap-2 flex-wrap">
+            <!-- Fullscreen Barista TV Button -->
+            <button onclick="toggleKitchenFullscreen()" title="Chế độ toàn màn hình TV / Tablet Quầy Bar" class="px-3.5 py-1.5 rounded-full bg-surface-container hover:bg-surface-container-high text-xs font-bold text-on-surface border border-outline-variant/40 flex items-center gap-1 shadow-xs transition">
+              <span id="kds-fs-icon" class="material-symbols-outlined text-sm">fullscreen</span>
+              <span class="hidden sm:inline">Toàn Màn Hình</span>
+            </button>
+
+            <!-- Active / History Switch -->
+            <div class="flex items-center p-1 bg-surface-container rounded-full text-xs font-bold shadow-inner">
+              <button id="kds-filter-active" onclick="setKitchenFilter('ACTIVE')" class="px-3.5 py-1 rounded-full bg-primary text-on-primary transition-all shadow-xs">Đang Phục Vụ</button>
+              <button id="kds-filter-history" onclick="setKitchenFilter('HISTORY')" class="px-3.5 py-1 rounded-full text-on-surface-variant hover:bg-surface-container-high transition-all">Lịch Sử</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 🌟 BATCH SUMMARY BAR: GOM MÓN TỔNG LỰC ĐANG CHỜ PHA CHẾ ─────────── -->
+        <div id="kds-batch-summary-container" class="pt-2.5 border-t border-outline-variant/20">
+          <div class="flex items-center gap-2 mb-1.5">
+            <span class="text-[11px] font-extrabold uppercase tracking-wider text-outline flex items-center gap-1">
+              <span class="material-symbols-outlined text-xs text-primary">local_fire_department</span>
+              <span>Tổng Món Cần Pha Ngay (Gom Mẻ):</span>
+            </span>
+          </div>
+          <div id="kds-batch-chips" class="flex gap-2 overflow-x-auto hide-scrollbar pb-1 text-xs">
+            <!-- Rendered via JS -->
+          </div>
+        </div>
+
+        <!-- Channel Filter Chips (Tất cả / Tại bàn / Mang về / Giao hàng) -->
+        <div class="flex items-center gap-1.5 pt-2 border-t border-outline-variant/10 text-xs overflow-x-auto hide-scrollbar">
+          <span class="font-bold text-outline mr-1">Kênh:</span>
+          <button id="kds-channel-all" onclick="setKitchenChannel('ALL')" class="px-3 py-1 rounded-full font-bold bg-primary text-on-primary shadow-xs transition">Tất Cả</button>
+          <button id="kds-channel-takeaway" onclick="setKitchenChannel('TAKEAWAY')" class="px-3 py-1 rounded-full font-medium bg-surface-container text-on-surface hover:bg-surface-container-high transition">🥤 Mang Về</button>
+          <button id="kds-channel-dinein" onclick="setKitchenChannel('DINE_IN')" class="px-3 py-1 rounded-full font-medium bg-surface-container text-on-surface hover:bg-surface-container-high transition">🪑 Tại Bàn</button>
+          <button id="kds-channel-delivery" onclick="setKitchenChannel('DELIVERY')" class="px-3 py-1 rounded-full font-medium bg-surface-container text-on-surface hover:bg-surface-container-high transition">🛵 Giao Hàng</button>
+        </div>
+      </div>
+
+      <!-- 🌟 KANBAN TICKETS BOARD ───────────────────────────────────────────── -->
       <div id="kitchen-kanban">
-        <!-- Rendered via JS with border-l-4 cards -->
+        <!-- Rendered via JS with interactive strike-through & SLA timers -->
       </div>
     </section>
 
@@ -735,38 +780,66 @@
 
   <!-- ── 4. CLEAN ICON-ONLY BOTTOM NAVIGATION BAR (KHÔNG CHỮ VIỆT) ──────────── -->
   <nav data-bottom-nav class="fixed bottom-0 left-0 right-0 z-50 bg-surface/95 backdrop-blur-lg border-t border-outline-variant flex items-center justify-around px-3 py-2 shadow-soft">
-    <!-- 1. POS / Bán Hàng -->
     <button data-tab="pos" onclick="setTab('pos')" title="Bán Hàng" class="flex items-center justify-center p-2.5 rounded-2xl text-primary bg-primary-fixed/50 transition-all">
       <span class="material-symbols-outlined text-2xl">point_of_sale</span>
     </button>
-
-    <!-- 2. Bếp KDS -->
     <button data-tab="kitchen" onclick="setTab('kitchen')" title="Bếp Pha Chế KDS" class="flex items-center justify-center p-2.5 rounded-2xl text-on-surface-variant opacity-70 hover:opacity-100 transition-all">
       <span class="material-symbols-outlined text-2xl">countertops</span>
     </button>
-
-    <!-- 3. CHI (Sổ Quỹ / Chi Phí) -->
     <button data-tab="expenses" onclick="setTab('expenses')" title="Quản Lý Chi Phí (CHI)" class="flex items-center justify-center p-2.5 rounded-2xl text-on-surface-variant opacity-70 hover:opacity-100 transition-all">
       <span class="material-symbols-outlined text-2xl">receipt_long</span>
     </button>
-
-    <!-- 4. Khách Hàng CRM -->
     <button data-tab="customers" onclick="setTab('customers')" title="Khách Hàng" class="flex items-center justify-center p-2.5 rounded-2xl text-on-surface-variant opacity-70 hover:opacity-100 transition-all">
       <span class="material-symbols-outlined text-2xl">group</span>
     </button>
-
-    <!-- 5. Nhiệm Vụ -->
     <button data-tab="tasks" onclick="setTab('tasks')" title="Nhiệm Vụ Checklist" class="flex items-center justify-center p-2.5 rounded-2xl text-on-surface-variant opacity-70 hover:opacity-100 transition-all">
       <span class="material-symbols-outlined text-2xl">assignment</span>
     </button>
-
-    <!-- 6. Cài Đặt & Báo Cáo -->
     <button data-tab="settings" onclick="setTab('settings')" title="Cài Đặt & Báo Cáo" class="flex items-center justify-center p-2.5 rounded-2xl text-on-surface-variant opacity-70 hover:opacity-100 transition-all">
       <span class="material-symbols-outlined text-2xl">settings</span>
     </button>
   </nav>
 
   <!-- ── 5. MODALS & DRAWERS ──────────────────────────────────────────────── -->
+
+  <!-- MODAL: In Tem Nhãn Dán Ly (CUP STICKER 50x30mm) ───────────────────────── -->
+  <div id="modal-cup-sticker" class="modal-overlay hidden">
+    <div class="modal-container max-w-sm animate-scale-up">
+      <div class="p-4 border-b border-outline-variant/30 flex justify-between items-center">
+        <div>
+          <h3 class="font-display font-bold text-base text-primary flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-primary">label</span>
+            <span>In Tem Nhãn Dán Ly</span>
+          </h3>
+          <span class="text-[11px] text-outline font-semibold">Chuẩn kích thước 50x30mm máy in tem nhiệt</span>
+        </div>
+        <button onclick="closeModal('modal-cup-sticker')" class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center text-outline"><span class="material-symbols-outlined text-base">close</span></button>
+      </div>
+
+      <div class="p-4 space-y-4 flex flex-col items-center">
+        <!-- Printable Sticker Box -->
+        <div id="printable-cup-sticker" class="w-[200px] border-2 border-dashed border-gray-400 bg-white text-black p-2.5 rounded-xl font-mono text-[11px] space-y-1 shadow-sm leading-tight">
+          <div class="flex justify-between items-center border-b border-gray-300 pb-1 font-bold">
+            <span id="sticker-shop">TIỆM CỦA LÁ</span>
+            <span id="sticker-order-id" class="text-xs">#0000</span>
+          </div>
+          <div id="sticker-prod-name" class="font-bold text-xs pt-0.5">Trà Lài Đác Thơm (L)</div>
+          <div id="sticker-options" class="text-[10px] text-gray-700">100% Đá • 70% Đường</div>
+          <div id="sticker-toppings" class="text-[10px] text-gray-600 italic">+ Hạt Đác Rim</div>
+          <div class="flex justify-between items-center pt-1 border-t border-gray-300 text-[9px] text-gray-500">
+            <span id="sticker-table">Bàn: Mang Về</span>
+            <span id="sticker-time">11:45</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="p-4 border-t border-outline-variant/30 flex gap-2">
+        <button onclick="window.print()" class="w-full py-3 bg-primary text-on-primary font-bold rounded-xl text-xs shadow-sm flex items-center justify-center gap-2">
+          <span class="material-symbols-outlined text-sm">print</span> In Tem Dán Ly (50x30mm)
+        </button>
+      </div>
+    </div>
+  </div>
 
   <!-- MODAL: Customization Món (Size, Đá, Đường, Topping) -->
   <div id="modal-custom-product" class="modal-overlay hidden">
@@ -1445,7 +1518,7 @@
 
   <!-- ── 7. APPLICATION JAVASCRIPT ENGINE & PWA SERVICE WORKER ─────────────── -->
   <script>
-    // ── GLOBAL APPLICATION STATE & MULTI-ORDER TAB MODEL ───────────────────────
+    // ── GLOBAL APPLICATION STATE ──────────────────────────────────────────────
     var state = {
       loading: false,
       soundEnabled: true,
@@ -1454,7 +1527,11 @@
       searchQuery: '',
       customerSearchQuery: '',
       selectedCategory: 'all',
-      kitchenFilter: 'ACTIVE',
+      
+      // KDS State
+      kitchenFilter: 'ACTIVE', // 'ACTIVE' | 'HISTORY'
+      kitchenChannel: 'ALL',   // 'ALL' | 'TAKEAWAY' | 'DINE_IN' | 'DELIVERY'
+      completedOrderItems: {}, // Track struck-through completed items per order: { "orderId_itemIdx": true }
 
       // Multi-Order Tab System (Draft Orders / Hold Order)
       currentOrderTabIndex: 0,
@@ -1529,7 +1606,6 @@
       paymentMethod: 'TRANSFER'
     };
 
-    // Helper to get active draft order tab
     function getActiveTab() {
       if (!state.activeOrderTabs[state.currentOrderTabIndex]) {
         state.currentOrderTabIndex = 0;
@@ -1812,19 +1888,90 @@
       closeModal('modal-shift-handover');
     }
 
-    // ── KITCHEN KDS FILTER ────────────────────────────────────────────────────
+    // ── ADVANCED KDS (BẾP PHA CHẾ NÂNG CAO) ───────────────────────────────────
     function setKitchenFilter(f) {
       state.kitchenFilter = f;
       var btnActive = document.getElementById('kds-filter-active');
       var btnHistory = document.getElementById('kds-filter-history');
       if (f === 'ACTIVE') {
-        if (btnActive) btnActive.className = 'px-4 py-1.5 bg-primary text-on-primary rounded-full text-xs font-bold transition-all shadow-sm';
-        if (btnHistory) btnHistory.className = 'px-4 py-1.5 bg-surface-container text-on-surface-variant hover:bg-surface-container-high rounded-full text-xs font-medium transition-all';
+        if (btnActive) btnActive.className = 'px-3.5 py-1 rounded-full bg-primary text-on-primary transition-all shadow-xs';
+        if (btnHistory) btnHistory.className = 'px-3.5 py-1 rounded-full text-on-surface-variant hover:bg-surface-container-high transition-all';
       } else {
-        if (btnHistory) btnHistory.className = 'px-4 py-1.5 bg-primary text-on-primary rounded-full text-xs font-bold transition-all shadow-sm';
-        if (btnActive) btnActive.className = 'px-4 py-1.5 bg-surface-container text-on-surface-variant hover:bg-surface-container-high rounded-full text-xs font-medium transition-all';
+        if (btnHistory) btnHistory.className = 'px-3.5 py-1 rounded-full bg-primary text-on-primary transition-all shadow-xs';
+        if (btnActive) btnActive.className = 'px-3.5 py-1 rounded-full text-on-surface-variant hover:bg-surface-container-high transition-all';
       }
       renderKitchen();
+    }
+
+    function setKitchenChannel(ch) {
+      state.kitchenChannel = ch;
+      ['ALL', 'TAKEAWAY', 'DINE_IN', 'DELIVERY'].forEach(function(c) {
+        var id = c === 'ALL' ? 'kds-channel-all' : ('kds-channel-' + c.toLowerCase());
+        var btn = document.getElementById(id);
+        if (btn) {
+          if (c === ch) btn.className = 'px-3 py-1 rounded-full font-bold bg-primary text-on-primary shadow-xs transition';
+          else btn.className = 'px-3 py-1 rounded-full font-medium bg-surface-container text-on-surface hover:bg-surface-container-high transition';
+        }
+      });
+      renderKitchen();
+    }
+
+    function toggleKitchenFullscreen() {
+      var icon = document.getElementById('kds-fs-icon');
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(function(err) {
+          console.warn('Fullscreen err:', err);
+        });
+        if (icon) icon.innerText = 'fullscreen_exit';
+        showToast('Đã bật chế độ toàn màn hình quầy bar TV / Tablet', 'fullscreen');
+      } else {
+        if (document.exitFullscreen) document.exitFullscreen();
+        if (icon) icon.innerText = 'fullscreen';
+        showToast('Đã thoát chế độ toàn màn hình', 'fullscreen_exit');
+      }
+    }
+
+    function toggleOrderItemDone(orderId, itemIdx, e) {
+      if (e) e.stopPropagation();
+      var key = orderId + '_' + itemIdx;
+      state.completedOrderItems[key] = !state.completedOrderItems[key];
+      renderKitchen();
+    }
+
+    function openCupStickerModal(orderId, itemIdx, e) {
+      if (e) e.stopPropagation();
+      var ord = state.activeOrders.find(function(o) { return o.ID === orderId; });
+      if (!ord || !ord.items || !ord.items[itemIdx]) return;
+      var it = ord.items[itemIdx];
+
+      var shopEl = document.getElementById('sticker-shop');
+      var idEl = document.getElementById('sticker-order-id');
+      var nameEl = document.getElementById('sticker-prod-name');
+      var optEl = document.getElementById('sticker-options');
+      var topEl = document.getElementById('sticker-toppings');
+      var tableEl = document.getElementById('sticker-table');
+      var timeEl = document.getElementById('sticker-time');
+
+      if (shopEl) shopEl.innerText = state.settings.shopName || 'TIỆM CỦA LÁ';
+      if (idEl) idEl.innerText = '#' + String(ord.ID).slice(-4);
+      if (nameEl) nameEl.innerText = it.ProductName + (it.Size ? ' (' + it.Size + ')' : '');
+
+      var opts = [];
+      if (it.Ice) opts.push(it.Ice + ' Đá');
+      if (it.Sugar) opts.push(it.Sugar + ' Đường');
+      if (optEl) optEl.innerText = opts.length > 0 ? opts.join(' • ') : 'Mặc định';
+
+      if (topEl) topEl.innerText = it.Toppings ? ('+ ' + it.Toppings) : '';
+      if (tableEl) tableEl.innerText = 'Bàn: ' + (ord.TableID ? getTableName(ord.TableID) : (ord.OrderType === 'TAKEAWAY' ? 'Mang Về' : 'Giao Hàng'));
+      if (timeEl) timeEl.innerText = new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
+
+      openModal('modal-cup-sticker');
+    }
+
+    async function recallOrderToKitchen(orderId) {
+      if (!confirm('Hoàn tác đơn #' + orderId.slice(-4) + ' trở lại quầy pha chế?')) return;
+      await updateOrderStatus(orderId, 'PREPARING');
+      setKitchenFilter('ACTIVE');
     }
 
     // ── ADVANCED POS: ORDER TYPES & MULTI-ORDER TABS ENGINE ───────────────────
@@ -2698,21 +2845,77 @@
       }
     }
 
-    // ── KITCHEN / EXPENSES / CUSTOMERS / TASKS / SETTINGS RENDERERS ───────────
+    // ── KITCHEN KDS RENDERER (ADVANCED BATCH SUMMARY & INTERACTIVE KANBAN) ────
     function renderKitchen() {
       var container = document.getElementById('kitchen-kanban');
+      var countBadge = document.getElementById('kds-active-count-badge');
+      var batchChips = document.getElementById('kds-batch-chips');
       if (!container) return;
 
+      // Filter orders by channel if selected
+      var channelMatch = function(o) {
+        if (state.kitchenChannel === 'ALL') return true;
+        if (state.kitchenChannel === 'TAKEAWAY') return o.OrderType === 'TAKEAWAY' || (!o.TableID && o.OrderType !== 'DELIVERY');
+        if (state.kitchenChannel === 'DINE_IN') return o.OrderType === 'DINE_IN' || !!o.TableID;
+        if (state.kitchenChannel === 'DELIVERY') return o.OrderType === 'DELIVERY';
+        return true;
+      };
+
+      // 1. Calculate Batch Summary of Items
+      var pendingOrders = state.activeOrders.filter(function(o) { return ['NEW', 'PREPARING'].includes(o.Status); });
+      if (countBadge) countBadge.innerText = pendingOrders.length + ' đơn đang chờ pha';
+
+      if (batchChips) {
+        var itemCounts = {};
+        pendingOrders.forEach(function(o) {
+          (o.items || []).forEach(function(it, itIdx) {
+            var key = o.ID + '_' + itIdx;
+            if (!state.completedOrderItems[key]) {
+              var pName = it.ProductName + (it.Size ? ' (' + it.Size + ')' : '');
+              itemCounts[pName] = (itemCounts[pName] || 0) + (Number(it.Quantity) || 1);
+            }
+          });
+        });
+
+        var itemKeys = Object.keys(itemCounts);
+        if (itemKeys.length === 0) {
+          batchChips.innerHTML = '<span class="text-xs text-outline italic">Hiện không có món nào chờ pha</span>';
+        } else {
+          var bHtml = '';
+          itemKeys.sort(function(a, b) { return itemCounts[b] - itemCounts[a]; }).forEach(function(pName) {
+            bHtml += '<div class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-primary/10 border border-primary/20 text-primary font-bold whitespace-nowrap shadow-2xs">';
+            bHtml += '  <span class="material-symbols-outlined text-sm">local_cafe</span>';
+            bHtml += '  <span>' + pName + '</span>';
+            bHtml += '  <span class="px-1.5 py-0.2 rounded-md bg-primary text-on-primary font-mono text-[11px] font-extrabold">' + itemCounts[pName] + ' ly</span>';
+            bHtml += '</div>';
+          });
+          batchChips.innerHTML = bHtml;
+        }
+      }
+
+      // 2. Render History View
       if (state.kitchenFilter === 'HISTORY') {
-        var completedOrders = state.activeOrders.filter(function(o) { return o.Status === 'COMPLETED' || o.Status === 'CANCELLED'; });
+        var completedOrders = state.activeOrders.filter(function(o) {
+          return (o.Status === 'COMPLETED' || o.Status === 'CANCELLED') && channelMatch(o);
+        });
+
         if (completedOrders.length === 0) {
           container.innerHTML = '<div class="py-16 text-center text-on-surface-variant bg-surface-container-lowest rounded-2xl border border-outline-variant/20"><span class="material-symbols-outlined text-4xl mb-1 opacity-50">history</span><p class="text-xs">Chưa có đơn hoàn tất trong ngày</p></div>';
           return;
         }
+
         var hHtml = '<div class="space-y-3">';
         completedOrders.forEach(function(o) {
           hHtml += '<div class="bg-surface-container-lowest p-4 rounded-2xl border border-outline-variant/30 flex justify-between items-center text-xs shadow-card">';
-          hHtml += '  <div><div class="flex items-center gap-2"><span class="font-bold text-sm text-primary">#' + o.ID.slice(-4) + '</span><span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold ' + (o.Status === 'COMPLETED' ? 'bg-status-free/15 text-status-free' : 'bg-status-urgent/15 text-status-urgent') + '">' + (o.Status === 'COMPLETED' ? 'ĐÃ HOÀN TẤT' : 'ĐÃ HỦY') + '</span></div><div class="text-outline mt-1">' + (o.TableID ? getTableName(o.TableID) : 'Mang Về') + ' • ' + formatVND(o.TotalAmount) + '</div></div>';
+          hHtml += '  <div>';
+          hHtml += '    <div class="flex items-center gap-2">';
+          hHtml += '      <span class="font-bold text-sm text-primary">#' + o.ID.slice(-4) + '</span>';
+          hHtml += '      <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold ' + (o.Status === 'COMPLETED' ? 'bg-status-free/15 text-status-free' : 'bg-status-urgent/15 text-status-urgent') + '">' + (o.Status === 'COMPLETED' ? 'ĐÃ HOÀN TẤT' : 'ĐÃ HỦY') + '</span>';
+          hHtml += '      <span class="font-bold text-on-surface">' + (o.TableID ? getTableName(o.TableID) : (o.CustomerName || 'Mang Về')) + '</span>';
+          hHtml += '    </div>';
+          hHtml += '    <div class="text-outline mt-1 font-mono">' + (o.items ? o.items.map(function(i){ return i.Quantity + 'x ' + i.ProductName; }).join(', ') : '') + ' • ' + formatVND(o.TotalAmount) + '</div>';
+          hHtml += '  </div>';
+          hHtml += '  <button onclick="recallOrderToKitchen(\'' + o.ID + '\')" class="px-3 py-1.5 bg-surface-container hover:bg-surface-container-high rounded-xl font-bold text-primary flex items-center gap-1"><span class="material-symbols-outlined text-sm">undo</span> Hoàn Tác</button>';
           hHtml += '</div>';
         });
         hHtml += '</div>';
@@ -2720,43 +2923,85 @@
         return;
       }
 
-      var ordersNew = state.activeOrders.filter(function(o) { return o.Status === 'NEW'; });
-      var ordersPrep = state.activeOrders.filter(function(o) { return o.Status === 'PREPARING'; });
-      var ordersPack = state.activeOrders.filter(function(o) { return o.Status === 'PACKING'; });
+      // 3. Render 3 Kanban Columns for Active Orders
+      var ordersNew = state.activeOrders.filter(function(o) { return o.Status === 'NEW' && channelMatch(o); });
+      var ordersPrep = state.activeOrders.filter(function(o) { return o.Status === 'PREPARING' && channelMatch(o); });
+      var ordersPack = state.activeOrders.filter(function(o) { return (o.Status === 'PACKING' || o.Status === 'SERVING') && channelMatch(o); });
 
       var renderCol = function(title, count, borderLeftClass, orders, nextActionLabel, nextStatus) {
-        var colHtml = '<div class="flex-1 bg-surface-container-low rounded-2xl p-3 flex flex-col gap-3 min-w-[280px] border border-outline-variant/20">';
+        var colHtml = '<div class="flex-1 bg-surface-container-low rounded-2xl p-3 flex flex-col gap-3 min-w-[290px] border border-outline-variant/20">';
         colHtml += '  <div class="flex items-center justify-between pb-2 border-b border-outline-variant/30">';
-        colHtml += '    <h3 class="font-display font-bold text-xs uppercase tracking-wider text-primary">' + title + '</h3>';
+        colHtml += '    <h3 class="font-display font-bold text-xs uppercase tracking-wider text-primary flex items-center gap-1.5">';
+        colHtml += '      <span>' + title + '</span>';
+        colHtml += '    </h3>';
         colHtml += '    <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-surface-container text-on-surface">' + count + '</span>';
         colHtml += '  </div>';
         colHtml += '  <div class="space-y-3 overflow-y-auto max-h-[70vh]">';
 
         if (orders.length === 0) {
-          colHtml += '<div class="py-8 text-center text-on-surface-variant text-xs opacity-60">Trống đơn</div>';
+          colHtml += '<div class="py-12 text-center text-on-surface-variant text-xs opacity-60">Trống đơn</div>';
         } else {
           orders.forEach(function(o) {
             var diffMin = Math.max(0, Math.floor((new Date().getTime() - new Date(o.CreatedAt).getTime()) / 60000));
-            var timeBadge = diffMin > 10 ? 'bg-status-urgent/15 text-status-urgent font-bold animate-pulse' : (diffMin > 5 ? 'bg-status-preparing/20 text-on-surface' : 'bg-status-free/15 text-status-free');
+            var isDelayed = diffMin > 10;
+            var isWarning = diffMin > 5 && diffMin <= 10;
+            var timeBadge = isDelayed ? 'bg-status-urgent text-white font-extrabold animate-pulse' : (isWarning ? 'bg-status-preparing/30 text-on-surface font-bold' : 'bg-status-free/15 text-status-free font-bold');
+            var cardBorder = isDelayed ? 'border-status-urgent border-2 animate-pulse-glow' : borderLeftClass;
 
-            colHtml += '<article class="bg-surface-container-lowest rounded-xl shadow-card border-l-4 ' + borderLeftClass + ' p-3.5 flex flex-col gap-2 relative transition-transform duration-200 hover:-translate-y-0.5">';
+            // Check if all items in order are struck-through
+            var allItemsDone = (o.items || []).length > 0 && (o.items || []).every(function(it, idx) {
+              return !!state.completedOrderItems[o.ID + '_' + idx];
+            });
+
+            var channelIcon = o.OrderType === 'DINE_IN' || o.TableID ? '🪑' : (o.OrderType === 'DELIVERY' ? '🛵' : '🥤');
+            var tableDisplay = o.TableID ? getTableName(o.TableID) : (o.OrderType === 'DELIVERY' ? ('Giao: ' + (o.CustomerName || 'Shipper')) : 'Mang Về');
+
+            colHtml += '<article class="bg-surface-container-lowest rounded-xl shadow-card border-l-4 ' + cardBorder + ' p-3.5 flex flex-col gap-2.5 relative transition-transform duration-200 hover:-translate-y-0.5 ' + (allItemsDone ? 'ring-2 ring-status-free bg-status-free/5' : '') + '">';
+            
+            // Header row: ID, Type, Time SLA
             colHtml += '  <div class="flex items-center justify-between">';
-            colHtml += '    <span class="font-display font-bold text-sm text-primary">#' + o.ID.slice(-4) + '</span>';
-            colHtml += '    <span class="px-2 py-0.5 rounded-md text-[10px] font-mono font-bold ' + timeBadge + '">' + formatElapsedTime(o.CreatedAt) + ' trước</span>';
+            colHtml += '    <div class="flex items-center gap-1.5">';
+            colHtml += '      <span class="font-display font-extrabold text-sm text-primary">#' + o.ID.slice(-4) + '</span>';
+            colHtml += '      <span class="text-xs font-bold text-on-surface">' + channelIcon + ' ' + tableDisplay + '</span>';
+            colHtml += '    </div>';
+            colHtml += '    <span class="px-2 py-0.5 rounded-md text-[10px] font-mono ' + timeBadge + '">' + formatElapsedTime(o.CreatedAt) + ' trước</span>';
             colHtml += '  </div>';
-            colHtml += '  <div class="text-xs font-bold text-on-surface">' + (o.TableID ? getTableName(o.TableID) : (o.OrderType === 'TAKEAWAY' ? 'Mang Về' : 'Giao Hàng')) + '</div>';
-            colHtml += '  <div class="space-y-1 py-1.5 border-t border-b border-outline-variant/20 text-xs">';
-            (o.items || []).forEach(function(it) {
-              colHtml += '    <div class="flex justify-between font-medium"><span>' + it.Quantity + 'x ' + it.ProductName + (it.Size ? ' (' + it.Size + ')' : '') + '</span><span class="font-mono text-outline">' + formatVND(it.Subtotal) + '</span></div>';
-              if (it.Toppings) colHtml += '    <div class="text-[10px] text-on-surface-variant pl-2">+ ' + it.Toppings + '</div>';
+
+            if (o.Note) {
+              colHtml += '  <div class="p-1.5 bg-yellow-50 text-yellow-900 rounded-lg text-[11px] font-semibold border border-yellow-200">📝 ' + o.Note + '</div>';
+            }
+
+            // Items List with interactive strike-through
+            colHtml += '  <div class="space-y-2 py-1.5 border-t border-b border-outline-variant/20 text-xs">';
+            (o.items || []).forEach(function(it, itIdx) {
+              var isItemDone = !!state.completedOrderItems[o.ID + '_' + itIdx];
+              colHtml += '    <div onclick="toggleOrderItemDone(\'' + o.ID + '\', ' + itIdx + ', event)" class="p-1.5 rounded-lg cursor-pointer transition flex items-start justify-between gap-2 ' + (isItemDone ? 'bg-status-free/10 line-through text-outline' : 'bg-surface-container-low hover:bg-surface-container') + '">';
+              colHtml += '      <div class="flex items-start gap-1.5 flex-1">';
+              colHtml += '        <span class="material-symbols-outlined text-sm mt-0.5 ' + (isItemDone ? 'text-status-free' : 'text-outline') + '">' + (isItemDone ? 'check_circle' : 'radio_button_unchecked') + '</span>';
+              colHtml += '        <div>';
+              colHtml += '          <div class="font-bold text-xs text-on-surface"><span class="text-primary font-extrabold">' + it.Quantity + 'x</span> ' + it.ProductName + (it.Size ? ' (' + it.Size + ')' : '') + '</div>';
+              colHtml += '          <div class="text-[10px] text-outline">';
+              if (it.Ice) colHtml += 'Đá ' + it.Ice + ' • ';
+              if (it.Sugar) colHtml += 'Đường ' + it.Sugar;
+              if (it.Toppings) colHtml += ' • + ' + it.Toppings;
+              colHtml += '          </div>';
+              colHtml += '        </div>';
+              colHtml += '      </div>';
+              colHtml += '      <button onclick="openCupStickerModal(\'' + o.ID + '\', ' + itIdx + ', event)" title="In tem dán ly 50x30mm" class="p-1 rounded bg-surface-container text-outline hover:text-primary transition flex-shrink-0"><span class="material-symbols-outlined text-xs">label</span></button>';
+              colHtml += '    </div>';
             });
             colHtml += '  </div>';
-            colHtml += '  <div class="flex gap-2 pt-1">';
+
+            // Action Buttons
+            colHtml += '  <div class="flex gap-2 pt-0.5">';
             if (nextStatus) {
-              colHtml += '    <button onclick="updateOrderStatus(\'' + o.ID + '\', \'' + nextStatus + '\')" class="flex-1 py-1.5 bg-primary text-on-primary rounded-lg text-xs font-bold hover:bg-primary-container transition">' + nextActionLabel + '</button>';
+              colHtml += '    <button onclick="updateOrderStatus(\'' + o.ID + '\', \'' + nextStatus + '\')" class="flex-1 py-2 bg-primary text-on-primary rounded-xl text-xs font-bold hover:bg-primary-container shadow-xs transition flex items-center justify-center gap-1 ' + (allItemsDone ? 'ring-2 ring-primary animate-pulse' : '') + '">';
+              colHtml += '      <span class="material-symbols-outlined text-sm">check</span> ' + nextActionLabel;
+              colHtml += '    </button>';
             }
-            colHtml += '    <button onclick="openCheckoutForOrder(\'' + o.ID + '\')" class="px-3 py-1.5 bg-surface-container text-primary font-bold rounded-lg text-xs hover:bg-surface-container-high transition">Thanh Toán</button>';
+            colHtml += '    <button onclick="openCheckoutForOrder(\'' + o.ID + '\')" class="px-3 py-2 bg-surface-container text-primary font-bold rounded-xl text-xs hover:bg-surface-container-high transition">Thu Tiền</button>';
             colHtml += '  </div>';
+
             colHtml += '</article>';
           });
         }
@@ -2768,8 +3013,8 @@
 
       container.innerHTML = '<div class="grid grid-cols-1 md:grid-cols-3 gap-4">' +
         renderCol('Đơn Mới', ordersNew.length, 'border-status-urgent', ordersNew, 'Nhận Pha Chế', 'PREPARING') +
-        renderCol('Đang Pha Chế', ordersPrep.length, 'border-status-preparing', ordersPrep, 'Hoàn Tất Món', 'PACKING') +
-        renderCol('Chờ Giao / Thu Tiền', ordersPack.length, 'border-status-free', ordersPack, 'Đã Phục Vụ', 'COMPLETED') +
+        renderCol('Đang Pha Chế', ordersPrep.length, 'border-status-preparing', ordersPrep, 'Hoàn Tất Ra Món', 'PACKING') +
+        renderCol('Chờ Phục Vụ / Đóng Gói', ordersPack.length, 'border-status-free', ordersPack, 'Đã Phục Vụ', 'COMPLETED') +
         '</div>';
     }
 
@@ -3609,12 +3854,12 @@
 
     // ── INITIALIZATION ────────────────────────────────────────────────────────
     document.addEventListener('DOMContentLoaded', function() {
-      console.log('[BOOT] TCLApp Advanced POS Loaded.');
+      console.log('[BOOT] TCLApp Advanced POS & KDS Loaded.');
       renderApp();
       refreshData();
       setInterval(function() {
         if (state.currentTab === 'kitchen') renderKitchen();
-      }, 30000);
+      }, 10000);
     });
   </script>
 </body>
